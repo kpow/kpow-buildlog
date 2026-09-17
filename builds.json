@@ -1,0 +1,2554 @@
+{
+  "builds": [
+    {
+      "slug": "kfun",
+      "title": "kFun",
+      "status": "active",
+      "kind": "hardware",
+      "summary": "Two handheld game consoles built from one codebase.",
+      "stack": [
+        "ESP32-S3",
+        "C++",
+        "LovyanGFX",
+        "PlatformIO"
+      ],
+      "tags": [
+        "handheld",
+        "games",
+        "firmware"
+      ],
+      "rung": "design",
+      "facts": {
+        "consoles": "2",
+        "games": "6"
+      },
+      "repo": "kpow/kfun",
+      "hero": "/buildlog/kfun/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/kfun"
+        }
+      ],
+      "started": "2026-07-28",
+      "body": "Two handheld consoles, one codebase. **tinyfun** is a LOLIN S3 Mini Pro with a\n128×128 screen and three buttons; **bigfun** is an ESP32-S3 SuperMini with a\n320×240 screen and six. A single `KFUN_WIDE` compile-time split is all that\nseparates them — pins live only in each board's `Config.h`, and nothing in the\nengine, UI, or games ever names a GPIO. Some slots are literally a different\ngame per console: Invaders becomes Galaga on the wide board, Breakout becomes\nArkanoid.\n\nThe engine is a non-blocking Game contract (`init` / `update(dt)` / `render`)\nrunning at a fixed 60 Hz, with every game placement-new'd into a single 12 KB\narena that fails to compile if it won't fit. The framebuffer is pinned to SRAM\nbecause PSRAM faults on per-pixel writes, and the quit chord is un-swallowable so\na misbehaving game can never trap you. Highlights among the six slots: **SkyGrid**,\nan original software 3D renderer with no z-buffer that pushes 128 triangles at\n60 fps, and **Backgammon**, a fully rules-checked, natively unit-tested engine\nthat plays 2-ply expectimax on bigfun with doubling cube, Crawford, and NVS match\nsave.",
+      "stats": {
+        "entries": 12,
+        "photos": 4,
+        "daysActive": 51,
+        "firstEntry": "2026-07-28",
+        "lastEntry": "2026-09-16"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-08-01",
+          "src": "/buildlog/kfun/media/pair.jpg",
+          "caption": "bigfun next to the smaller tinyfun"
+        },
+        {
+          "date": "2026-08-01",
+          "src": "/buildlog/kfun/media/invaders.jpg",
+          "caption": "Space Invaders running on the TFT"
+        },
+        {
+          "date": "2026-08-04",
+          "src": "/buildlog/kfun/media/hero.jpg",
+          "caption": "the finished bigfun"
+        },
+        {
+          "date": "2026-08-04",
+          "src": "/buildlog/kfun/media/splash.jpg",
+          "caption": "bigfun boot splash screen"
+        }
+      ],
+      "lastEntry": "2026-09-16",
+      "entries": [
+        {
+          "date": "2026-09-16",
+          "title": "m5bigfun on CoreS3, and a chooser",
+          "tags": [
+            "m5bigfun",
+            "cores3",
+            "leds"
+          ],
+          "media": [],
+          "body": "Ported the console to a new m5bigfun target — CoreS3 with the Faces Bottom3 and a\nGamepad3 — and lit its LED strips: effects are ranked by tier, every game gets a\nvoice on the strips, and Backgammon shows whose turn it is. Topped it with a\ntop-level chooser so one device can hold two firmwares and pick between them at boot."
+        },
+        {
+          "date": "2026-09-05",
+          "title": "Third-batch board enrolled",
+          "tags": [
+            "hardware",
+            "tinyfun"
+          ],
+          "media": [],
+          "body": "Enrolled a third-batch tinyfun board (MAC 28:84:85:67:b1:44) as panel profile B.\nEach batch of panels drifts a little, so a new profile beats fighting the same\ntuning every time."
+        },
+        {
+          "date": "2026-08-19",
+          "title": "Shake to restart, and a printable case",
+          "tags": [
+            "imu",
+            "engine",
+            "case"
+          ],
+          "media": [],
+          "body": "Wired up a QMI8658C shake HAL — a physical shake restarts the current game — with a\nno-op stub on bigfun since it has no IMU, and made the engine resume games from NVS\nso you pick up where you left off. Also packaged the enclosure as a sliceable 3MF\nproject so the shell is one print away."
+        },
+        {
+          "date": "2026-08-14",
+          "title": "megafun folds in, three boards",
+          "tags": [
+            "monorepo",
+            "tinyfun",
+            "capabilities"
+          ],
+          "media": [],
+          "body": "Folded megafun into the monorepo so all three boards share one core, gated by\ncapability flags instead of forks. Added per-board panel profiles with an on-board\ntuner and enrolled the original tinyfun board as profile M1, gave the launcher an\nattract auto-rotate after idle, and rewrote the README for three boards with a\npre-commit guardrail to keep it honest."
+        },
+        {
+          "date": "2026-08-10",
+          "title": "Backgammon VS PLAYER over ESP-NOW",
+          "tags": [
+            "backgammon",
+            "esp-now",
+            "multiplayer"
+          ],
+          "media": [],
+          "body": "Added a VS PLAYER mode to Backgammon over an ESP-NOW link, built up phase by phase —\nturn transport first, then game-over sync, then the doubling cube — mirroring the\nmegafun implementation. Followed it with a per-device mirror and a resilience layer\nso a dropped packet doesn't desync the board, keeping mega and bigfun at parity."
+        },
+        {
+          "date": "2026-08-08",
+          "title": "Galaga trains and SkyGrid forks",
+          "tags": [
+            "bigfun",
+            "galaga",
+            "skygrid"
+          ],
+          "media": [],
+          "body": "Deepened the wide-board games: Galaga got enemy trains and a difficulty ladder,\nSkyGrid got track forks and proper ship motion, and both got a round of UI effects\nthat use the extra screen real estate the wide board offers."
+        },
+        {
+          "date": "2026-08-04",
+          "title": "Galaga on bigfun, README rebranded kFun",
+          "tags": [
+            "bigfun",
+            "galaga",
+            "milestone"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/hero.jpg",
+              "caption": "the finished bigfun"
+            },
+            {
+              "src": "/buildlog/kfun/media/splash.jpg",
+              "caption": "bigfun boot splash screen"
+            }
+          ],
+          "body": "Galaga takes over the Invaders slot on bigfun with auto-fire, so the wide board and\nthe small one now play different games in the same slot. Rebranded the README as\nkFun — tinyfun plus bigfun — pulling the two boards under one project name."
+        },
+        {
+          "date": "2026-08-03",
+          "title": "PSRAM enabled, Backgammon Hard AI goes 2-ply expectimax",
+          "tags": [
+            "bigfun",
+            "backgammon",
+            "hardware"
+          ],
+          "media": [],
+          "body": "Enabled the board's 2MB PSRAM on bigfun. Reworked the Backgammon Hard AI to run\n2-ply expectimax, so it evaluates the dice one roll deep rather than grabbing the\nnearest legal move."
+        },
+        {
+          "date": "2026-08-02",
+          "title": "Particle effects across both boards, and real Backgammon match play",
+          "tags": [
+            "juice",
+            "games",
+            "backgammon"
+          ],
+          "media": [],
+          "body": "Added particle and shake effects across both consoles: kill and death pops in\nInvaders, line-clear debris in Tetris, checker slide-and-capture pops in Backgammon,\nglide on Snake, and brick-break and life-loss shakes in Breakout. Also stood up real\nmatch play in bigfun Backgammon — 5-point match, doubling cube, difficulty, NVS save\n— and gave the intro a Slackey wordmark with glow and particles."
+        },
+        {
+          "date": "2026-08-01",
+          "title": "Merged into the kFun monorepo, shared console on the SuperMini",
+          "tags": [
+            "monorepo",
+            "bigfun",
+            "milestone"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/pair.jpg",
+              "caption": "bigfun next to the smaller tinyfun"
+            },
+            {
+              "src": "/buildlog/kfun/media/invaders.jpg",
+              "caption": "Space Invaders running on the TFT"
+            }
+          ],
+          "body": "Restructured everything into the kFun monorepo — a shared common/ with tinyfun/ and\nbigfun/ on top — and got the full app booting the shared console on the SuperMini.\nThen a round of art and effects work on the wide board: landscape backgammon with\ntraditional triangle points, a centred Tetris well with side panels, an Arkanoid\nrebuild, a sprite pipeline off the Kenney CC0 art, launcher attract cards, nebula\nbackgrounds with post-FX, and a themed game-over screen."
+        },
+        {
+          "date": "2026-07-29",
+          "title": "Backgammon replaces Asteroids, Canyon renamed to SkyGrid",
+          "tags": [
+            "backgammon",
+            "skygrid",
+            "games"
+          ],
+          "media": [],
+          "body": "Swapped Asteroids out for Backgammon and renamed Canyon to SkyGrid, and added a help\nscreen listing the button controls. Redrew the board, made a piece's second move\nfindable, added bear-off auto and bigger dice. Also cut the Slackey case logo SVGs\nfor the eventual printed shell."
+        },
+        {
+          "date": "2026-07-28",
+          "title": "First TinyFun boot on the S3 Mini Pro",
+          "tags": [
+            "tinyfun",
+            "games",
+            "milestone"
+          ],
+          "media": [],
+          "body": "First working console: a five-game handheld on the LOLIN S3 Mini Pro driving a\n128×128 panel. Brought up the boot screen and a custom typeface, and got CANYON — a\n3D anti-gravity racer — running on the panel. Also did an Asteroids pass: added a\n3-shot spread and lightened the opening wave so the first screen isn't a full field\nof rocks."
+        }
+      ]
+    },
+    {
+      "slug": "noodle",
+      "title": "NoodleLab v2",
+      "status": "active",
+      "kind": "hardware",
+      "summary": "A modular LED light instrument that turned into a distributed system.",
+      "stack": [
+        "ESP32-S3",
+        "ESP32-C3",
+        "ESP-NOW",
+        "FastLED",
+        "FreeRTOS",
+        "PCA9685",
+        "PlatformIO"
+      ],
+      "tags": [
+        "led",
+        "esp-now",
+        "firmware",
+        "distributed"
+      ],
+      "rung": "light → solder",
+      "facts": {
+        "satellites": "7",
+        "effects": "16"
+      },
+      "repo": "kpow/noodlez-v2",
+      "hero": "/buildlog/noodle/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/noodlez-v2"
+        }
+      ],
+      "started": "2026-03-23",
+      "body": "A modular LED light instrument that turned into a distributed system. It started\nas one microcontroller driving a few panels — but when it ran out of pins, I gave\nevery panel its own chip and linked them wirelessly. Now I can keep adding\nsurfaces without ever hitting a hardware wall, and they all animate together in\nreal time.\n\n## How it works\n\nAn **ESP32-S3 core** (Adafruit FeatherS3) commands a fleet of **ESP-NOW\nsatellites** — 8×8, 16×16, and 12×8 matrices, an RGBW bar, a mic satellite, a\nhaptic dial remote, and a motorized disco ball — each its own ESP32-C3. The core\nbroadcasts one **58-byte packet**; every satellite receives the same packet and\nrenders locally, staying frame-synced without the core pushing every pixel.\n\n- **Dual-core FreeRTOS** — radio on one core, FastLED render on the other, so they\n  never step on each other (the S3's RMT peripheral fights the WiFi radio if you\n  get the startup order wrong).\n- **16 FastLED effects**, audio-reactive via a **512-point FFT** on the mic\n  satellite that broadcasts bass/mid/treble/beat to the whole fleet.\n- **Control surface:** three NeoPixel encoders, a NeoSlider, a ToF proximity\n  sensor, capacitive touch, PCA9685-driven LED filaments + skull, and a\n  lightning-bolt lane.\n\n## Why it's built this way\n\nThe distributed architecture wasn't a flourish — it was running out of GPIO and\nrefusing to stop adding panels. Moving each surface to its own wireless board\nmeans the system scales by adding *boards*, not pins.",
+      "stats": {
+        "entries": 16,
+        "photos": 5,
+        "daysActive": 169,
+        "firstEntry": "2026-03-25",
+        "lastEntry": "2026-09-07"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-04-11",
+          "src": "/buildlog/noodle/media/fiber.jpg",
+          "caption": "Driver board lighting fiber-optic strands"
+        },
+        {
+          "date": "2026-04-15",
+          "src": "/buildlog/noodle/media/hero.jpg",
+          "caption": "The full instrument lit"
+        },
+        {
+          "date": "2026-05-09",
+          "src": "/buildlog/noodle/media/hex-orb.jpg",
+          "caption": "Hex panels and RGB orb on the bench"
+        },
+        {
+          "date": "2026-05-16",
+          "src": "/buildlog/noodle/media/lit-desk.jpg",
+          "caption": "Lit desk with the pixel matrix running"
+        },
+        {
+          "date": "2026-05-27",
+          "src": "/buildlog/noodle/media/disco-skull.jpg",
+          "caption": "Printed skull over the spinning disco ball"
+        }
+      ],
+      "lastEntry": "2026-09-07",
+      "entries": [
+        {
+          "date": "2026-09-07",
+          "title": "Landscape TFT + chrome refresh; the Patternflow bank",
+          "tags": [
+            "ui",
+            "patterns"
+          ],
+          "media": [],
+          "body": "Recomposed the entire UI for a landscape 320×240 ST7789 mount — one-row header, framed menus, Live Control and Chladni re-laid-out. Landed the Patternflow bank too: hand-ported JS shader-style patterns running on all three boards, with the red Qwiic button as a palette dice."
+        },
+        {
+          "date": "2026-08-29",
+          "title": "21 effects, a palette system, and 'Noodle 2K'",
+          "tags": [
+            "effects",
+            "palettes",
+            "milestone"
+          ],
+          "media": [],
+          "body": "Big content wave: a trimmed 2D particle engine and the WLED particle effects (catalog to 21), a real 16-band GEQ spectrum analyzer, and a global palette system with host-parity tests and a dial palette picker. Rebranded the whole thing \"Noodle 2K\" with a new layered power-on intro. Also brought up a hub75 MatrixPortal satellite doing native 64×32."
+        },
+        {
+          "date": "2026-08-16",
+          "title": "The big rebuild — bare MCU, Chladni, cyberpunk chrome",
+          "tags": [
+            "rebuild",
+            "ui"
+          ],
+          "media": [],
+          "body": "Stripped the rig back to a bare MCU and brought it up clean: retired the icon and (later) 8×12 sats, drove the 16×16 locally, moved SparkFun inputs to their own I2C bus, and replaced the wireframe screensaver with a live Chladni-plate visualizer. Also redid the whole UI on an anti-aliased \"chrome\" kit and killed the flicker."
+        },
+        {
+          "date": "2026-06-13",
+          "title": "Portability pass + matrix sat moves to an S3",
+          "tags": [
+            "firmware",
+            "portability"
+          ],
+          "media": [],
+          "body": "Made the whole project portable to a new machine — pinned the pioarduino platform by URL across every board so builds are reproducible. Ported the 12×8 matrix satellite to a dual-core ESP32-S3 SuperMini for a better radio, and added a baked Pac-Chase animation source for the 16×16."
+        },
+        {
+          "date": "2026-05-27",
+          "title": "Disco-ball satellite — and a nasty ground-noise lesson",
+          "tags": [
+            "satellites",
+            "disco",
+            "hardware-lesson"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/disco-skull.jpg",
+              "caption": "Printed skull over the spinning disco ball"
+            }
+          ],
+          "body": "Added a motorized disco ball as its own satellite (stepper + spot LED + OLED) with a dedicated LiveTarget. First version ran the stepper off main power and it made the ground filthy — the noise bled into the rest of the Noodle. Its own supply fixed it. Classic motor-on-shared-ground trap."
+        },
+        {
+          "date": "2026-05-16",
+          "title": "ESP-NOW only, plus a screen-capture path",
+          "tags": [
+            "esp-now",
+            "streaming"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/lit-desk.jpg",
+              "caption": "Lit desk with the pixel matrix running"
+            }
+          ],
+          "body": "Dropped WiFi association entirely — the Console runs pure ESP-NOW now. Started the screen-share path (browser → ingest → matrix) and a LittleFS clip store, so I can push real captured pixels to the 16×16, not just generated effects."
+        },
+        {
+          "date": "2026-05-09",
+          "title": "Dial remote, sprite overlays, playlists",
+          "tags": [
+            "dial",
+            "ui"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/hex-orb.jpg",
+              "caption": "Hex panels and RGB orb on the bench"
+            }
+          ],
+          "body": "Added the dial sat as a wireless remote with a live preview canvas, a composite overlay source (16×16 pattern + centered 8×8 icon), Qwiic forward/back buttons for the pattern stack, and curated playlists. Also cut the dead DDP path entirely."
+        },
+        {
+          "date": "2026-05-05",
+          "title": "The fleet takes shape — bar, 8×8, 16×16 satellites",
+          "tags": [
+            "esp-now",
+            "satellites"
+          ],
+          "media": [],
+          "body": "Built out the pixel satellites — a 1×30 bar, an 8×8 icon panel, a 16×16 matrix — each its own board rendering locally off a shared wire format (v5). The GPIO wall is officially gone; I scale by adding boards now."
+        },
+        {
+          "date": "2026-04-29",
+          "title": "Audio satellite — first ESP-NOW peer, beat detection",
+          "tags": [
+            "esp-now",
+            "audio",
+            "satellites"
+          ],
+          "media": [],
+          "body": "First satellite: a separate board with a mic running spectral-flux, bass-leaning beat detection, broadcasting audio features over peered ESP-NOW so every effect can react in lockstep. This is where it stopped being one board."
+        },
+        {
+          "date": "2026-04-19",
+          "title": "Three encoders, per-target ownership, Source Map",
+          "tags": [
+            "controls",
+            "ui"
+          ],
+          "media": [],
+          "body": "Wired up three NeoPixel rotary encoders with per-target slot ownership (highest I2C address = slot 0), a Source Map for per-surface assignment, and retired Pixelblaze in favor of the native engine. The control surface is starting to feel like a real instrument panel."
+        },
+        {
+          "date": "2026-04-15",
+          "title": "Descriptor-table effect engine + the FeatherWing",
+          "tags": [
+            "led",
+            "effects"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/hero.jpg",
+              "caption": "The full instrument lit"
+            }
+          ],
+          "body": "Stood up the real effects engine — a descriptor table, 10 effects to start — plus a 4×8 NeoPixel FeatherWing mirroring the matrix and a TPS61169 gamma-corrected filament driver. The whole surface is lit and animating together now."
+        },
+        {
+          "date": "2026-04-12",
+          "title": "Ran out of pins — going distributed",
+          "tags": [
+            "milestone",
+            "esp-now"
+          ],
+          "media": [],
+          "body": "Added an external 8×8 and hit the GPIO wall. That's the decision point: every LED surface becomes its own ESP-NOW satellite, so the system scales by adding boards, not pins. Everything after this is that idea playing out."
+        },
+        {
+          "date": "2026-04-11",
+          "title": "Filaments breathing, fiber optics, live Pixelblaze",
+          "tags": [
+            "led",
+            "filaments"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/fiber.jpg",
+              "caption": "Driver board lighting fiber-optic strands"
+            }
+          ],
+          "body": "PCA9685 LED filaments on a sine-breath offset, a Pixelblaze websocket path for browsing and streaming patterns live, and the patterns/ scaffolding. First time the thing looked less like a prototype and more like an instrument."
+        },
+        {
+          "date": "2026-04-06",
+          "title": "Dual-core FreeRTOS — network off the render path",
+          "tags": [
+            "firmware",
+            "freertos"
+          ],
+          "media": [],
+          "body": "Decomposed the firmware into four FreeRTOS tasks across both cores, moving the network onto Core 0 so the radio and the LED render stop fighting each other. This is the backbone everything else hangs off."
+        },
+        {
+          "date": "2026-04-05",
+          "title": "Noodle 2.0 — core up and running in a day",
+          "tags": [
+            "milestone",
+            "bring-up"
+          ],
+          "media": [],
+          "body": "Rebuilt from the breadboard onto a FeatherS3. In one sitting: display + encoder + buttons working, a sensor dashboard (distance, light, NeoPixel), WLED control, and a direct 4×12 matrix with an 8×8 icon slideshow. The solid STEMMA-QT prototyping paid off immediately."
+        },
+        {
+          "date": "2026-03-25",
+          "title": "Noodle 1 — the breadboard prototype that didn't scale",
+          "tags": [
+            "prototype",
+            "breadboard"
+          ],
+          "media": [],
+          "body": "First pass at the idea: one controller driving a series of LED grids and\nfilaments. Built it on a breadboard with a rat's nest of wires. It worked, barely,\nbut it was obvious this would never scale — every new surface meant more jumpers\nand more flakiness. Tore it down and went looking for a more solid way to\nprototype (landed on Adafruit STEMMA QT modules)."
+        }
+      ]
+    },
+    {
+      "slug": "vizbot",
+      "title": "vizBot",
+      "status": "shipped",
+      "kind": "hardware",
+      "summary": "A companion robot with a face, personalities, and a cloud backend.",
+      "stack": [
+        "ESP32-S3",
+        "FreeRTOS",
+        "arduinoFFT",
+        "ESP-NOW",
+        "Node.js",
+        "DigitalOcean"
+      ],
+      "tags": [
+        "robot",
+        "cloud",
+        "iot",
+        "firmware"
+      ],
+      "rung": "solder → design",
+      "facts": {
+        "expressions": "25",
+        "deployed": "4"
+      },
+      "repo": "kpow/vizpow",
+      "hero": "/buildlog/vizbot/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/vizpow"
+        }
+      ],
+      "started": "2026-01-24",
+      "body": "vizBot is a little companion robot with a face — 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions. Everything on the screen is drawn from primitives (eyes, mouths, tweened\ntransitions), so the same face engine renders identically across a Waveshare LCD,\nan M5 Core S3, and a 1-bit 128×64 OLED. It listens with a 512-point FFT on the\nCore S3 mic and reacts to sound, gets audio-reactive ambient effects, drives a\n**StackChan** servo base for physical head movement, and pushes its speech out to\na **WLED matrix over DDP** — direct pixel control, no scroll-effect games.\n\nUnder the hood it's dual-core FreeRTOS: rendering on one core, WiFi/HTTP/mesh and\nan isolated cloud task on the other. The bots talk to **vizCloud** — a separate\nNode.js backend I run on DigitalOcean — to register, sync telemetry, join fleet\ngroups, and pull server-queued commands, including NTP-scheduled commands so a\nwhole room of bots can move together. On the local side they form an **ESP-NOW\nmesh** that does cooperative WLED arbitration: two bots won't stomp the same\nmatrix, and one will even defer its speech bubble until a peer releases the\ndisplay. Four of them are living in other places now — a real fleet in the wild.",
+      "stats": {
+        "entries": 16,
+        "photos": 3,
+        "daysActive": 219,
+        "firstEntry": "2026-01-24",
+        "lastEntry": "2026-08-30"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-06-24",
+          "src": "/buildlog/vizbot/media/hero.jpg",
+          "caption": "The neon-green vizBot with its OLED face"
+        },
+        {
+          "date": "2026-06-24",
+          "src": "/buildlog/vizbot/media/face-1.jpg",
+          "caption": "One of the 25 procedurally-drawn expressions"
+        },
+        {
+          "date": "2026-06-24",
+          "src": "/buildlog/vizbot/media/face-2.jpg",
+          "caption": "Another animated face"
+        }
+      ],
+      "lastEntry": "2026-08-30",
+      "entries": [
+        {
+          "date": "2026-08-30",
+          "title": "StackChan servo hardening + fleet deployment",
+          "tags": [
+            "stackchan",
+            "servos",
+            "fleet"
+          ],
+          "media": [],
+          "body": "Chased the StackChan head stalls to ground: calibrated the pitch zero, moved to the M5 StackChan-BSP driver, armed the servos properly with position mode and torque, and replaced a flaky servo watchdog with a blind 5-minute rail cycle plus a graceful glide back to pose after reinit instead of snapping home. Four vizBots are now running in other locations, and vizCloud is live for adding content."
+        },
+        {
+          "date": "2026-06-26",
+          "title": "vizMini — the face on an ESP32-C3 and an OLED",
+          "tags": [
+            "vizmini",
+            "portability"
+          ],
+          "media": [],
+          "body": "Spun off vizMini: a standalone, pared-down vizbot for an ESP32-C3 SuperMini driving a 1-bit 128×64 OLED — the same face engine on the cheapest hardware it would run on. Added an onboard NeoPixel rainbow glow, swapped the capacitive pad for a debounced pushbutton, dropped the sleep state so it stays awake, and added web OTA updates."
+        },
+        {
+          "date": "2026-06-24",
+          "title": "Neon-green build photos + cold-boot servo fix",
+          "tags": [
+            "stackchan",
+            "web",
+            "hardware-lesson"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/hero.jpg",
+              "caption": "The neon-green vizBot with its OLED face"
+            },
+            {
+              "src": "/buildlog/vizbot/media/face-1.jpg",
+              "caption": "One of the 25 procedurally-drawn expressions"
+            },
+            {
+              "src": "/buildlog/vizbot/media/face-2.jpg",
+              "caption": "Another animated face"
+            }
+          ],
+          "body": "The bot in the flesh — neon-green shell, OLED face, StackChan base underneath. Fixed the StackChan servos refusing to answer through a cold-boot start-up by retrying the servo ping until they woke. Kept web control responsive by decoupling it from the cloud sync, and fixed a registration truncation bug that was cutting device names short."
+        },
+        {
+          "date": "2026-05-24",
+          "title": "Audio-reactive ambient effects + kaleidoscope pass",
+          "tags": [
+            "audio",
+            "effects"
+          ],
+          "media": [],
+          "body": "Made all 16 ambient effects audio-reactive — first the ambient set and a base-LED audio mode, then mappings for the remaining 12, then a punch-up on Plasma/Galaxy/Stripes/Puzzle with a base-LED audio overlay. Added a kaleidoscope post-processing pass on top of the ambient effects and a drama slider to dial the intensity."
+        },
+        {
+          "date": "2026-05-22",
+          "title": "vizBot 3.0 — StackChan body target",
+          "tags": [
+            "stackchan",
+            "servos",
+            "milestone"
+          ],
+          "media": [],
+          "body": "vizBot 3.0 put the face on a StackChan body. Built up in phases: a minimum-viable StackChan build target, StackChan hardware driver bring-up, web endpoints with pitch safety clamping, then servo expressivity, touch reactions, idle sweeps, and a chill mode. Replaced the old ambient effects with 16 patterns ported from noodle-v2. Had to pin M5GFX@0.2.19 — 0.2.21 gave the Core S3 a black screen."
+        },
+        {
+          "date": "2026-04-01",
+          "title": "PlatformIO migration + a SAM2695 MIDI synth",
+          "tags": [
+            "platformio",
+            "midi"
+          ],
+          "media": [],
+          "body": "Moved vizbot and vizpow off the Arduino IDE onto PlatformIO for reproducible builds and versioned firmware binaries, with bins published to a top-level builds/ directory. Integrated a SAM2695 MIDI synthesizer across several phases, including cloud MIDI sequence caching and sync so the bot can pull tunes down. It plays MIDI now in addition to speech."
+        },
+        {
+          "date": "2026-03-05",
+          "title": "vizCloud, multi-bot orchestration, and an ESP-NOW mesh",
+          "tags": [
+            "cloud",
+            "esp-now",
+            "distributed",
+            "milestone"
+          ],
+          "media": [],
+          "body": "Landed vizCloud integration with a static BSS framebuffer for zero-flicker TLS, an isolated cloud task on Core 0, and a unified WiFi task. Built Stage 4/5 multi-bot orchestration on top of it. Added an ESP-NOW local mesh doing cooperative WLED arbitration — flag bits in a broadcast packet so two bots won't drive the same matrix at once, with one deferring its speech bubble until a peer releases the display."
+        },
+        {
+          "date": "2026-03-04",
+          "title": "Senses — mic, proximity, light, and a hologram mode",
+          "tags": [
+            "sensors",
+            "audio"
+          ],
+          "media": [],
+          "body": "Added sensor input: a mic audio-analysis driver, a proximity + ambient-light sensor driver, sound-reactive and proximity-reactive expressions, and auto-brightness. Reworked the face with 6 eye shapes, 6 mouth shapes, and 8 new expressions, and redid the speech bubble with a proportional font that positions off the sensors. Added a hologram mode — a horizontal LCD mirror for a Pepper's-ghost prism."
+        },
+        {
+          "date": "2026-03-03",
+          "title": "LovyanGFX migration + a tween system",
+          "tags": [
+            "graphics",
+            "animation"
+          ],
+          "media": [],
+          "body": "Migrated the LCD target from Arduino_GFX to LovyanGFX; chased a blue tint and dim brightness afterward, and unified canvas management along the way. Built a tween system with 8 easing functions and wired it into the main loop, replacing the hand-rolled smoothstep and linear lerps. Expression transitions and look-around animations now run on the easing curves."
+        },
+        {
+          "date": "2026-02-21",
+          "title": "M5 Core S3 target + per-device identity",
+          "tags": [
+            "cores3",
+            "portability"
+          ],
+          "media": [],
+          "body": "Added an M5Stack Core S3 target with a multi-screen layout system: a layout.h that derives the UI from screen size, so a new display is a compile flag rather than a rewrite. Gave each bot its own identity — a unique per-device SSID and mDNS hostname derived from the eFuse MAC, plus a user-settable device name for a memorable hostname. Groundwork for running more than one bot at a time."
+        },
+        {
+          "date": "2026-02-19",
+          "title": "WLED integration — from scroll effects to raw DDP",
+          "tags": [
+            "wled",
+            "ddp"
+          ],
+          "media": [],
+          "body": "Added forwarding of the bot's speech to a WLED LED matrix. First approach drove WLED's built-in scrolling text effect; fought it for days over scroll speed, trails, jump cuts, and effect reinit on consecutive words. Switched to direct pixel control over DDP, drawing the text myself, which gave immediate clean frames without relying on the effect engine."
+        },
+        {
+          "date": "2026-02-15",
+          "title": "Networking hardening and the Core 0 crash",
+          "tags": [
+            "wifi",
+            "freertos",
+            "hardware-lesson"
+          ],
+          "media": [],
+          "body": "Spent several days hardening the networking. Added a sequential boot loader with onscreen diagnostics, an I2C mutex and command queue for race safety, moved the web server to a FreeRTOS task on Core 0, added WiFi provisioning with NVS-stored credentials, and a captive portal with DNS + mDNS auto-redirect. The Core 0 crash took the longest — chased it through watchdog reconfigures and stack-size bumps before the WiFi task stayed up. Closed out with persistent settings and a health heartbeat."
+        },
+        {
+          "date": "2026-02-13",
+          "title": "Face engine and the split into vizBot",
+          "tags": [
+            "face",
+            "milestone",
+            "firmware"
+          ],
+          "media": [],
+          "body": "Built the face engine in phases: core face with 12 expressions, then sayings and speech bubbles, then personality presets and a full web UI, then 20 expressions with backgrounds. Everything is drawn from primitives so it scales with the screen. Split the firmware in two — vizpow keeps the effects, vizbot gets the face — and renamed the WiFi AP from VizPow to vizBot."
+        },
+        {
+          "date": "2026-02-07",
+          "title": "Hi-res LCD, an ESP8266 port, and the vizPow name",
+          "tags": [
+            "lcd",
+            "portability"
+          ],
+          "media": [],
+          "body": "Brought up a hi-res LCD rendering mode with a touch menu so the effects render on a real screen, not just a matrix. Ported the engine to an ESP8266 LED matrix target to test how portable it was. Renamed the project to vizPow. Same core engine, more display surfaces."
+        },
+        {
+          "date": "2026-01-27",
+          "title": "Emoji mode, icon sprites, and shake-to-switch",
+          "tags": [
+            "icons",
+            "gestures"
+          ],
+          "media": [],
+          "body": "Added an emoji display mode with a sprite picker and 32 icon sprites, plus icon tooling to manage them. Wired up a shuffle-bag auto-cycle for effects and palettes so they don't repeat too soon. Added a shake gesture read off the IMU to change modes."
+        },
+        {
+          "date": "2026-01-24",
+          "title": "Bring-up — ESP32-S3 LED matrix controller",
+          "tags": [
+            "bring-up",
+            "firmware"
+          ],
+          "media": [],
+          "body": "Started the project as a plain ESP32-S3 LED matrix controller. Sorted the build config, laid out the folder structure, and pushed pixels to the grid. Scope at this point is a board, a matrix, and a controller that renders effects — no face, no cloud, no gestures yet."
+        }
+      ]
+    },
+    {
+      "slug": "radar",
+      "title": "ESP32 Plane Radar",
+      "status": "shipped",
+      "kind": "hardware",
+      "summary": "A desktop ADS-B aircraft scope on a round LCD.",
+      "stack": [
+        "ESP32-C3",
+        "LovyanGFX",
+        "ADS-B",
+        "PlatformIO"
+      ],
+      "tags": [
+        "display",
+        "adsb",
+        "firmware"
+      ],
+      "rung": "solder",
+      "facts": {
+        "aircraft": "64",
+        "screen": "1.28in round"
+      },
+      "repo": "kpow/ESP32-Plane-Radar",
+      "hero": "/buildlog/radar/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/ESP32-Plane-Radar"
+        }
+      ],
+      "started": "2026-06-13",
+      "body": "A desktop ADS-B aircraft **radar scope**. It paints the live traffic around my\nhome lat/lon onto a green sonar grid — a rotating sweep with a comet trail,\nheading triangles with speed vectors out front, callsign/type/altitude tags, and\nanything out of range parked as a bearing-dot on the rim. The data comes from the\npublic **adsb.fi opendata REST API** over HTTPS (no local receiver), polled every\n3 seconds for up to **64 aircraft**, with the radius scaled to the screen edge.\nIt all lives on a **GC9A01 1.28\" round LCD** (240×240, LovyanGFX) driven by an\n**ESP32-C3 Super Mini**, in a printed slatted case with a BOOT button and an\noptional touch pad to cycle range.\n\n## How it's built\n\nThe whole thing is **heap-aware everywhere**, because TLS eats RAM. I render into\nan **8-bit off-screen sprite framebuffer** (chosen specifically to survive the\nheap pressure of a live HTTPS poll), stream-parse the JSON with a field filter so\nI never hold the whole body, and check the heap *before* opening the socket. Between\npolls the scope **dead-reckons each plane forward** from its last heading and speed\nso motion stays smooth at 30 fps — capped, so a dropped poll or an outage can't\nfling a target off the edge. There's also a full **gzipped SPA companion app baked\ninto flash** — radar, flight list, stats, and detail cards served off `/api/flights`,\nwith the browser enriching routes and photos from adsbdb and planespotters. An\n**ESP32-S3 target** exists too, for the better radio.",
+      "stats": {
+        "entries": 6,
+        "photos": 4,
+        "daysActive": 77,
+        "firstEntry": "2026-06-13",
+        "lastEntry": "2026-08-28"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/wired.jpg",
+          "caption": "Round GC9A01 wired up on the bench"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/scope.jpg",
+          "caption": "Close on the radar scope — sweep and callsigns"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/housing.jpg",
+          "caption": "Display fitted into the printed slatted housing"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/hero.jpg",
+          "caption": "The finished retro-cube radar, green sweep + traffic"
+        }
+      ],
+      "lastEntry": "2026-08-28",
+      "entries": [
+        {
+          "date": "2026-08-28",
+          "title": "Empty radar bug: de-chunk the ADS-B body",
+          "tags": [
+            "firmware",
+            "adsb",
+            "bugfix"
+          ],
+          "media": [],
+          "body": "Radar had started coming up empty — grid, sweep, no planes. Turned out the ADS-B endpoint was returning its response with **chunked transfer encoding**, and my stream parser was choking on the chunk-size markers instead of the JSON. De-chunked the body before parsing and the traffic came right back. Sneaky one: the fetch succeeded, the heap was fine, it was just quietly feeding garbage to the parser."
+        },
+        {
+          "date": "2026-08-06",
+          "title": "Map underlay + multi-leg routes",
+          "tags": [
+            "firmware",
+            "webapp",
+            "adsb"
+          ],
+          "media": [],
+          "body": "Added a faint **map underlay** to both scopes — coast, lakes, rivers, roads — drawn dim enough to give a sense of place without fighting the traffic on top. It makes the whole thing legible: you can tell a plane is following a river valley or lined up on a road.\n\nAlso taught the route display to handle **multi-leg trips**: it now shows every stop on the route and highlights the leg the aircraft is currently flying, instead of collapsing everything to origin-and-destination. (Refreshed the README a couple of days earlier while I was in here.)"
+        },
+        {
+          "date": "2026-07-19",
+          "title": "The web companion app — touch radar in the browser",
+          "tags": [
+            "firmware",
+            "webapp",
+            "heap",
+            "touch"
+          ],
+          "media": [],
+          "body": "Big day for the browser side. Built an **interactive touch radar web UI** served straight off the device, with per-device themes and — the important part — a **heap fix** so serving the SPA doesn't collide with the live ADS-B poll. The app is gzipped and baked into flash; it hits `/api/flights` for the traffic and lets the browser enrich each plane with route and photo data. Added a page header that shows live context so you know what you're looking at without hunting.\n\nOn the hardware side, **hardened the TTP223 range-touch input** against a flapping line — the capacitive pad was chattering and cycling range on its own, so I debounced it into behaving. Also swept the repo: stopped tracking `.DS_Store` junk and told git to ignore the capsule-radar reference project I'd been reading for ideas."
+        },
+        {
+          "date": "2026-06-15",
+          "title": "Sweep goes under the grid",
+          "tags": [
+            "firmware",
+            "display"
+          ],
+          "media": [],
+          "body": "Small layering fix that makes a big visual difference: render the radar sweep *beneath* the grid instead of over it. Now the sweep glow reads as light passing under the graticule, and the grid lines and plane markers stay crisp on top. Draw order is half the battle with these sprite composites."
+        },
+        {
+          "date": "2026-06-14",
+          "title": "Onboard RGB status light + a scanning overlay",
+          "tags": [
+            "firmware",
+            "ux"
+          ],
+          "media": [],
+          "body": "Put the C3's onboard RGB LED to work as a status light with a little animation, and added a scanning overlay on top of the scope so it reads more like radar and less like a static plot. Also dropped the 100 km range option — at that zoom the projection distortion gets silly and I never actually use it. The useful ranges are the close ones."
+        },
+        {
+          "date": "2026-06-13",
+          "title": "Forked a plane-radar project, then rebuilt it heap-first",
+          "tags": [
+            "firmware",
+            "adsb",
+            "display",
+            "heap"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/radar/media/wired.jpg",
+              "caption": "Round GC9A01 wired up on the bench"
+            },
+            {
+              "src": "/buildlog/radar/media/scope.jpg",
+              "caption": "Close on the radar scope — sweep and callsigns"
+            },
+            {
+              "src": "/buildlog/radar/media/housing.jpg",
+              "caption": "Display fitted into the printed slatted housing"
+            },
+            {
+              "src": "/buildlog/radar/media/hero.jpg",
+              "caption": "The finished retro-cube radar, green sweep + traffic"
+            }
+          ],
+          "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3, then more or less gutted it. The stock build locked up periodically — it was firing a burst of ADS-B requests and buffering whole response bodies. Fixed that with a single request on a backoff and a **stream-parse** so I only ever pull the fields I need. That alone stopped the lockups.\n\nFrom there it was a founding rebuild in one long session: a **dual-core split** with the network fetch on its own task so rendering never stalls, and **smooth plane interpolation** so targets glide between the 3-second polls instead of teleporting. Added an **ESP32-S3 Super Mini target** for the better radio, plus WiFi retry hardening so a flaky connect recovers instead of hanging. Then the bells and whistles: **16-bit color at 80 MHz SPI** on the S3, and the **radar sweep with a comet trail paced at 30 fps**. By the end it was a live scope — round LCD, green grid, real callsigns — sitting in the printed slatted cube on the desk."
+        }
+      ]
+    },
+    {
+      "slug": "phantasyfish",
+      "title": "PhantasyFish",
+      "status": "live",
+      "kind": "software",
+      "summary": "Fantasy sports for Phish setlists.",
+      "stack": [
+        "React",
+        "TypeScript",
+        "Express",
+        "PostgreSQL",
+        "Drizzle",
+        "OpenAI",
+        "Resend",
+        "DigitalOcean"
+      ],
+      "tags": [
+        "web",
+        "fullstack",
+        "phish"
+      ],
+      "rung": null,
+      "facts": {
+        "players": "115",
+        "shows": "74",
+        "predictions": "1155",
+        "points": "65054"
+      },
+      "repo": "kpow/phantasyphish",
+      "hero": "/buildlog/phantasyfish/media/hero.jpg",
+      "links": [
+        {
+          "label": "site",
+          "url": "https://phantasyfish.com"
+        },
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/phantasyphish"
+        }
+      ],
+      "started": "2025-04-12",
+      "body": "Fantasy sports for Phish setlists — you predict a show before the band plays, then\nscore on how close you got. I built and run the whole stack: the game itself, the\nautomated scoring engine, an AI that drafts setlists from history, leaderboards, and\nthe email that ties it together. It's been live and played for over a year.\n\nUnder the hood it's full-stack TypeScript — a React front end over Express and\nPostgreSQL with Drizzle ORM. The **scoring engine** hands out song, set,\nexact-position, opener–closer, and shared-bustout bonuses, and it fires\nautomatically the moment the official setlist posts. **WookBot** is an OpenAI setlist\ngenerator built on historical play patterns, and around all of it sit leaderboards\n(global / tour / show), research tools, an admin console, and transactional email.\n\n## By the numbers (year one)\n\n115 players across 6 tours and 28 venues · 74 shows scored · 1,155 predictions ·\n65,054 points · 248 top score · **398 exact song positions nailed** · 2,501 songs\nplaced in the right set · 99 bustouts · 67 AI-generated setlists · a 959-song catalog.",
+      "stats": {
+        "entries": 17,
+        "photos": 1,
+        "daysActive": 486,
+        "firstEntry": "2025-04-12",
+        "lastEntry": "2026-08-10"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "0": "m",
+          "1": "e",
+          "2": "d",
+          "3": "i",
+          "4": "a",
+          "5": "/",
+          "6": "h",
+          "7": "e",
+          "8": "r",
+          "9": "o",
+          "10": ".",
+          "11": "j",
+          "12": "p",
+          "13": "g",
+          "date": "2025-04-12",
+          "src": "/buildlog/phantasyfish/undefined"
+        }
+      ],
+      "lastEntry": "2026-08-10",
+      "entries": [
+        {
+          "date": "2026-08-10",
+          "title": "Year one, by the numbers",
+          "tags": [
+            "milestone",
+            "data"
+          ],
+          "media": [],
+          "body": "Did a full data run and totted up the first year: 115 players across 6 tours and 28 venues,\n74 shows scored, 1,155 predictions, 65,054 points earned. Also in the totals: 398 exact\nsong positions nailed, 2,501 songs placed in the right set, 99 bustouts called, and 67\nsetlists generated by WookBot. A whole game, live and played, built and run start to finish\nover the year."
+        },
+        {
+          "date": "2026-07-17",
+          "title": "phish.net outage resilience: local mirror, DB fallback, manual scoring",
+          "tags": [
+            "resilience",
+            "scoring",
+            "data"
+          ],
+          "media": [],
+          "body": "Built resilience against the phish.net data source going down mid-show, the worst failure\nmode for a live-scoring game. Added a local phish.net mirror with background sync, a\ndatabase fallback for show endpoints when the API is blocked, and the ability to score\nstraight from a hand-entered live setlist when the network won't cooperate. A bad night on\nsomeone else's server no longer takes the game down with it."
+        },
+        {
+          "date": "2026-03-29",
+          "title": "Import upcoming shows into a tour, modular admin routes",
+          "tags": [
+            "admin",
+            "tours",
+            "refactor"
+          ],
+          "media": [],
+          "body": "Added an admin feature to import upcoming shows straight into a tour, so setting up a new\nseason is a few clicks instead of hand-entering a schedule. This came after splitting the\nadmin routes out of one giant file into modular pieces — the console had grown enough that\nthe routing needed to be maintainable, not just working. The refactor keeps the cost of\nadding the next feature down."
+        },
+        {
+          "date": "2025-12-14",
+          "title": "Tour Wrapped recap page and personalized email links",
+          "tags": [
+            "wrapped",
+            "email",
+            "stats"
+          ],
+          "media": [],
+          "body": "Built a Tour Wrapped stats page: a per-player recap of the tour just played — your best\ncalls, your points, your rarities. Wired a personalized wrappedLink variable into the email\nsystem so every player gets a direct link to their own recap, keyed to the right tour. It\ntook a few follow-up fixes to make the callout point at the correct completed tour, and\nWrapped turned out to be the thing people actually shared."
+        },
+        {
+          "date": "2025-09-22",
+          "title": "Final summer-tour data pull, season closeout",
+          "tags": [
+            "tours",
+            "data",
+            "season"
+          ],
+          "media": [],
+          "body": "Ran the last data pull for summer tour and let the season settle. The cycle for running\nthis: a burst of live scoring while shows are happening, then a quiet stretch to reconcile\ndata, fix what scored wrong, and get ready for the next run. First full tour season in the\nbooks."
+        },
+        {
+          "date": "2025-07-28",
+          "title": "Scores dashboard and a stats sidebar",
+          "tags": [
+            "research",
+            "stats",
+            "ui"
+          ],
+          "media": [],
+          "body": "Shipped a scores dashboard and a stats sidebar alongside the research tools: a song\nexplorer with a selector, tour-plays columns, and the numbers players use to reason about\nwhat the band will open with. The research side is where the hardcore players build\npredictions off gap data and tour history rather than guesses."
+        },
+        {
+          "date": "2025-07-20",
+          "title": "Live mode: scoring as the show happens",
+          "tags": [
+            "live",
+            "scoring",
+            "admin"
+          ],
+          "media": [],
+          "body": "Summer tour meant live mode: a live view that scores predictions in near real time as a\nsetlist comes in, with an admin side to drive it song by song. Added a compact setlist\ndisplay for the live page and pushed bustout callouts right into it, so the leaderboard\nreshuffles as each song is entered while the band is still playing."
+        },
+        {
+          "date": "2025-06-22",
+          "title": "Tour manager and per-tour song counts",
+          "tags": [
+            "tours",
+            "data"
+          ],
+          "media": [],
+          "body": "Built a tour manager and started tracking per-tour song counts — how many times each song\nhas been played on the current run. Phish is organized by tour, so almost every view worth\nhaving — leaderboards, research, Wrapped stats — depends on knowing which shows belong to\nwhich tour. Getting that structure right unlocked a lot of the features that came after."
+        },
+        {
+          "date": "2025-06-18",
+          "title": "Email manager 1.0",
+          "tags": [
+            "email",
+            "resend",
+            "admin"
+          ],
+          "media": [],
+          "body": "Stood up the transactional email system on Resend: a composer, refined templates, and a\nlogs viewer to see what actually went out. The old ad-hoc emailers are gone, replaced by\none manager driven from the admin side. A day later I added a rate limiter so a large send\ncan't get the domain flagged."
+        },
+        {
+          "date": "2025-05-20",
+          "title": "Editing setlists by hand",
+          "tags": [
+            "admin",
+            "setlist",
+            "scoring"
+          ],
+          "media": [],
+          "body": "Added an admin interface for editing setlist details directly, because the official data\nisn't always right, or isn't posted yet, and the whole scoring run depends on it. Now a\nmangled setlist can be corrected or an auto-generated one refined before it scores, with\nbetter error handling for when the source data is malformed. The scoring run is only as\ngood as the setlist it's fed."
+        },
+        {
+          "date": "2025-05-13",
+          "title": "Admin console 1.0",
+          "tags": [
+            "admin",
+            "tooling"
+          ],
+          "media": [],
+          "body": "Built the back office: admin pages to manage files, songs, users, and WookBot setlists\nfrom one place. Running a live game means constantly touching data — fixing a song entry,\nchecking an account, curating a generated setlist — and doing that directly against the\ndatabase was getting slow. The console replaced a batch of one-off scripts with actual\nscreens."
+        },
+        {
+          "date": "2025-05-09",
+          "title": "Scoring engine: bustout detection from gap data, bonus breakdown",
+          "tags": [
+            "scoring",
+            "bustout",
+            "bonuses"
+          ],
+          "media": [],
+          "body": "Reworked the scoring engine for fairness. Bustout detection now uses gap data — the stretch\nof shows since a song was last played — so calling a rarity is worth real bonus points, and\nshared bustouts pay out to everyone who called them. Tightened the exact-position accuracy\nscoring, and started surfacing the bonus breakdown on the score page so players can see\nexactly why they earned each point instead of trusting a single total."
+        },
+        {
+          "date": "2025-05-08",
+          "title": "WookBot: OpenAI setlist generator goes public",
+          "tags": [
+            "wookbot",
+            "ai",
+            "openai"
+          ],
+          "media": [],
+          "body": "WookBot went public: an OpenAI-backed generator that drafts a plausible setlist for an\nupcoming show from historical play patterns. Gave it a home-page module showing the show\ndate and venue, a selector to browse past generations, and skeleton loading states during\ngeneration. It only pulls from published show data, so the suggestions stay grounded in\nsongs the band actually plays."
+        },
+        {
+          "date": "2025-05-05",
+          "title": "Leaderboards: global, tour, single-show",
+          "tags": [
+            "leaderboard",
+            "competition"
+          ],
+          "media": [],
+          "body": "Added leaderboards with three scopes: a global board across all players, a per-tour board\nscoped to the current run, and a single-show board for one show's predictions. Each board\nranks the top predictors for its scope, and each board's view buttons link straight to the\nrelevant scorecards, so you can go from a ranked name to that player's scored prediction in\none click. This is the piece that turns scored predictions into an ongoing competition\nbetween shows."
+        },
+        {
+          "date": "2025-04-18",
+          "title": "Random-fill button, setlist-save fixes, spam-folder reminder",
+          "tags": [
+            "ux",
+            "email",
+            "accounts"
+          ],
+          "media": [],
+          "body": "Closing out the first playable week. Added a random-fill button that populates a setlist\nwith random songs, for people who want to jump in without building one by hand. Fixed a\nbatch of setlist-saving bugs that had been dropping songs. Added a check-your-spam-folder\nreminder for the account verification email, since sign-ups were coming in and the\nverification mail was landing in spam folders."
+        },
+        {
+          "date": "2025-04-14",
+          "title": "Scorecards and the first scored show",
+          "tags": [
+            "scoring",
+            "scorecard"
+          ],
+          "media": [],
+          "body": "Built the scorecard: a two-column set 1 / set 2 layout with a breakdown showing which\nsongs contributed to your points. Wired in real 2024 show data to score predictions\nagainst, so a finished prediction could be scored for the first time. The score button\nstays hidden until a show is officially scored, so players don't see a wall of zeros\nbefore the band has played."
+        },
+        {
+          "date": "2025-04-12",
+          "title": "First commit: build-a-setlist UI, song database, prediction saving",
+          "tags": [
+            "launch",
+            "ui",
+            "setlist"
+          ],
+          "media": [
+            {
+              "0": "m",
+              "1": "e",
+              "2": "d",
+              "3": "i",
+              "4": "a",
+              "5": "/",
+              "6": "h",
+              "7": "e",
+              "8": "r",
+              "9": "o",
+              "10": ".",
+              "11": "j",
+              "12": "p",
+              "13": "g",
+              "src": "/buildlog/phantasyfish/undefined"
+            }
+          ],
+          "body": "First commit. The build-a-setlist UI is on screen: drop songs into slots, reorder them,\nand add sets as you go. Seeded the song database by pulling from several phish.net\nendpoints, then cached the result to a local JSON file so the game doesn't hit the API on\nevery load. Prediction saving landed the same day, so the core loop — build a setlist,\nsave it as a prediction — was working end to end from day one."
+        }
+      ]
+    },
+    {
+      "slug": "stackled",
+      "title": "StackLED",
+      "status": "shipped",
+      "kind": "hardware",
+      "summary": "A handheld LED stacker arcade game.",
+      "stack": [
+        "ESP32-C3",
+        "MAX7219",
+        "PlatformIO"
+      ],
+      "tags": [
+        "game",
+        "led",
+        "firmware"
+      ],
+      "rung": "solder",
+      "facts": {
+        "matrix": "8x32",
+        "builtAt": "makedown"
+      },
+      "repo": "kpow/stackled",
+      "hero": "/buildlog/stackled/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/stackled"
+        }
+      ],
+      "started": "2026-07-04",
+      "body": "It's the carnival Stacker — the skill-tester where you pile a sliding light bar\nup a tower. A lit bar slides left and right across a tall 8×32 field; you mash\nthe button to drop it, and only the pixels that overlap the row below survive.\nOverhang gets trimmed, so the bar gets narrower every time you're sloppy. Reach\nthe top to clear the level; each one runs faster and thinner than the last. Five\nhand-authored levels, then it goes procedurally endless. Runs on an ESP32-C3\nSuper Mini driving four MAX7219 panels, with an illuminated button and a speaker\nthat can scream.\n\nThe twist I'm proudest of: the bar **is** your health meter. There's no separate\nlives counter — the same bar you're stacking erodes on wall-bounces and misses,\nand when its width hits zero, you're done. Under the hood the whole stack is pure\nbitmask math: each row is a `uint8_t`, a new row AND'd with the one below is the\nsurvivors, popcount is your width, count-trailing-zeros is the left edge. No\narrays of pixels, just bit twiddling and a non-blocking `millis()` state machine.\nI built it at **makedown**, a crew maker-weekend where everyone hauls in their\nown project — I brought a bag of panels and a green 3D-printed wand, and left\nwith a game.",
+      "stats": {
+        "entries": 6,
+        "photos": 2,
+        "daysActive": 32,
+        "firstEntry": "2026-07-04",
+        "lastEntry": "2026-08-04"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-08-04",
+          "src": "/buildlog/stackled/media/hero.jpg",
+          "caption": "The green wand, tower lit mid-game on the tall 8×32 field"
+        },
+        {
+          "date": "2026-08-04",
+          "src": "/buildlog/stackled/media/lit.jpg",
+          "caption": "The lit field — the classic pixel staircase climbing the tower"
+        }
+      ],
+      "lastEntry": "2026-08-04",
+      "entries": [
+        {
+          "date": "2026-08-04",
+          "title": "Shipped — battery-powered wand, repo cleanup",
+          "tags": [
+            "shipped",
+            "photos"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/stackled/media/hero.jpg",
+              "caption": "The green wand, tower lit mid-game on the tall 8×32 field"
+            },
+            {
+              "src": "/buildlog/stackled/media/lit.jpg",
+              "caption": "The lit field — the classic pixel staircase climbing the tower"
+            }
+          ],
+          "body": "Called it done. Cleaned up the repo: stopped tracking `.DS_Store` and added it to `.gitignore`. It runs off a battery inside the green 3D-printed wand, with no laptop tether. The photos show it mid-game: a tall green 8×32 field with the classic pixel staircase climbing the tower. Handheld and self-contained."
+        },
+        {
+          "date": "2026-07-12",
+          "title": "Attract mode and auto-detecting NO/NC button wiring",
+          "tags": [
+            "ux",
+            "attract-mode",
+            "firmware"
+          ],
+          "media": [],
+          "body": "Added an attract mode: on power-up it plays a self-animating tower demo behind the start screen. At boot the firmware reads the button and treats whatever state it sees as \"not pressed,\" so it auto-detects NO *or* NC wiring and I don't have to track which switch was soldered in. The attract loop replays the tower animation after two title scrolls, and the game-over screen falls back to attract mode after two scroll passes, so it always returns to the start state."
+        },
+        {
+          "date": "2026-07-11",
+          "title": "Replaced lives with an eroding health bar",
+          "tags": [
+            "gameplay",
+            "mechanic",
+            "levels"
+          ],
+          "media": [],
+          "body": "Removed the lives counter and replaced it with the bar-erosion mechanic the game now hangs on: wall-bounces and misses eat the bar's width directly, and width zero is game over. Moved the life pips to a 2px strip above the current row — they were getting buried inside tall stacks. Disabled hold-to-quit and logged button presses to chase input bugs. Then authored the difficulty ramp. The first cut gave thick pieces on the early levels: 3-row blocks on L1, 2-row on L2, single rows from L3. I then softened the opener further to a 4-row-block intro on L1, with thickness stepping down each level to single rows by L4."
+        },
+        {
+          "date": "2026-07-11",
+          "title": "Full 8×32 bring-up — lives, intensity, grace rows",
+          "tags": [
+            "bring-up",
+            "gameplay",
+            "tuning"
+          ],
+          "media": [],
+          "body": "Full bring-up on the 8×32: flipped both display axes so the tower grows upward, fixed the NC button contact, and ran a speaker siren test. Added a lives system — four complete misses per game, with a pip flashed on each miss. Bumped the matrix intensity from 6 to 10 so it reads in a lit room. Handed out the first three rows as free \"grace rows\" so a fresh player doesn't lose on the first move. Started swallowing stale button presses across state transitions: a leftover press on the game-over screen was skipping the next screen."
+        },
+        {
+          "date": "2026-07-04",
+          "title": "Swapped to an FC16 4-in-1 — 8×32 playfield",
+          "tags": [
+            "hardware",
+            "bring-up",
+            "display"
+          ],
+          "media": [],
+          "body": "Swapped in an FC16 4-in-1 module and reconfigured for the real playfield: four MAX7219 8×8 matrices chained into an 8-wide, 32-tall field. Wiring a fresh chain is fiddly, so I kept a checkerboard retry loop in the bring-up for hot-plugging the matrix on the bench, then restored the standard bring-up loop once the solder held. Also moved the button LED off GPIO10 to GPIO1 and updated the pin tables and wiring diagram to match as-built."
+        },
+        {
+          "date": "2026-07-04",
+          "title": "Milestone 1 — full game firmware in one session",
+          "tags": [
+            "milestone",
+            "firmware",
+            "engine"
+          ],
+          "media": [],
+          "body": "Scaffolded the project in PlatformIO, ran a bring-up test build, then wrote the full game firmware: engine, level progression, and scoring. The core is a non-blocking `millis()` state machine running pure bitmask stack logic. Each row is a `uint8_t`. To land a piece, AND a candidate row with the row below to keep only the overlapping pixels; popcount gives the resulting width, count-trailing-zeros gives the left edge. No pixel arrays — the whole field is bits. Renamed the project to STACKLED and removed a duplicate copy of the build guide. Wrote the build guide out in full, including 5-band resistor bodies drawn with the correct color codes so the BOM reads directly off the page. High score is stored in NVS, so it survives a power cycle."
+        }
+      ]
+    },
+    {
+      "slug": "cyberdeck",
+      "title": "The Cyberdeck (noode-exp)",
+      "status": "active",
+      "kind": "hardware",
+      "summary": "A portable Raspberry Pi workstation with a custom ESP32 electronics bench.",
+      "stack": [
+        "Raspberry Pi 5",
+        "ESP32-S3",
+        "ST7789",
+        "WS2812",
+        "HLK-LD2412",
+        "PlatformIO"
+      ],
+      "tags": [
+        "cyberdeck",
+        "pi",
+        "bench"
+      ],
+      "rung": "design",
+      "facts": {
+        "modes": "11"
+      },
+      "repo": "kpow/noodle-exp",
+      "hero": "/buildlog/cyberdeck/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/noodle-exp"
+        }
+      ],
+      "started": "2026-06-28",
+      "body": "The Cyberdeck is a portable computer I built to be my bench, not just sit on it. At\nits core is an 8 GB **Raspberry Pi 5** with a **7\" touchscreen**, a **Mii Bluetooth\nkeyboard**, and an **M5Stack Stick / Joy-C** standing in as the mouse — all folded\ninto a custom-designed case with a matching box for the electronics side. There's no\nPi code here; the deck is a computer I assembled, and the repo name (`noodle-exp`)\nbelongs to the *other* half of the rig.\n\nThat other half is **noode-exp**, a standalone ESP32-S3 gadget that lives on the deck\nas its electronics workbench. It's a Lonely Binary **ESP32-S3 N16R8** driving a 2\"\n**ST7789**, an EC11 encoder + KY-023 joystick, a **4×4 WS2812 matrix**, a pair of LED\nfilament \"noodles\" (the name), and an **HLK-LD2412 mmWave presence radar** — all under\n~2500 lines of monolithic C++ with **11 modes** (Steer Cube, Cube Swarm, Warp Tunnel,\nBox Physics, Chladni, Kaleido, Filaments, LED Matrix, Color Pick, Room Radar, Presence\nLog). It's dual-core with a PSRAM framebuffer and no connectivity at all — a genuinely\nstandalone appliance. The v1 case geometry came out broken, so v2 got a redesigned\nkeyboard tray, which is the build hero.\n\n*(A fuller, git-derived history is pending — this devlog is reconstructed from the\nphotos and technical notes because the repo export 404'd on a name typo.)*",
+      "stats": {
+        "entries": 6,
+        "photos": 4,
+        "daysActive": 8,
+        "firstEntry": "2026-06-28",
+        "lastEntry": "2026-07-05"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-06-29",
+          "src": "/buildlog/cyberdeck/media/v1.jpg",
+          "caption": "The v1 rig: Pi tablet alongside the noode-exp bench"
+        },
+        {
+          "date": "2026-06-30",
+          "src": "/buildlog/cyberdeck/media/detail.jpg",
+          "caption": "Folded case and the skull-branded bench box"
+        },
+        {
+          "date": "2026-07-01",
+          "src": "/buildlog/cyberdeck/media/gadget.jpg",
+          "caption": "noode-exp on the ST7789 running a Chladni figure"
+        },
+        {
+          "date": "2026-07-04",
+          "src": "/buildlog/cyberdeck/media/hero.jpg",
+          "caption": "The v2 rig with the redesigned keyboard tray"
+        }
+      ],
+      "lastEntry": "2026-07-05",
+      "entries": [
+        {
+          "date": "2026-07-05",
+          "title": "mmWave presence work feeds a planned vizBot add-on",
+          "tags": [
+            "mmwave",
+            "radar",
+            "vizbot",
+            "roadmap"
+          ],
+          "media": [],
+          "body": "The Room Radar and Presence Log modes are the test bed for the HLK-LD2412 mmWave sensor. The plan is to spin presence detection out into a vizBot add-on so vizBot can tell when someone is nearby. noode-exp is where the sensor gets proven before it moves onto the robot."
+        },
+        {
+          "date": "2026-07-04",
+          "title": "v2 case with the redesigned keyboard tray",
+          "tags": [
+            "case",
+            "v2",
+            "hero"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/cyberdeck/media/hero.jpg",
+              "caption": "The v2 rig with the redesigned keyboard tray"
+            }
+          ],
+          "body": "Reworked the broken v1 geometry into a v2 case with a proper keyboard tray; it now sits and folds correctly. The Mii keyboard drops into the tray, the 7\" screen mounts above it, and the bench box docks alongside. This is the hero configuration of the rig."
+        },
+        {
+          "date": "2026-07-01",
+          "title": "noode-exp bench running — 11 modes and a Chladni pattern",
+          "tags": [
+            "esp32",
+            "firmware",
+            "chladni"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/cyberdeck/media/gadget.jpg",
+              "caption": "noode-exp on the ST7789 running a Chladni figure"
+            }
+          ],
+          "body": "The ESP32-S3 bench is alive with all 11 modes cycling off the encoder — Steer Cube, Warp Tunnel, Box Physics, Filaments, Room Radar, and the rest. Here it's rendering Chladni, one of 42 standing-wave figures, on the 2\" ST7789. Dual-core with a PSRAM framebuffer, matrix FX ported from noodlez-v2, and no connectivity at all — a fully standalone appliance."
+        },
+        {
+          "date": "2026-06-30",
+          "title": "Case color scheme — black with neon-yellow, skull on the bench box",
+          "tags": [
+            "case",
+            "design",
+            "branding"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/cyberdeck/media/detail.jpg",
+              "caption": "Folded case and the skull-branded bench box"
+            }
+          ],
+          "body": "Set the color scheme: black with neon-yellow accents across both enclosures, plus a skull graphic on the electronics-bench box to match the branding on my other builds. Shot the folded case next to the bench box so the two matching enclosures read as one rig."
+        },
+        {
+          "date": "2026-06-29",
+          "title": "v1 rig assembled — Pi tablet plus the ESP32 bench",
+          "tags": [
+            "pi",
+            "case",
+            "v1"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/cyberdeck/media/v1.jpg",
+              "caption": "The v1 rig: Pi tablet alongside the noode-exp bench"
+            }
+          ],
+          "body": "Got the v1 rig standing up: the Pi tablet next to the noode-exp electronics bench, a separate case for each. The case geometry came out wrong — the parts don't fit cleanly and it doesn't fold flat the way it should. Logging the problem so v2 can redesign the tray and fix the fold."
+        },
+        {
+          "date": "2026-06-28",
+          "title": "First Pi 5 build — 7\\\" touch, Bluetooth keyboard, Joy-C mouse",
+          "tags": [
+            "pi",
+            "hardware",
+            "start"
+          ],
+          "media": [],
+          "body": "Started assembling the deck around an 8 GB Raspberry Pi 5 with a 7\" touchscreen as the main display. Text input comes from a Mii Bluetooth keyboard; pointer input from an M5Stack Stick running a Joy-C, which stands in as the mouse. Together they make the deck a self-contained portable computer with no external host. No Pi software yet — this half of the rig is hardware assembly only."
+        }
+      ]
+    }
+  ],
+  "recent": [
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-09-16",
+      "title": "m5bigfun on CoreS3, and a chooser",
+      "tags": [
+        "m5bigfun",
+        "cores3",
+        "leds"
+      ],
+      "media": [],
+      "body": "Ported the console to a new m5bigfun target — CoreS3 with the Faces Bottom3 and a\nGamepad3 — and lit its LED strips: effects are ranked by tier, every game gets a\nvoice on the strips, and Backgammon shows whose turn it is. Topped it with a\ntop-level chooser so one device can hold two firmwares and pick between them at boot."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-09-07",
+      "title": "Landscape TFT + chrome refresh; the Patternflow bank",
+      "tags": [
+        "ui",
+        "patterns"
+      ],
+      "media": [],
+      "body": "Recomposed the entire UI for a landscape 320×240 ST7789 mount — one-row header, framed menus, Live Control and Chladni re-laid-out. Landed the Patternflow bank too: hand-ported JS shader-style patterns running on all three boards, with the red Qwiic button as a palette dice."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-09-05",
+      "title": "Third-batch board enrolled",
+      "tags": [
+        "hardware",
+        "tinyfun"
+      ],
+      "media": [],
+      "body": "Enrolled a third-batch tinyfun board (MAC 28:84:85:67:b1:44) as panel profile B.\nEach batch of panels drifts a little, so a new profile beats fighting the same\ntuning every time."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-08-30",
+      "title": "StackChan servo hardening + fleet deployment",
+      "tags": [
+        "stackchan",
+        "servos",
+        "fleet"
+      ],
+      "media": [],
+      "body": "Chased the StackChan head stalls to ground: calibrated the pitch zero, moved to the M5 StackChan-BSP driver, armed the servos properly with position mode and torque, and replaced a flaky servo watchdog with a blind 5-minute rail cycle plus a graceful glide back to pose after reinit instead of snapping home. Four vizBots are now running in other locations, and vizCloud is live for adding content."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-08-29",
+      "title": "21 effects, a palette system, and 'Noodle 2K'",
+      "tags": [
+        "effects",
+        "palettes",
+        "milestone"
+      ],
+      "media": [],
+      "body": "Big content wave: a trimmed 2D particle engine and the WLED particle effects (catalog to 21), a real 16-band GEQ spectrum analyzer, and a global palette system with host-parity tests and a dial palette picker. Rebranded the whole thing \"Noodle 2K\" with a new layered power-on intro. Also brought up a hub75 MatrixPortal satellite doing native 64×32."
+    },
+    {
+      "build": "radar",
+      "buildTitle": "ESP32 Plane Radar",
+      "date": "2026-08-28",
+      "title": "Empty radar bug: de-chunk the ADS-B body",
+      "tags": [
+        "firmware",
+        "adsb",
+        "bugfix"
+      ],
+      "media": [],
+      "body": "Radar had started coming up empty — grid, sweep, no planes. Turned out the ADS-B endpoint was returning its response with **chunked transfer encoding**, and my stream parser was choking on the chunk-size markers instead of the JSON. De-chunked the body before parsing and the traffic came right back. Sneaky one: the fetch succeeded, the heap was fine, it was just quietly feeding garbage to the parser."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-19",
+      "title": "Shake to restart, and a printable case",
+      "tags": [
+        "imu",
+        "engine",
+        "case"
+      ],
+      "media": [],
+      "body": "Wired up a QMI8658C shake HAL — a physical shake restarts the current game — with a\nno-op stub on bigfun since it has no IMU, and made the engine resume games from NVS\nso you pick up where you left off. Also packaged the enclosure as a sliceable 3MF\nproject so the shell is one print away."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-08-16",
+      "title": "The big rebuild — bare MCU, Chladni, cyberpunk chrome",
+      "tags": [
+        "rebuild",
+        "ui"
+      ],
+      "media": [],
+      "body": "Stripped the rig back to a bare MCU and brought it up clean: retired the icon and (later) 8×12 sats, drove the 16×16 locally, moved SparkFun inputs to their own I2C bus, and replaced the wireframe screensaver with a live Chladni-plate visualizer. Also redid the whole UI on an anti-aliased \"chrome\" kit and killed the flicker."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-14",
+      "title": "megafun folds in, three boards",
+      "tags": [
+        "monorepo",
+        "tinyfun",
+        "capabilities"
+      ],
+      "media": [],
+      "body": "Folded megafun into the monorepo so all three boards share one core, gated by\ncapability flags instead of forks. Added per-board panel profiles with an on-board\ntuner and enrolled the original tinyfun board as profile M1, gave the launcher an\nattract auto-rotate after idle, and rewrote the README for three boards with a\npre-commit guardrail to keep it honest."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-10",
+      "title": "Backgammon VS PLAYER over ESP-NOW",
+      "tags": [
+        "backgammon",
+        "esp-now",
+        "multiplayer"
+      ],
+      "media": [],
+      "body": "Added a VS PLAYER mode to Backgammon over an ESP-NOW link, built up phase by phase —\nturn transport first, then game-over sync, then the doubling cube — mirroring the\nmegafun implementation. Followed it with a per-device mirror and a resilience layer\nso a dropped packet doesn't desync the board, keeping mega and bigfun at parity."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2026-08-10",
+      "title": "Year one, by the numbers",
+      "tags": [
+        "milestone",
+        "data"
+      ],
+      "media": [],
+      "body": "Did a full data run and totted up the first year: 115 players across 6 tours and 28 venues,\n74 shows scored, 1,155 predictions, 65,054 points earned. Also in the totals: 398 exact\nsong positions nailed, 2,501 songs placed in the right set, 99 bustouts called, and 67\nsetlists generated by WookBot. A whole game, live and played, built and run start to finish\nover the year."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-08",
+      "title": "Galaga trains and SkyGrid forks",
+      "tags": [
+        "bigfun",
+        "galaga",
+        "skygrid"
+      ],
+      "media": [],
+      "body": "Deepened the wide-board games: Galaga got enemy trains and a difficulty ladder,\nSkyGrid got track forks and proper ship motion, and both got a round of UI effects\nthat use the extra screen real estate the wide board offers."
+    },
+    {
+      "build": "radar",
+      "buildTitle": "ESP32 Plane Radar",
+      "date": "2026-08-06",
+      "title": "Map underlay + multi-leg routes",
+      "tags": [
+        "firmware",
+        "webapp",
+        "adsb"
+      ],
+      "media": [],
+      "body": "Added a faint **map underlay** to both scopes — coast, lakes, rivers, roads — drawn dim enough to give a sense of place without fighting the traffic on top. It makes the whole thing legible: you can tell a plane is following a river valley or lined up on a road.\n\nAlso taught the route display to handle **multi-leg trips**: it now shows every stop on the route and highlights the leg the aircraft is currently flying, instead of collapsing everything to origin-and-destination. (Refreshed the README a couple of days earlier while I was in here.)"
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-04",
+      "title": "Galaga on bigfun, README rebranded kFun",
+      "tags": [
+        "bigfun",
+        "galaga",
+        "milestone"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/hero.jpg",
+          "caption": "the finished bigfun"
+        },
+        {
+          "src": "/buildlog/kfun/media/splash.jpg",
+          "caption": "bigfun boot splash screen"
+        }
+      ],
+      "body": "Galaga takes over the Invaders slot on bigfun with auto-fire, so the wide board and\nthe small one now play different games in the same slot. Rebranded the README as\nkFun — tinyfun plus bigfun — pulling the two boards under one project name."
+    },
+    {
+      "build": "stackled",
+      "buildTitle": "StackLED",
+      "date": "2026-08-04",
+      "title": "Shipped — battery-powered wand, repo cleanup",
+      "tags": [
+        "shipped",
+        "photos"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/stackled/media/hero.jpg",
+          "caption": "The green wand, tower lit mid-game on the tall 8×32 field"
+        },
+        {
+          "src": "/buildlog/stackled/media/lit.jpg",
+          "caption": "The lit field — the classic pixel staircase climbing the tower"
+        }
+      ],
+      "body": "Called it done. Cleaned up the repo: stopped tracking `.DS_Store` and added it to `.gitignore`. It runs off a battery inside the green 3D-printed wand, with no laptop tether. The photos show it mid-game: a tall green 8×32 field with the classic pixel staircase climbing the tower. Handheld and self-contained."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-03",
+      "title": "PSRAM enabled, Backgammon Hard AI goes 2-ply expectimax",
+      "tags": [
+        "bigfun",
+        "backgammon",
+        "hardware"
+      ],
+      "media": [],
+      "body": "Enabled the board's 2MB PSRAM on bigfun. Reworked the Backgammon Hard AI to run\n2-ply expectimax, so it evaluates the dice one roll deep rather than grabbing the\nnearest legal move."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-02",
+      "title": "Particle effects across both boards, and real Backgammon match play",
+      "tags": [
+        "juice",
+        "games",
+        "backgammon"
+      ],
+      "media": [],
+      "body": "Added particle and shake effects across both consoles: kill and death pops in\nInvaders, line-clear debris in Tetris, checker slide-and-capture pops in Backgammon,\nglide on Snake, and brick-break and life-loss shakes in Breakout. Also stood up real\nmatch play in bigfun Backgammon — 5-point match, doubling cube, difficulty, NVS save\n— and gave the intro a Slackey wordmark with glow and particles."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-01",
+      "title": "Merged into the kFun monorepo, shared console on the SuperMini",
+      "tags": [
+        "monorepo",
+        "bigfun",
+        "milestone"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/pair.jpg",
+          "caption": "bigfun next to the smaller tinyfun"
+        },
+        {
+          "src": "/buildlog/kfun/media/invaders.jpg",
+          "caption": "Space Invaders running on the TFT"
+        }
+      ],
+      "body": "Restructured everything into the kFun monorepo — a shared common/ with tinyfun/ and\nbigfun/ on top — and got the full app booting the shared console on the SuperMini.\nThen a round of art and effects work on the wide board: landscape backgammon with\ntraditional triangle points, a centred Tetris well with side panels, an Arkanoid\nrebuild, a sprite pipeline off the Kenney CC0 art, launcher attract cards, nebula\nbackgrounds with post-FX, and a themed game-over screen."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-07-29",
+      "title": "Backgammon replaces Asteroids, Canyon renamed to SkyGrid",
+      "tags": [
+        "backgammon",
+        "skygrid",
+        "games"
+      ],
+      "media": [],
+      "body": "Swapped Asteroids out for Backgammon and renamed Canyon to SkyGrid, and added a help\nscreen listing the button controls. Redrew the board, made a piece's second move\nfindable, added bear-off auto and bigger dice. Also cut the Slackey case logo SVGs\nfor the eventual printed shell."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-07-28",
+      "title": "First TinyFun boot on the S3 Mini Pro",
+      "tags": [
+        "tinyfun",
+        "games",
+        "milestone"
+      ],
+      "media": [],
+      "body": "First working console: a five-game handheld on the LOLIN S3 Mini Pro driving a\n128×128 panel. Brought up the boot screen and a custom typeface, and got CANYON — a\n3D anti-gravity racer — running on the panel. Also did an Asteroids pass: added a\n3-shot spread and lightened the opening wave so the first screen isn't a full field\nof rocks."
+    },
+    {
+      "build": "radar",
+      "buildTitle": "ESP32 Plane Radar",
+      "date": "2026-07-19",
+      "title": "The web companion app — touch radar in the browser",
+      "tags": [
+        "firmware",
+        "webapp",
+        "heap",
+        "touch"
+      ],
+      "media": [],
+      "body": "Big day for the browser side. Built an **interactive touch radar web UI** served straight off the device, with per-device themes and — the important part — a **heap fix** so serving the SPA doesn't collide with the live ADS-B poll. The app is gzipped and baked into flash; it hits `/api/flights` for the traffic and lets the browser enrich each plane with route and photo data. Added a page header that shows live context so you know what you're looking at without hunting.\n\nOn the hardware side, **hardened the TTP223 range-touch input** against a flapping line — the capacitive pad was chattering and cycling range on its own, so I debounced it into behaving. Also swept the repo: stopped tracking `.DS_Store` junk and told git to ignore the capsule-radar reference project I'd been reading for ideas."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2026-07-17",
+      "title": "phish.net outage resilience: local mirror, DB fallback, manual scoring",
+      "tags": [
+        "resilience",
+        "scoring",
+        "data"
+      ],
+      "media": [],
+      "body": "Built resilience against the phish.net data source going down mid-show, the worst failure\nmode for a live-scoring game. Added a local phish.net mirror with background sync, a\ndatabase fallback for show endpoints when the API is blocked, and the ability to score\nstraight from a hand-entered live setlist when the network won't cooperate. A bad night on\nsomeone else's server no longer takes the game down with it."
+    },
+    {
+      "build": "stackled",
+      "buildTitle": "StackLED",
+      "date": "2026-07-12",
+      "title": "Attract mode and auto-detecting NO/NC button wiring",
+      "tags": [
+        "ux",
+        "attract-mode",
+        "firmware"
+      ],
+      "media": [],
+      "body": "Added an attract mode: on power-up it plays a self-animating tower demo behind the start screen. At boot the firmware reads the button and treats whatever state it sees as \"not pressed,\" so it auto-detects NO *or* NC wiring and I don't have to track which switch was soldered in. The attract loop replays the tower animation after two title scrolls, and the game-over screen falls back to attract mode after two scroll passes, so it always returns to the start state."
+    },
+    {
+      "build": "stackled",
+      "buildTitle": "StackLED",
+      "date": "2026-07-11",
+      "title": "Replaced lives with an eroding health bar",
+      "tags": [
+        "gameplay",
+        "mechanic",
+        "levels"
+      ],
+      "media": [],
+      "body": "Removed the lives counter and replaced it with the bar-erosion mechanic the game now hangs on: wall-bounces and misses eat the bar's width directly, and width zero is game over. Moved the life pips to a 2px strip above the current row — they were getting buried inside tall stacks. Disabled hold-to-quit and logged button presses to chase input bugs. Then authored the difficulty ramp. The first cut gave thick pieces on the early levels: 3-row blocks on L1, 2-row on L2, single rows from L3. I then softened the opener further to a 4-row-block intro on L1, with thickness stepping down each level to single rows by L4."
+    },
+    {
+      "build": "stackled",
+      "buildTitle": "StackLED",
+      "date": "2026-07-11",
+      "title": "Full 8×32 bring-up — lives, intensity, grace rows",
+      "tags": [
+        "bring-up",
+        "gameplay",
+        "tuning"
+      ],
+      "media": [],
+      "body": "Full bring-up on the 8×32: flipped both display axes so the tower grows upward, fixed the NC button contact, and ran a speaker siren test. Added a lives system — four complete misses per game, with a pip flashed on each miss. Bumped the matrix intensity from 6 to 10 so it reads in a lit room. Handed out the first three rows as free \"grace rows\" so a fresh player doesn't lose on the first move. Started swallowing stale button presses across state transitions: a leftover press on the game-over screen was skipping the next screen."
+    },
+    {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-07-05",
+      "title": "mmWave presence work feeds a planned vizBot add-on",
+      "tags": [
+        "mmwave",
+        "radar",
+        "vizbot",
+        "roadmap"
+      ],
+      "media": [],
+      "body": "The Room Radar and Presence Log modes are the test bed for the HLK-LD2412 mmWave sensor. The plan is to spin presence detection out into a vizBot add-on so vizBot can tell when someone is nearby. noode-exp is where the sensor gets proven before it moves onto the robot."
+    },
+    {
+      "build": "stackled",
+      "buildTitle": "StackLED",
+      "date": "2026-07-04",
+      "title": "Swapped to an FC16 4-in-1 — 8×32 playfield",
+      "tags": [
+        "hardware",
+        "bring-up",
+        "display"
+      ],
+      "media": [],
+      "body": "Swapped in an FC16 4-in-1 module and reconfigured for the real playfield: four MAX7219 8×8 matrices chained into an 8-wide, 32-tall field. Wiring a fresh chain is fiddly, so I kept a checkerboard retry loop in the bring-up for hot-plugging the matrix on the bench, then restored the standard bring-up loop once the solder held. Also moved the button LED off GPIO10 to GPIO1 and updated the pin tables and wiring diagram to match as-built."
+    },
+    {
+      "build": "stackled",
+      "buildTitle": "StackLED",
+      "date": "2026-07-04",
+      "title": "Milestone 1 — full game firmware in one session",
+      "tags": [
+        "milestone",
+        "firmware",
+        "engine"
+      ],
+      "media": [],
+      "body": "Scaffolded the project in PlatformIO, ran a bring-up test build, then wrote the full game firmware: engine, level progression, and scoring. The core is a non-blocking `millis()` state machine running pure bitmask stack logic. Each row is a `uint8_t`. To land a piece, AND a candidate row with the row below to keep only the overlapping pixels; popcount gives the resulting width, count-trailing-zeros gives the left edge. No pixel arrays — the whole field is bits. Renamed the project to STACKLED and removed a duplicate copy of the build guide. Wrote the build guide out in full, including 5-band resistor bodies drawn with the correct color codes so the BOM reads directly off the page. High score is stored in NVS, so it survives a power cycle."
+    },
+    {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-07-04",
+      "title": "v2 case with the redesigned keyboard tray",
+      "tags": [
+        "case",
+        "v2",
+        "hero"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/cyberdeck/media/hero.jpg",
+          "caption": "The v2 rig with the redesigned keyboard tray"
+        }
+      ],
+      "body": "Reworked the broken v1 geometry into a v2 case with a proper keyboard tray; it now sits and folds correctly. The Mii keyboard drops into the tray, the 7\" screen mounts above it, and the bench box docks alongside. This is the hero configuration of the rig."
+    },
+    {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-07-01",
+      "title": "noode-exp bench running — 11 modes and a Chladni pattern",
+      "tags": [
+        "esp32",
+        "firmware",
+        "chladni"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/cyberdeck/media/gadget.jpg",
+          "caption": "noode-exp on the ST7789 running a Chladni figure"
+        }
+      ],
+      "body": "The ESP32-S3 bench is alive with all 11 modes cycling off the encoder — Steer Cube, Warp Tunnel, Box Physics, Filaments, Room Radar, and the rest. Here it's rendering Chladni, one of 42 standing-wave figures, on the 2\" ST7789. Dual-core with a PSRAM framebuffer, matrix FX ported from noodlez-v2, and no connectivity at all — a fully standalone appliance."
+    },
+    {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-06-30",
+      "title": "Case color scheme — black with neon-yellow, skull on the bench box",
+      "tags": [
+        "case",
+        "design",
+        "branding"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/cyberdeck/media/detail.jpg",
+          "caption": "Folded case and the skull-branded bench box"
+        }
+      ],
+      "body": "Set the color scheme: black with neon-yellow accents across both enclosures, plus a skull graphic on the electronics-bench box to match the branding on my other builds. Shot the folded case next to the bench box so the two matching enclosures read as one rig."
+    },
+    {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-06-29",
+      "title": "v1 rig assembled — Pi tablet plus the ESP32 bench",
+      "tags": [
+        "pi",
+        "case",
+        "v1"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/cyberdeck/media/v1.jpg",
+          "caption": "The v1 rig: Pi tablet alongside the noode-exp bench"
+        }
+      ],
+      "body": "Got the v1 rig standing up: the Pi tablet next to the noode-exp electronics bench, a separate case for each. The case geometry came out wrong — the parts don't fit cleanly and it doesn't fold flat the way it should. Logging the problem so v2 can redesign the tray and fix the fold."
+    },
+    {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-06-28",
+      "title": "First Pi 5 build — 7\\\" touch, Bluetooth keyboard, Joy-C mouse",
+      "tags": [
+        "pi",
+        "hardware",
+        "start"
+      ],
+      "media": [],
+      "body": "Started assembling the deck around an 8 GB Raspberry Pi 5 with a 7\" touchscreen as the main display. Text input comes from a Mii Bluetooth keyboard; pointer input from an M5Stack Stick running a Joy-C, which stands in as the mouse. Together they make the deck a self-contained portable computer with no external host. No Pi software yet — this half of the rig is hardware assembly only."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-06-26",
+      "title": "vizMini — the face on an ESP32-C3 and an OLED",
+      "tags": [
+        "vizmini",
+        "portability"
+      ],
+      "media": [],
+      "body": "Spun off vizMini: a standalone, pared-down vizbot for an ESP32-C3 SuperMini driving a 1-bit 128×64 OLED — the same face engine on the cheapest hardware it would run on. Added an onboard NeoPixel rainbow glow, swapped the capacitive pad for a debounced pushbutton, dropped the sleep state so it stays awake, and added web OTA updates."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-06-24",
+      "title": "Neon-green build photos + cold-boot servo fix",
+      "tags": [
+        "stackchan",
+        "web",
+        "hardware-lesson"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/hero.jpg",
+          "caption": "The neon-green vizBot with its OLED face"
+        },
+        {
+          "src": "/buildlog/vizbot/media/face-1.jpg",
+          "caption": "One of the 25 procedurally-drawn expressions"
+        },
+        {
+          "src": "/buildlog/vizbot/media/face-2.jpg",
+          "caption": "Another animated face"
+        }
+      ],
+      "body": "The bot in the flesh — neon-green shell, OLED face, StackChan base underneath. Fixed the StackChan servos refusing to answer through a cold-boot start-up by retrying the servo ping until they woke. Kept web control responsive by decoupling it from the cloud sync, and fixed a registration truncation bug that was cutting device names short."
+    },
+    {
+      "build": "radar",
+      "buildTitle": "ESP32 Plane Radar",
+      "date": "2026-06-15",
+      "title": "Sweep goes under the grid",
+      "tags": [
+        "firmware",
+        "display"
+      ],
+      "media": [],
+      "body": "Small layering fix that makes a big visual difference: render the radar sweep *beneath* the grid instead of over it. Now the sweep glow reads as light passing under the graticule, and the grid lines and plane markers stay crisp on top. Draw order is half the battle with these sprite composites."
+    },
+    {
+      "build": "radar",
+      "buildTitle": "ESP32 Plane Radar",
+      "date": "2026-06-14",
+      "title": "Onboard RGB status light + a scanning overlay",
+      "tags": [
+        "firmware",
+        "ux"
+      ],
+      "media": [],
+      "body": "Put the C3's onboard RGB LED to work as a status light with a little animation, and added a scanning overlay on top of the scope so it reads more like radar and less like a static plot. Also dropped the 100 km range option — at that zoom the projection distortion gets silly and I never actually use it. The useful ranges are the close ones."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-06-13",
+      "title": "Portability pass + matrix sat moves to an S3",
+      "tags": [
+        "firmware",
+        "portability"
+      ],
+      "media": [],
+      "body": "Made the whole project portable to a new machine — pinned the pioarduino platform by URL across every board so builds are reproducible. Ported the 12×8 matrix satellite to a dual-core ESP32-S3 SuperMini for a better radio, and added a baked Pac-Chase animation source for the 16×16."
+    },
+    {
+      "build": "radar",
+      "buildTitle": "ESP32 Plane Radar",
+      "date": "2026-06-13",
+      "title": "Forked a plane-radar project, then rebuilt it heap-first",
+      "tags": [
+        "firmware",
+        "adsb",
+        "display",
+        "heap"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/radar/media/wired.jpg",
+          "caption": "Round GC9A01 wired up on the bench"
+        },
+        {
+          "src": "/buildlog/radar/media/scope.jpg",
+          "caption": "Close on the radar scope — sweep and callsigns"
+        },
+        {
+          "src": "/buildlog/radar/media/housing.jpg",
+          "caption": "Display fitted into the printed slatted housing"
+        },
+        {
+          "src": "/buildlog/radar/media/hero.jpg",
+          "caption": "The finished retro-cube radar, green sweep + traffic"
+        }
+      ],
+      "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3, then more or less gutted it. The stock build locked up periodically — it was firing a burst of ADS-B requests and buffering whole response bodies. Fixed that with a single request on a backoff and a **stream-parse** so I only ever pull the fields I need. That alone stopped the lockups.\n\nFrom there it was a founding rebuild in one long session: a **dual-core split** with the network fetch on its own task so rendering never stalls, and **smooth plane interpolation** so targets glide between the 3-second polls instead of teleporting. Added an **ESP32-S3 Super Mini target** for the better radio, plus WiFi retry hardening so a flaky connect recovers instead of hanging. Then the bells and whistles: **16-bit color at 80 MHz SPI** on the S3, and the **radar sweep with a comet trail paced at 30 fps**. By the end it was a live scope — round LCD, green grid, real callsigns — sitting in the printed slatted cube on the desk."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-05-27",
+      "title": "Disco-ball satellite — and a nasty ground-noise lesson",
+      "tags": [
+        "satellites",
+        "disco",
+        "hardware-lesson"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/disco-skull.jpg",
+          "caption": "Printed skull over the spinning disco ball"
+        }
+      ],
+      "body": "Added a motorized disco ball as its own satellite (stepper + spot LED + OLED) with a dedicated LiveTarget. First version ran the stepper off main power and it made the ground filthy — the noise bled into the rest of the Noodle. Its own supply fixed it. Classic motor-on-shared-ground trap."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-05-24",
+      "title": "Audio-reactive ambient effects + kaleidoscope pass",
+      "tags": [
+        "audio",
+        "effects"
+      ],
+      "media": [],
+      "body": "Made all 16 ambient effects audio-reactive — first the ambient set and a base-LED audio mode, then mappings for the remaining 12, then a punch-up on Plasma/Galaxy/Stripes/Puzzle with a base-LED audio overlay. Added a kaleidoscope post-processing pass on top of the ambient effects and a drama slider to dial the intensity."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-05-22",
+      "title": "vizBot 3.0 — StackChan body target",
+      "tags": [
+        "stackchan",
+        "servos",
+        "milestone"
+      ],
+      "media": [],
+      "body": "vizBot 3.0 put the face on a StackChan body. Built up in phases: a minimum-viable StackChan build target, StackChan hardware driver bring-up, web endpoints with pitch safety clamping, then servo expressivity, touch reactions, idle sweeps, and a chill mode. Replaced the old ambient effects with 16 patterns ported from noodle-v2. Had to pin M5GFX@0.2.19 — 0.2.21 gave the Core S3 a black screen."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-05-16",
+      "title": "ESP-NOW only, plus a screen-capture path",
+      "tags": [
+        "esp-now",
+        "streaming"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/lit-desk.jpg",
+          "caption": "Lit desk with the pixel matrix running"
+        }
+      ],
+      "body": "Dropped WiFi association entirely — the Console runs pure ESP-NOW now. Started the screen-share path (browser → ingest → matrix) and a LittleFS clip store, so I can push real captured pixels to the 16×16, not just generated effects."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-05-09",
+      "title": "Dial remote, sprite overlays, playlists",
+      "tags": [
+        "dial",
+        "ui"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/hex-orb.jpg",
+          "caption": "Hex panels and RGB orb on the bench"
+        }
+      ],
+      "body": "Added the dial sat as a wireless remote with a live preview canvas, a composite overlay source (16×16 pattern + centered 8×8 icon), Qwiic forward/back buttons for the pattern stack, and curated playlists. Also cut the dead DDP path entirely."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-05-05",
+      "title": "The fleet takes shape — bar, 8×8, 16×16 satellites",
+      "tags": [
+        "esp-now",
+        "satellites"
+      ],
+      "media": [],
+      "body": "Built out the pixel satellites — a 1×30 bar, an 8×8 icon panel, a 16×16 matrix — each its own board rendering locally off a shared wire format (v5). The GPIO wall is officially gone; I scale by adding boards now."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-04-29",
+      "title": "Audio satellite — first ESP-NOW peer, beat detection",
+      "tags": [
+        "esp-now",
+        "audio",
+        "satellites"
+      ],
+      "media": [],
+      "body": "First satellite: a separate board with a mic running spectral-flux, bass-leaning beat detection, broadcasting audio features over peered ESP-NOW so every effect can react in lockstep. This is where it stopped being one board."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-04-19",
+      "title": "Three encoders, per-target ownership, Source Map",
+      "tags": [
+        "controls",
+        "ui"
+      ],
+      "media": [],
+      "body": "Wired up three NeoPixel rotary encoders with per-target slot ownership (highest I2C address = slot 0), a Source Map for per-surface assignment, and retired Pixelblaze in favor of the native engine. The control surface is starting to feel like a real instrument panel."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-04-15",
+      "title": "Descriptor-table effect engine + the FeatherWing",
+      "tags": [
+        "led",
+        "effects"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/hero.jpg",
+          "caption": "The full instrument lit"
+        }
+      ],
+      "body": "Stood up the real effects engine — a descriptor table, 10 effects to start — plus a 4×8 NeoPixel FeatherWing mirroring the matrix and a TPS61169 gamma-corrected filament driver. The whole surface is lit and animating together now."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-04-12",
+      "title": "Ran out of pins — going distributed",
+      "tags": [
+        "milestone",
+        "esp-now"
+      ],
+      "media": [],
+      "body": "Added an external 8×8 and hit the GPIO wall. That's the decision point: every LED surface becomes its own ESP-NOW satellite, so the system scales by adding boards, not pins. Everything after this is that idea playing out."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-04-11",
+      "title": "Filaments breathing, fiber optics, live Pixelblaze",
+      "tags": [
+        "led",
+        "filaments"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/fiber.jpg",
+          "caption": "Driver board lighting fiber-optic strands"
+        }
+      ],
+      "body": "PCA9685 LED filaments on a sine-breath offset, a Pixelblaze websocket path for browsing and streaming patterns live, and the patterns/ scaffolding. First time the thing looked less like a prototype and more like an instrument."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-04-06",
+      "title": "Dual-core FreeRTOS — network off the render path",
+      "tags": [
+        "firmware",
+        "freertos"
+      ],
+      "media": [],
+      "body": "Decomposed the firmware into four FreeRTOS tasks across both cores, moving the network onto Core 0 so the radio and the LED render stop fighting each other. This is the backbone everything else hangs off."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-04-05",
+      "title": "Noodle 2.0 — core up and running in a day",
+      "tags": [
+        "milestone",
+        "bring-up"
+      ],
+      "media": [],
+      "body": "Rebuilt from the breadboard onto a FeatherS3. In one sitting: display + encoder + buttons working, a sensor dashboard (distance, light, NeoPixel), WLED control, and a direct 4×12 matrix with an 8×8 icon slideshow. The solid STEMMA-QT prototyping paid off immediately."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-04-01",
+      "title": "PlatformIO migration + a SAM2695 MIDI synth",
+      "tags": [
+        "platformio",
+        "midi"
+      ],
+      "media": [],
+      "body": "Moved vizbot and vizpow off the Arduino IDE onto PlatformIO for reproducible builds and versioned firmware binaries, with bins published to a top-level builds/ directory. Integrated a SAM2695 MIDI synthesizer across several phases, including cloud MIDI sequence caching and sync so the bot can pull tunes down. It plays MIDI now in addition to speech."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2026-03-29",
+      "title": "Import upcoming shows into a tour, modular admin routes",
+      "tags": [
+        "admin",
+        "tours",
+        "refactor"
+      ],
+      "media": [],
+      "body": "Added an admin feature to import upcoming shows straight into a tour, so setting up a new\nseason is a few clicks instead of hand-entering a schedule. This came after splitting the\nadmin routes out of one giant file into modular pieces — the console had grown enough that\nthe routing needed to be maintainable, not just working. The refactor keeps the cost of\nadding the next feature down."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "NoodleLab v2",
+      "date": "2026-03-25",
+      "title": "Noodle 1 — the breadboard prototype that didn't scale",
+      "tags": [
+        "prototype",
+        "breadboard"
+      ],
+      "media": [],
+      "body": "First pass at the idea: one controller driving a series of LED grids and\nfilaments. Built it on a breadboard with a rat's nest of wires. It worked, barely,\nbut it was obvious this would never scale — every new surface meant more jumpers\nand more flakiness. Tore it down and went looking for a more solid way to\nprototype (landed on Adafruit STEMMA QT modules)."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-03-05",
+      "title": "vizCloud, multi-bot orchestration, and an ESP-NOW mesh",
+      "tags": [
+        "cloud",
+        "esp-now",
+        "distributed",
+        "milestone"
+      ],
+      "media": [],
+      "body": "Landed vizCloud integration with a static BSS framebuffer for zero-flicker TLS, an isolated cloud task on Core 0, and a unified WiFi task. Built Stage 4/5 multi-bot orchestration on top of it. Added an ESP-NOW local mesh doing cooperative WLED arbitration — flag bits in a broadcast packet so two bots won't drive the same matrix at once, with one deferring its speech bubble until a peer releases the display."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-03-04",
+      "title": "Senses — mic, proximity, light, and a hologram mode",
+      "tags": [
+        "sensors",
+        "audio"
+      ],
+      "media": [],
+      "body": "Added sensor input: a mic audio-analysis driver, a proximity + ambient-light sensor driver, sound-reactive and proximity-reactive expressions, and auto-brightness. Reworked the face with 6 eye shapes, 6 mouth shapes, and 8 new expressions, and redid the speech bubble with a proportional font that positions off the sensors. Added a hologram mode — a horizontal LCD mirror for a Pepper's-ghost prism."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-03-03",
+      "title": "LovyanGFX migration + a tween system",
+      "tags": [
+        "graphics",
+        "animation"
+      ],
+      "media": [],
+      "body": "Migrated the LCD target from Arduino_GFX to LovyanGFX; chased a blue tint and dim brightness afterward, and unified canvas management along the way. Built a tween system with 8 easing functions and wired it into the main loop, replacing the hand-rolled smoothstep and linear lerps. Expression transitions and look-around animations now run on the easing curves."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-02-21",
+      "title": "M5 Core S3 target + per-device identity",
+      "tags": [
+        "cores3",
+        "portability"
+      ],
+      "media": [],
+      "body": "Added an M5Stack Core S3 target with a multi-screen layout system: a layout.h that derives the UI from screen size, so a new display is a compile flag rather than a rewrite. Gave each bot its own identity — a unique per-device SSID and mDNS hostname derived from the eFuse MAC, plus a user-settable device name for a memorable hostname. Groundwork for running more than one bot at a time."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-02-19",
+      "title": "WLED integration — from scroll effects to raw DDP",
+      "tags": [
+        "wled",
+        "ddp"
+      ],
+      "media": [],
+      "body": "Added forwarding of the bot's speech to a WLED LED matrix. First approach drove WLED's built-in scrolling text effect; fought it for days over scroll speed, trails, jump cuts, and effect reinit on consecutive words. Switched to direct pixel control over DDP, drawing the text myself, which gave immediate clean frames without relying on the effect engine."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-02-15",
+      "title": "Networking hardening and the Core 0 crash",
+      "tags": [
+        "wifi",
+        "freertos",
+        "hardware-lesson"
+      ],
+      "media": [],
+      "body": "Spent several days hardening the networking. Added a sequential boot loader with onscreen diagnostics, an I2C mutex and command queue for race safety, moved the web server to a FreeRTOS task on Core 0, added WiFi provisioning with NVS-stored credentials, and a captive portal with DNS + mDNS auto-redirect. The Core 0 crash took the longest — chased it through watchdog reconfigures and stack-size bumps before the WiFi task stayed up. Closed out with persistent settings and a health heartbeat."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-02-13",
+      "title": "Face engine and the split into vizBot",
+      "tags": [
+        "face",
+        "milestone",
+        "firmware"
+      ],
+      "media": [],
+      "body": "Built the face engine in phases: core face with 12 expressions, then sayings and speech bubbles, then personality presets and a full web UI, then 20 expressions with backgrounds. Everything is drawn from primitives so it scales with the screen. Split the firmware in two — vizpow keeps the effects, vizbot gets the face — and renamed the WiFi AP from VizPow to vizBot."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-02-07",
+      "title": "Hi-res LCD, an ESP8266 port, and the vizPow name",
+      "tags": [
+        "lcd",
+        "portability"
+      ],
+      "media": [],
+      "body": "Brought up a hi-res LCD rendering mode with a touch menu so the effects render on a real screen, not just a matrix. Ported the engine to an ESP8266 LED matrix target to test how portable it was. Renamed the project to vizPow. Same core engine, more display surfaces."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-01-27",
+      "title": "Emoji mode, icon sprites, and shake-to-switch",
+      "tags": [
+        "icons",
+        "gestures"
+      ],
+      "media": [],
+      "body": "Added an emoji display mode with a sprite picker and 32 icon sprites, plus icon tooling to manage them. Wired up a shuffle-bag auto-cycle for effects and palettes so they don't repeat too soon. Added a shake gesture read off the IMU to change modes."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-01-24",
+      "title": "Bring-up — ESP32-S3 LED matrix controller",
+      "tags": [
+        "bring-up",
+        "firmware"
+      ],
+      "media": [],
+      "body": "Started the project as a plain ESP32-S3 LED matrix controller. Sorted the build config, laid out the folder structure, and pushed pixels to the grid. Scope at this point is a board, a matrix, and a controller that renders effects — no face, no cloud, no gestures yet."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-12-14",
+      "title": "Tour Wrapped recap page and personalized email links",
+      "tags": [
+        "wrapped",
+        "email",
+        "stats"
+      ],
+      "media": [],
+      "body": "Built a Tour Wrapped stats page: a per-player recap of the tour just played — your best\ncalls, your points, your rarities. Wired a personalized wrappedLink variable into the email\nsystem so every player gets a direct link to their own recap, keyed to the right tour. It\ntook a few follow-up fixes to make the callout point at the correct completed tour, and\nWrapped turned out to be the thing people actually shared."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-09-22",
+      "title": "Final summer-tour data pull, season closeout",
+      "tags": [
+        "tours",
+        "data",
+        "season"
+      ],
+      "media": [],
+      "body": "Ran the last data pull for summer tour and let the season settle. The cycle for running\nthis: a burst of live scoring while shows are happening, then a quiet stretch to reconcile\ndata, fix what scored wrong, and get ready for the next run. First full tour season in the\nbooks."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-07-28",
+      "title": "Scores dashboard and a stats sidebar",
+      "tags": [
+        "research",
+        "stats",
+        "ui"
+      ],
+      "media": [],
+      "body": "Shipped a scores dashboard and a stats sidebar alongside the research tools: a song\nexplorer with a selector, tour-plays columns, and the numbers players use to reason about\nwhat the band will open with. The research side is where the hardcore players build\npredictions off gap data and tour history rather than guesses."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-07-20",
+      "title": "Live mode: scoring as the show happens",
+      "tags": [
+        "live",
+        "scoring",
+        "admin"
+      ],
+      "media": [],
+      "body": "Summer tour meant live mode: a live view that scores predictions in near real time as a\nsetlist comes in, with an admin side to drive it song by song. Added a compact setlist\ndisplay for the live page and pushed bustout callouts right into it, so the leaderboard\nreshuffles as each song is entered while the band is still playing."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-06-22",
+      "title": "Tour manager and per-tour song counts",
+      "tags": [
+        "tours",
+        "data"
+      ],
+      "media": [],
+      "body": "Built a tour manager and started tracking per-tour song counts — how many times each song\nhas been played on the current run. Phish is organized by tour, so almost every view worth\nhaving — leaderboards, research, Wrapped stats — depends on knowing which shows belong to\nwhich tour. Getting that structure right unlocked a lot of the features that came after."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-06-18",
+      "title": "Email manager 1.0",
+      "tags": [
+        "email",
+        "resend",
+        "admin"
+      ],
+      "media": [],
+      "body": "Stood up the transactional email system on Resend: a composer, refined templates, and a\nlogs viewer to see what actually went out. The old ad-hoc emailers are gone, replaced by\none manager driven from the admin side. A day later I added a rate limiter so a large send\ncan't get the domain flagged."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-05-20",
+      "title": "Editing setlists by hand",
+      "tags": [
+        "admin",
+        "setlist",
+        "scoring"
+      ],
+      "media": [],
+      "body": "Added an admin interface for editing setlist details directly, because the official data\nisn't always right, or isn't posted yet, and the whole scoring run depends on it. Now a\nmangled setlist can be corrected or an auto-generated one refined before it scores, with\nbetter error handling for when the source data is malformed. The scoring run is only as\ngood as the setlist it's fed."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-05-13",
+      "title": "Admin console 1.0",
+      "tags": [
+        "admin",
+        "tooling"
+      ],
+      "media": [],
+      "body": "Built the back office: admin pages to manage files, songs, users, and WookBot setlists\nfrom one place. Running a live game means constantly touching data — fixing a song entry,\nchecking an account, curating a generated setlist — and doing that directly against the\ndatabase was getting slow. The console replaced a batch of one-off scripts with actual\nscreens."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-05-09",
+      "title": "Scoring engine: bustout detection from gap data, bonus breakdown",
+      "tags": [
+        "scoring",
+        "bustout",
+        "bonuses"
+      ],
+      "media": [],
+      "body": "Reworked the scoring engine for fairness. Bustout detection now uses gap data — the stretch\nof shows since a song was last played — so calling a rarity is worth real bonus points, and\nshared bustouts pay out to everyone who called them. Tightened the exact-position accuracy\nscoring, and started surfacing the bonus breakdown on the score page so players can see\nexactly why they earned each point instead of trusting a single total."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-05-08",
+      "title": "WookBot: OpenAI setlist generator goes public",
+      "tags": [
+        "wookbot",
+        "ai",
+        "openai"
+      ],
+      "media": [],
+      "body": "WookBot went public: an OpenAI-backed generator that drafts a plausible setlist for an\nupcoming show from historical play patterns. Gave it a home-page module showing the show\ndate and venue, a selector to browse past generations, and skeleton loading states during\ngeneration. It only pulls from published show data, so the suggestions stay grounded in\nsongs the band actually plays."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-05-05",
+      "title": "Leaderboards: global, tour, single-show",
+      "tags": [
+        "leaderboard",
+        "competition"
+      ],
+      "media": [],
+      "body": "Added leaderboards with three scopes: a global board across all players, a per-tour board\nscoped to the current run, and a single-show board for one show's predictions. Each board\nranks the top predictors for its scope, and each board's view buttons link straight to the\nrelevant scorecards, so you can go from a ranked name to that player's scored prediction in\none click. This is the piece that turns scored predictions into an ongoing competition\nbetween shows."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-04-18",
+      "title": "Random-fill button, setlist-save fixes, spam-folder reminder",
+      "tags": [
+        "ux",
+        "email",
+        "accounts"
+      ],
+      "media": [],
+      "body": "Closing out the first playable week. Added a random-fill button that populates a setlist\nwith random songs, for people who want to jump in without building one by hand. Fixed a\nbatch of setlist-saving bugs that had been dropping songs. Added a check-your-spam-folder\nreminder for the account verification email, since sign-ups were coming in and the\nverification mail was landing in spam folders."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-04-14",
+      "title": "Scorecards and the first scored show",
+      "tags": [
+        "scoring",
+        "scorecard"
+      ],
+      "media": [],
+      "body": "Built the scorecard: a two-column set 1 / set 2 layout with a breakdown showing which\nsongs contributed to your points. Wired in real 2024 show data to score predictions\nagainst, so a finished prediction could be scored for the first time. The score button\nstays hidden until a show is officially scored, so players don't see a wall of zeros\nbefore the band has played."
+    },
+    {
+      "build": "phantasyfish",
+      "buildTitle": "PhantasyFish",
+      "date": "2025-04-12",
+      "title": "First commit: build-a-setlist UI, song database, prediction saving",
+      "tags": [
+        "launch",
+        "ui",
+        "setlist"
+      ],
+      "media": [
+        {
+          "0": "m",
+          "1": "e",
+          "2": "d",
+          "3": "i",
+          "4": "a",
+          "5": "/",
+          "6": "h",
+          "7": "e",
+          "8": "r",
+          "9": "o",
+          "10": ".",
+          "11": "j",
+          "12": "p",
+          "13": "g",
+          "src": "/buildlog/phantasyfish/undefined"
+        }
+      ],
+      "body": "First commit. The build-a-setlist UI is on screen: drop songs into slots, reorder them,\nand add sets as you go. Seeded the song database by pulling from several phish.net\nendpoints, then cached the result to a local JSON file so the game doesn't hit the API on\nevery load. Prediction saving landed the same day, so the core loop — build a setlist,\nsave it as a prediction — was working end to end from day one."
+    }
+  ],
+  "generatedAt": "2026-09-17T20:43:05.151Z"
+}

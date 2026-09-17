@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build Log — NoodleLab v2 — kpow.xyz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Slackey&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAFAFA;
+    --card:#FFFFFF;
+    --ink:#0A0A0A;
+    --gray-700:#374151;
+    --gray-500:#6B7280;
+    --gray-400:#9CA3AF;
+    --border:#E5E7EB;
+    /* gemtone purple ramp */
+    --purple:#7C3AED;
+    --purple-deep:#5B21B6;
+    --purple-bright:#A855F7;
+    --purple-tint:#F5F3FF;
+    --purple-border:#DDD6FE;
+    --radius:8px;
+    --shadow:0 1px 2px rgba(10,10,10,.06),0 4px 12px rgba(10,10,10,.05);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Roboto',system-ui,-apple-system,sans-serif;
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--purple);text-decoration:none;}
+  a:hover{color:var(--purple-deep);text-decoration:underline;}
+
+  /* ---- top nav strip ---- */
+  .topnav{
+    background:var(--ink);
+    color:#fff;
+    position:sticky;top:0;z-index:50;
+    border-bottom:2px solid var(--purple);
+  }
+  .topnav-inner{
+    max-width:1040px;margin:0 auto;
+    display:flex;align-items:center;gap:14px;
+    padding:9px 20px;
+  }
+  .skull{
+    width:26px;height:26px;border-radius:6px;
+    background:linear-gradient(135deg,#2a2a2a,#111);
+    border:1px solid #333;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;line-height:1;
+  }
+  .brand{font-family:'Slackey',cursive;font-size:18px;letter-spacing:.5px;color:#fff;}
+  .brand:hover{text-decoration:none;color:#fff;}
+  .nav-pill{
+    font-family:'Slackey',cursive;font-size:11px;
+    background:var(--purple);color:#fff;
+    padding:4px 10px;border-radius:999px;letter-spacing:.4px;
+  }
+  .nav-spacer{flex:1;}
+  .nav-links{display:flex;gap:18px;font-size:13px;color:var(--gray-400);}
+  .nav-links a{color:var(--gray-400);}
+  .nav-links a:hover{color:#fff;text-decoration:none;}
+
+  /* ---- page container ---- */
+  .wrap{max-width:1040px;margin:0 auto;padding:22px 20px 60px;}
+
+  /* ---- builds index bar ---- */
+  .index-bar{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    margin-bottom:22px;
+  }
+  .titlebar{
+    background:var(--ink);
+    color:#fff;
+    display:flex;align-items:center;gap:10px;
+    padding:8px 14px;
+  }
+  .titlebar h2{
+    font-family:'Slackey',cursive;font-weight:400;
+    font-size:14px;margin:0;letter-spacing:.4px;
+  }
+  .titlebar .count{
+    margin-left:auto;font-size:11px;color:var(--gray-400);
+    font-family:'Roboto';letter-spacing:.3px;
+  }
+  table.builds{width:100%;border-collapse:collapse;font-size:13px;}
+  table.builds thead th{
+    text-align:left;font-weight:700;color:var(--gray-500);
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;
+    padding:7px 12px;border-bottom:1px solid var(--border);
+    background:#fcfcfd;
+  }
+  table.builds thead th.num,table.builds td.num{text-align:right;}
+  table.builds tbody tr{border-bottom:1px solid var(--border);cursor:pointer;}
+  table.builds tbody tr:last-child{border-bottom:none;}
+  table.builds tbody tr:hover{background:var(--purple-tint);}
+  table.builds tbody tr.active{background:var(--purple-tint);box-shadow:inset 3px 0 0 var(--purple);}
+  table.builds td{padding:7px 12px;vertical-align:middle;color:var(--gray-700);}
+  table.builds td.b-title{font-weight:700;color:var(--ink);white-space:nowrap;}
+  table.builds tr.active td.b-title{color:var(--purple-deep);}
+  table.builds td.num{font-variant-numeric:tabular-nums;color:var(--gray-500);}
+  .last-date{color:var(--gray-400);font-variant-numeric:tabular-nums;white-space:nowrap;}
+
+  /* status + kind pills */
+  .pill{
+    display:inline-block;font-size:10.5px;font-weight:700;
+    padding:2px 8px;border-radius:999px;letter-spacing:.4px;
+    text-transform:uppercase;line-height:1.5;white-space:nowrap;
+  }
+  .st-active{background:var(--purple);color:#fff;}
+  .st-shipped{background:var(--purple-tint);color:var(--purple-deep);border:1px solid var(--purple-border);}
+  .st-live{background:#0A0A0A;color:#fff;}
+  .st-shelved{background:#F3F4F6;color:var(--gray-500);border:1px solid var(--border);}
+  .kind{
+    font-size:10.5px;color:var(--gray-500);text-transform:lowercase;
+    letter-spacing:.3px;
+  }
+
+  /* ---- two-column layout ---- */
+  .layout{
+    display:grid;
+    grid-template-columns:240px minmax(0,1fr);
+    gap:26px;
+    align-items:start;
+  }
+
+  /* ---- LEFT: purple meta rail ---- */
+  .rail{
+    position:sticky;top:70px;
+    background:var(--purple-tint);
+    border:1px solid var(--purple-border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:16px 15px 18px;
+    font-size:13px;
+  }
+  .rail .rail-top{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .rail h3{
+    font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;
+    color:var(--purple-deep);font-weight:700;
+    margin:16px 0 7px;
+  }
+  .rail h3:first-of-type{margin-top:4px;}
+  .rail .started{
+    color:var(--gray-700);font-size:12px;
+  }
+  .rail .started b{color:var(--purple-deep);}
+
+  .chips{display:flex;flex-wrap:wrap;gap:5px;}
+  .chip{
+    display:inline-block;background:#fff;border:1px solid var(--purple-border);
+    color:var(--purple-deep);font-size:11px;font-weight:500;
+    padding:2px 8px;border-radius:5px;line-height:1.5;
+  }
+  .chip.tag{color:var(--gray-700);border-color:var(--border);}
+  .chip.tag::before{content:"#";color:var(--purple-bright);font-weight:700;}
+
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .stat{
+    background:#fff;border:1px solid var(--purple-border);
+    border-radius:6px;padding:7px 9px;
+  }
+  .stat .n{font-size:17px;font-weight:700;color:var(--ink);line-height:1;font-variant-numeric:tabular-nums;}
+  .stat .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-500);margin-top:3px;}
+  .daterange{
+    margin-top:8px;font-size:11px;color:var(--gray-500);
+    font-variant-numeric:tabular-nums;
+    display:flex;align-items:center;gap:6px;
+  }
+  .daterange .arw{color:var(--purple-bright);}
+
+  .facts .fact-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:5px 0;border-bottom:1px dashed var(--purple-border);
+  }
+  .facts .fact-row:last-child{border-bottom:none;}
+  .facts .fk{color:var(--gray-700);font-size:12px;text-transform:capitalize;}
+  .facts .fv{font-weight:700;color:var(--purple-deep);font-size:15px;font-variant-numeric:tabular-nums;}
+
+  .rail .links a{
+    display:flex;align-items:center;gap:6px;
+    background:#fff;border:1px solid var(--purple-border);
+    border-radius:6px;padding:6px 9px;font-size:12px;font-weight:500;
+    color:var(--purple-deep);
+  }
+  .rail .links a:hover{background:var(--purple);color:#fff;border-color:var(--purple);text-decoration:none;}
+  .rail .links a .ext{margin-left:auto;font-size:11px;opacity:.7;}
+
+  /* ---- RIGHT: reading column ---- */
+  .reading{max-width:660px;}
+  .read-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    margin-bottom:22px;
+  }
+  .read-head{
+    background:var(--ink);color:#fff;
+    padding:16px 20px 15px;
+  }
+  .read-head .kicker{
+    font-size:10.5px;text-transform:uppercase;letter-spacing:1px;
+    color:var(--purple-bright);font-weight:700;margin-bottom:6px;
+  }
+  .read-head h1{
+    font-family:'Slackey',cursive;font-weight:400;
+    font-size:28px;line-height:1.1;margin:0 0 8px;letter-spacing:.3px;
+  }
+  .read-head .summary{
+    font-size:14px;color:#d4d4d8;margin:0;max-width:56ch;
+  }
+  .body-copy{padding:18px 20px 6px;}
+  .body-copy p{margin:0 0 13px;color:var(--gray-700);}
+  .body-copy p:first-child{color:var(--ink);font-size:15.5px;}
+  .body-copy h4{
+    font-size:12px;text-transform:uppercase;letter-spacing:.7px;
+    color:var(--purple-deep);font-weight:700;
+    margin:20px 0 9px;padding-bottom:5px;border-bottom:1px solid var(--border);
+  }
+  .body-copy ul{margin:0 0 13px;padding-left:18px;}
+  .body-copy li{margin-bottom:7px;color:var(--gray-700);}
+  .body-copy strong{color:var(--ink);font-weight:700;}
+  .body-copy code{
+    background:var(--purple-tint);color:var(--purple-deep);
+    border:1px solid var(--purple-border);border-radius:4px;
+    padding:0 4px;font-size:12.5px;
+  }
+
+  /* ---- devlog feed ---- */
+  .feed{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .feed .titlebar .count{color:var(--gray-400);}
+  .feed-body{padding:4px 20px 8px;}
+  .entry{padding:16px 0;border-bottom:1px solid var(--border);}
+  .entry:last-child{border-bottom:none;}
+  .entry-meta{display:flex;align-items:center;gap:10px;margin-bottom:5px;flex-wrap:wrap;}
+  .entry-date{
+    font-size:11px;font-weight:700;letter-spacing:.4px;
+    color:var(--purple);font-variant-numeric:tabular-nums;
+    background:var(--purple-tint);border:1px solid var(--purple-border);
+    padding:1px 7px;border-radius:5px;white-space:nowrap;
+  }
+  .entry-tags{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto;}
+  .etag{
+    font-size:10.5px;color:var(--gray-500);
+  }
+  .etag::before{content:"#";color:var(--purple-bright);}
+  .entry h3{
+    font-size:16px;font-weight:700;margin:0 0 6px;color:var(--ink);line-height:1.3;
+  }
+  .entry p{margin:0;color:var(--gray-700);font-size:14px;}
+  .media{
+    margin-top:11px;
+    border:1px dashed var(--purple-border);
+    background:var(--purple-tint);
+    border-radius:6px;
+    max-width:360px;
+  }
+  .media .frame{
+    height:130px;display:flex;align-items:center;justify-content:center;
+    color:var(--purple-bright);border-bottom:1px dashed var(--purple-border);
+    font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:700;
+    gap:7px;
+  }
+  .media .frame svg{width:22px;height:22px;opacity:.7;}
+  .media .cap{
+    padding:6px 10px;font-size:11.5px;color:var(--gray-500);font-style:italic;
+  }
+  .feed-foot{
+    padding:12px 20px 16px;text-align:center;
+  }
+  .feed-foot a{
+    font-size:12px;font-weight:700;color:var(--purple-deep);
+    text-transform:uppercase;letter-spacing:.5px;
+  }
+
+  .page-foot{
+    max-width:1040px;margin:26px auto 0;padding:0 20px;
+    color:var(--gray-400);font-size:11.5px;text-align:center;
+  }
+
+  @media(max-width:820px){
+    .layout{grid-template-columns:1fr;}
+    .rail{position:static;}
+    .last-date,.kind{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- top nav -->
+<div class="topnav">
+  <div class="topnav-inner">
+    <span class="skull">&#128128;</span>
+    <a href="#" class="brand">kpow</a>
+    <span class="nav-pill">build log</span>
+    <span class="nav-spacer"></span>
+    <nav class="nav-links">
+      <a href="#">music</a>
+      <a href="#">projects</a>
+      <a href="#">about</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- builds index bar -->
+  <section class="index-bar">
+    <div class="titlebar">
+      <h2>Builds</h2>
+      <span class="count">7 builds &middot; jump between logs</span>
+    </div>
+    <table class="builds">
+      <thead>
+        <tr>
+          <th>Build</th>
+          <th>Status</th>
+          <th>Kind</th>
+          <th class="num">Entries</th>
+          <th>Last entry</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="b-title">kFun</td>
+          <td><span class="pill st-active">active</span></td>
+          <td class="kind">hardware</td>
+          <td class="num">12</td>
+          <td class="last-date">2026-09-16</td>
+        </tr>
+        <tr class="active">
+          <td class="b-title">NoodleLab v2</td>
+          <td><span class="pill st-active">active</span></td>
+          <td class="kind">hardware</td>
+          <td class="num">16</td>
+          <td class="last-date">2026-09-07</td>
+        </tr>
+        <tr>
+          <td class="b-title">vizBot</td>
+          <td><span class="pill st-shipped">shipped</span></td>
+          <td class="kind">hardware</td>
+          <td class="num">16</td>
+          <td class="last-date">2026-08-30</td>
+        </tr>
+        <tr>
+          <td class="b-title">ESP32 Plane Radar</td>
+          <td><span class="pill st-shipped">shipped</span></td>
+          <td class="kind">hardware</td>
+          <td class="num">6</td>
+          <td class="last-date">2026-08-28</td>
+        </tr>
+        <tr>
+          <td class="b-title">PhantasyFish</td>
+          <td><span class="pill st-live">live</span></td>
+          <td class="kind">software</td>
+          <td class="num">17</td>
+          <td class="last-date">2026-08-10</td>
+        </tr>
+        <tr>
+          <td class="b-title">StackLED</td>
+          <td><span class="pill st-shipped">shipped</span></td>
+          <td class="kind">hardware</td>
+          <td class="num">6</td>
+          <td class="last-date">2026-08-04</td>
+        </tr>
+        <tr>
+          <td class="b-title">The Cyberdeck (noode-exp)</td>
+          <td><span class="pill st-active">active</span></td>
+          <td class="kind">hardware</td>
+          <td class="num">6</td>
+          <td class="last-date">2026-07-05</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- two-column detail -->
+  <div class="layout">
+
+    <!-- LEFT: purple meta rail -->
+    <aside class="rail">
+      <div class="rail-top">
+        <span class="pill st-active">active</span>
+        <span class="kind">hardware</span>
+      </div>
+      <div class="started">Started <b>2026-03-23</b></div>
+
+      <h3>Stack</h3>
+      <div class="chips">
+        <span class="chip">ESP32-S3</span>
+        <span class="chip">ESP32-C3</span>
+        <span class="chip">ESP-NOW</span>
+        <span class="chip">FastLED</span>
+        <span class="chip">FreeRTOS</span>
+        <span class="chip">PCA9685</span>
+        <span class="chip">PlatformIO</span>
+      </div>
+
+      <h3>Tags</h3>
+      <div class="chips">
+        <span class="chip tag">led</span>
+        <span class="chip tag">esp-now</span>
+        <span class="chip tag">firmware</span>
+        <span class="chip tag">distributed</span>
+      </div>
+
+      <h3>Stats</h3>
+      <div class="stat-grid">
+        <div class="stat"><div class="n">16</div><div class="l">Entries</div></div>
+        <div class="stat"><div class="n">5</div><div class="l">Photos</div></div>
+        <div class="stat"><div class="n">169</div><div class="l">Days active</div></div>
+        <div class="stat"><div class="n">7</div><div class="l">Satellites</div></div>
+      </div>
+      <div class="daterange">2026-03-25 <span class="arw">&rarr;</span> 2026-09-07</div>
+
+      <h3>Facts</h3>
+      <div class="facts">
+        <div class="fact-row"><span class="fk">Satellites</span><span class="fv">7</span></div>
+        <div class="fact-row"><span class="fk">Effects</span><span class="fv">16</span></div>
+      </div>
+
+      <h3>Links</h3>
+      <div class="links">
+        <a href="https://github.com/kpow/noodlez-v2" target="_blank" rel="noopener">
+          repo <span class="ext">&#8599;</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- RIGHT: reading column -->
+    <div class="reading">
+
+      <article class="read-card">
+        <div class="read-head">
+          <div class="kicker">Build &middot; NoodleLab</div>
+          <h1>NoodleLab v2</h1>
+          <p class="summary">A modular LED light instrument that turned into a distributed system.</p>
+        </div>
+        <div class="body-copy">
+          <p>A modular LED light instrument that turned into a distributed system. It started as one microcontroller driving a few panels &mdash; but when it ran out of pins, I gave every panel its own chip and linked them wirelessly. Now I can keep adding surfaces without ever hitting a hardware wall, and they all animate together in real time.</p>
+
+          <h4>Project Info</h4>
+          <p>An <strong>ESP32-S3 core</strong> (Adafruit FeatherS3) commands a fleet of <strong>ESP-NOW satellites</strong> &mdash; 8&times;8, 16&times;16, and 12&times;8 matrices, an RGBW bar, a mic satellite, a haptic dial remote, and a motorized disco ball &mdash; each its own ESP32-C3. The core broadcasts one <strong>58-byte packet</strong>; every satellite receives the same packet and renders locally, staying frame-synced without the core pushing every pixel.</p>
+          <ul>
+            <li><strong>Dual-core FreeRTOS</strong> &mdash; radio on one core, FastLED render on the other, so they never step on each other (the S3's RMT peripheral fights the WiFi radio if you get the startup order wrong).</li>
+            <li><strong>16 FastLED effects</strong>, audio-reactive via a <strong>512-point FFT</strong> on the mic satellite that broadcasts bass/mid/treble/beat to the whole fleet.</li>
+            <li><strong>Control surface:</strong> three NeoPixel encoders, a NeoSlider, a ToF proximity sensor, capacitive touch, <code>PCA9685</code>-driven LED filaments + skull, and a lightning-bolt lane.</li>
+          </ul>
+
+          <h4>Why it's built this way</h4>
+          <p>The distributed architecture wasn't a flourish &mdash; it was running out of GPIO and refusing to stop adding panels. Moving each surface to its own wireless board means the system scales by adding <em>boards</em>, not pins.</p>
+        </div>
+      </article>
+
+      <!-- devlog feed -->
+      <section class="feed">
+        <div class="titlebar">
+          <h2>Devlog</h2>
+          <span class="count">16 entries &middot; showing 5</span>
+        </div>
+        <div class="feed-body">
+
+          <div class="entry">
+            <div class="entry-meta">
+              <span class="entry-date">2026-09-07</span>
+              <span class="entry-tags"><span class="etag">ui</span><span class="etag">patterns</span></span>
+            </div>
+            <h3>Landscape TFT + chrome refresh; the Patternflow bank</h3>
+            <p>Recomposed the entire UI for a landscape 320&times;240 ST7789 mount &mdash; one-row header, framed menus, Live Control and Chladni re-laid-out. Landed the Patternflow bank too: hand-ported JS shader-style patterns running on all three boards, with the red Qwiic button as a palette dice.</p>
+          </div>
+
+          <div class="entry">
+            <div class="entry-meta">
+              <span class="entry-date">2026-08-29</span>
+              <span class="entry-tags"><span class="etag">effects</span><span class="etag">palettes</span><span class="etag">milestone</span></span>
+            </div>
+            <h3>21 effects, a palette system, and 'Noodle 2K'</h3>
+            <p>Big content wave: a trimmed 2D particle engine and the WLED particle effects (catalog to 21), a real 16-band GEQ spectrum analyzer, and a global palette system with host-parity tests and a dial palette picker. Rebranded the whole thing "Noodle 2K" with a new layered power-on intro. Also brought up a hub75 MatrixPortal satellite doing native 64&times;32.</p>
+          </div>
+
+          <div class="entry">
+            <div class="entry-meta">
+              <span class="entry-date">2026-08-16</span>
+              <span class="entry-tags"><span class="etag">rebuild</span><span class="etag">ui</span></span>
+            </div>
+            <h3>The big rebuild &mdash; bare MCU, Chladni, cyberpunk chrome</h3>
+            <p>Stripped the rig back to a bare MCU and brought it up clean: retired the icon and (later) 8&times;12 sats, drove the 16&times;16 locally, moved SparkFun inputs to their own I2C bus, and replaced the wireframe screensaver with a live Chladni-plate visualizer. Also redid the whole UI on an anti-aliased "chrome" kit and killed the flicker.</p>
+          </div>
+
+          <div class="entry">
+            <div class="entry-meta">
+              <span class="entry-date">2026-06-13</span>
+              <span class="entry-tags"><span class="etag">firmware</span><span class="etag">portability</span></span>
+            </div>
+            <h3>Portability pass + matrix sat moves to an S3</h3>
+            <p>Made the whole project portable to a new machine &mdash; pinned the pioarduino platform by URL across every board so builds are reproducible. Ported the 12&times;8 matrix satellite to a dual-core ESP32-S3 SuperMini for a better radio, and added a baked Pac-Chase animation source for the 16&times;16.</p>
+          </div>
+
+          <div class="entry">
+            <div class="entry-meta">
+              <span class="entry-date">2026-05-27</span>
+              <span class="entry-tags"><span class="etag">satellites</span><span class="etag">disco</span><span class="etag">hardware-lesson</span></span>
+            </div>
+            <h3>Disco-ball satellite &mdash; and a nasty ground-noise lesson</h3>
+            <p>Added a motorized disco ball as its own satellite (stepper + spot LED + OLED) with a dedicated LiveTarget. First version ran the stepper off main power and it made the ground filthy &mdash; the noise bled into the rest of the Noodle. Its own supply fixed it. Classic motor-on-shared-ground trap.</p>
+            <div class="media">
+              <div class="frame">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                image
+              </div>
+              <div class="cap">Printed skull over the spinning disco ball</div>
+            </div>
+          </div>
+
+        </div>
+        <div class="feed-foot">
+          <a href="#">View all 16 entries &rarr;</a>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<div class="page-foot">
+  kpow.xyz &middot; build log &middot; a comp
+</div>
+
+</body>
+</html>

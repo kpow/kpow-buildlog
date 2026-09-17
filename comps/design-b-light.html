@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Build Log — NoodleLab v2 · kpow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Slackey&display=swap" rel="stylesheet" />
+<script src="comp-images.js"></script>
+<style>
+  :root {
+    --bg: #FAFAFA;
+    --panel: #FFFFFF;
+    --panel-2: #FBFAFF;
+    --ink: #0A0A0A;
+    --ink-bar: #0A0A0A;
+    --gray-1: #374151;
+    --gray-2: #6B7280;
+    --gray-3: #9CA3AF;
+    --border: #E5E7EB;
+    --border-soft: #EEF0F2;
+
+    --amethyst: #7C3AED;      /* primary */
+    --amethyst-deep: #5B21B6; /* deep */
+    --amethyst-bright: #A855F7;/* bright */
+    --tint: #F5F3FF;          /* tint bg */
+    --tint-border: #DDD6FE;   /* border */
+
+    --mono: "SFMono-Regular", "Roboto Mono", ui-monospace, Menlo, monospace;
+    --halo: 0 0 0 4px rgba(124,58,237,.10), 0 0 12px 1px rgba(168,85,247,.35);
+    --measure: 680px;
+    --container: 1080px;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1000px 520px at 12% -10%, #F3EEFF 0%, rgba(243,238,255,0) 60%),
+      radial-gradient(820px 460px at 106% 2%, #F6F0FF 0%, rgba(246,240,255,0) 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: "Roboto", system-ui, -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--amethyst-deep); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---------- Top nav ---------- */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(255,255,255,.86);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 0 rgba(124,58,237,.10);
+  }
+  .topnav-inner {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 10px 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .skull {
+    width: 26px; height: 26px;
+    display: inline-grid; place-items: center;
+    border-radius: 7px;
+    background: var(--ink-bar);
+    border: 1px solid #000;
+    font-size: 15px;
+  }
+  .brand {
+    font-family: "Slackey", cursive;
+    font-size: 19px;
+    letter-spacing: .5px;
+    color: var(--ink);
+  }
+  .brand .dot { color: var(--amethyst); }
+  .nav-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    color: #fff;
+    border: 1px solid var(--amethyst-deep);
+    background: var(--amethyst);
+    padding: 3px 10px;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px -2px rgba(124,58,237,.5);
+  }
+  .nav-spacer { flex: 1; }
+  .nav-links { display: flex; gap: 18px; }
+  .nav-links a {
+    color: var(--gray-2);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .nav-links a:hover { color: var(--ink); text-decoration: none; }
+
+  /* ---------- Page ---------- */
+  .page {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 24px 22px 70px;
+  }
+
+  .crumbs {
+    font-size: 12px;
+    color: var(--gray-3);
+    margin: 2px 0 16px;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .crumbs a { color: var(--gray-2); }
+  .crumbs .sep { color: var(--border); }
+
+  /* ---------- Detail header: solid black title bar ---------- */
+  .detail-head {
+    background: var(--ink-bar);
+    border-radius: 14px 14px 0 0;
+    padding: 18px 22px 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px -20px rgba(10,10,10,.5);
+  }
+  .detail-head::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(420px 160px at 100% 0%, rgba(168,85,247,.22), transparent 70%);
+    pointer-events: none;
+  }
+  .dh-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    position: relative;
+  }
+  .detail-title {
+    font-family: "Slackey", cursive;
+    font-size: 30px;
+    line-height: 1.05;
+    margin: 0;
+    color: #fff;
+  }
+  .kind-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: #d7c9f5;
+    border: 1px solid rgba(221,214,254,.35);
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(124,58,237,.22);
+  }
+  .detail-summary {
+    color: #c9c9d2;
+    max-width: 620px;
+    margin: 2px 0 0;
+    font-size: 15px;
+    position: relative;
+  }
+
+  /* the meta card body sits below the black bar */
+  .detail-body-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-left: 3px solid var(--amethyst);
+    border-radius: 0 0 14px 14px;
+    padding: 16px 22px 18px;
+  }
+
+  /* status pill */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+  }
+  .pill .led {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .pill.active {
+    color: var(--amethyst-deep);
+    background: var(--tint);
+    border-color: var(--tint-border);
+    box-shadow: 0 0 0 3px rgba(124,58,237,.08);
+  }
+  .pill.shipped {
+    color: #047857;
+    background: #ECFDF5;
+    border-color: #A7F3D0;
+  }
+  .pill.live {
+    color: #0369A1;
+    background: #EFF6FF;
+    border-color: #BAE6FD;
+  }
+  .pill.shelved {
+    color: #6B7280;
+    background: #F3F4F6;
+    border-color: #E5E7EB;
+  }
+  /* on the black bar, status pill needs light contrast */
+  .detail-head .pill.active {
+    color: #E9DDFF;
+    background: rgba(124,58,237,.28);
+    border-color: rgba(168,85,247,.6);
+    box-shadow: 0 0 14px -3px rgba(168,85,247,.7);
+  }
+
+  /* ---------- Meta strip ---------- */
+  .meta-block { display: grid; gap: 10px; }
+
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .meta-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--gray-3);
+    margin-right: 4px;
+    min-width: 44px;
+  }
+  .chip {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--gray-1);
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+  .chip.tag {
+    color: var(--amethyst-deep);
+    border-color: var(--tint-border);
+    background: var(--tint);
+    font-family: "Roboto", sans-serif;
+  }
+
+  /* stat strip */
+  .stat-strip {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .stat {
+    background: var(--panel);
+    padding: 10px 12px;
+    text-align: left;
+  }
+  .stat.accent { background: var(--tint); }
+  .stat .num {
+    font-family: "Slackey", cursive;
+    font-size: 19px;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .stat.accent .num { color: var(--amethyst); }
+  .stat .lab {
+    display: block;
+    margin-top: 5px;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gray-3);
+  }
+  .stat .sub { font-size: 11px; color: var(--gray-1); font-family: var(--mono); }
+
+  .links-row { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
+  .link-btn {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--amethyst-deep);
+    border: 1px solid var(--tint-border);
+    background: var(--tint);
+    padding: 5px 11px;
+    border-radius: 7px;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: box-shadow .18s, border-color .18s;
+  }
+  .link-btn:hover { text-decoration: none; box-shadow: 0 4px 14px -4px rgba(124,58,237,.55); border-color: var(--amethyst); }
+
+  /* ---------- Hero band ---------- */
+  .hero-band {
+    margin-top: 16px;
+    border: 1px solid var(--tint-border);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--halo);
+    background: var(--panel);
+    max-width: var(--container);
+  }
+  .hero-band img {
+    display: block;
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    cursor: zoom-in;
+    background: var(--tint);
+  }
+  .hero-cap {
+    font-size: 12px;
+    color: var(--gray-2);
+    padding: 8px 14px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+    font-family: var(--mono);
+  }
+  .hero-cap .dotmk { color: var(--amethyst); }
+
+  /* ---------- Body copy ---------- */
+  .build-body {
+    max-width: var(--measure);
+    margin: 24px 0 8px;
+  }
+  .build-body p { color: var(--gray-1); margin: 0 0 14px; }
+  .build-body strong { color: var(--ink); font-weight: 700; }
+  .build-body h2 {
+    font-family: "Slackey", cursive;
+    font-size: 16px;
+    color: var(--ink);
+    margin: 24px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .build-body ul { margin: 0 0 14px; padding-left: 18px; }
+  .build-body li { color: var(--gray-1); margin-bottom: 7px; }
+  .build-body li strong { color: var(--amethyst-deep); }
+
+  /* ---------- Section heading ---------- */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 38px 0 18px;
+    max-width: var(--container);
+  }
+  .section-head h2 {
+    font-family: "Slackey", cursive;
+    font-size: 20px;
+    color: var(--ink);
+    margin: 0;
+  }
+  .section-head .count {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--gray-3);
+  }
+  .section-head .rule {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--tint-border), transparent);
+  }
+
+  /* ---------- WIP Pix filmstrip ---------- */
+  .wippix { max-width: var(--container); margin-bottom: 6px; }
+  .wippix-head {
+    display: flex; align-items: baseline; gap: 10px; margin: 24px 0 12px;
+  }
+  .wippix-head h3 {
+    font-family: "Slackey", cursive;
+    font-size: 15px;
+    color: var(--ink);
+    margin: 0;
+  }
+  .wippix-head .n { font-family: var(--mono); font-size: 11px; color: var(--gray-3); }
+  .filmstrip {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 4px 2px 12px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--tint-border) transparent;
+  }
+  .filmstrip::-webkit-scrollbar { height: 8px; }
+  .filmstrip::-webkit-scrollbar-thumb { background: var(--tint-border); border-radius: 8px; }
+  .frame {
+    flex: 0 0 210px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--panel);
+    transition: border-color .18s, box-shadow .18s, transform .18s;
+  }
+  .frame:hover {
+    border-color: var(--amethyst);
+    box-shadow: var(--halo);
+    transform: translateY(-2px);
+  }
+  .frame img {
+    display: block; width: 100%; height: 132px; object-fit: cover;
+    cursor: zoom-in; background: var(--tint);
+  }
+  .frame-meta { padding: 7px 9px 9px; }
+  .frame-date {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .4px;
+    color: var(--amethyst-deep); text-transform: uppercase;
+  }
+  .frame-cap { font-size: 11.5px; color: var(--gray-2); line-height: 1.35; margin-top: 2px; }
+
+  /* ---------- Timeline ---------- */
+  .timeline {
+    position: relative;
+    max-width: var(--measure);
+    padding-left: 30px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--amethyst-bright), var(--amethyst) 40%, var(--tint-border) 100%);
+    border-radius: 2px;
+  }
+  .entry {
+    position: relative;
+    padding: 0 0 24px 4px;
+  }
+  .entry::before {
+    content: "";
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--amethyst);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 0 4px rgba(124,58,237,.14);
+  }
+  .entry:first-child::before {
+    background: var(--amethyst-bright);
+    box-shadow: 0 0 0 4px rgba(168,85,247,.18), 0 0 10px 1px rgba(168,85,247,.5);
+  }
+  .entry-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .5px;
+    color: var(--amethyst-deep);
+    text-transform: uppercase;
+  }
+  .entry-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 3px 0 7px;
+    line-height: 1.3;
+  }
+  .entry-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+  .entry-tag {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: var(--amethyst-deep);
+    background: var(--tint);
+    border: 1px solid var(--tint-border);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+  .entry-body {
+    color: var(--gray-1);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  /* inline entry photo figure */
+  .entry-fig {
+    margin: 12px 0 0;
+    max-width: 360px;
+    border: 1px solid var(--tint-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--panel);
+    box-shadow: 0 6px 20px -14px rgba(124,58,237,.5);
+  }
+  .entry-fig img {
+    display: block; width: 100%; height: 220px; object-fit: cover;
+    cursor: zoom-in; background: var(--tint);
+  }
+  .entry-fig figcaption {
+    font-size: 11.5px; color: var(--gray-2);
+    padding: 7px 11px; border-top: 1px solid var(--border);
+    font-family: var(--mono);
+  }
+
+  /* ---------- Index grid ---------- */
+  .index-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: var(--container);
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    overflow: hidden;
+    transition: border-color .18s, box-shadow .18s, transform .18s;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-thumb {
+    display: block; width: 100%; height: 118px; object-fit: cover;
+    background: var(--tint);
+    border-bottom: 1px solid var(--border);
+  }
+  .card-inner { padding: 12px 14px 12px; display: flex; flex-direction: column; flex: 1; }
+  .card::after {
+    content: "";
+    position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+    background: var(--amethyst);
+    opacity: .35;
+    transition: opacity .18s;
+    z-index: 1;
+  }
+  .card:hover {
+    border-color: var(--amethyst);
+    box-shadow: 0 12px 30px -18px rgba(124,58,237,.7), 0 0 0 3px rgba(124,58,237,.08);
+    transform: translateY(-2px);
+  }
+  .card:hover::after { opacity: 1; }
+  .card.current {
+    border-color: var(--amethyst);
+    box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+  }
+  .card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .card-here {
+    font-size: 9px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--amethyst-deep); font-weight: 700;
+  }
+  .pill.mini { font-size: 9.5px; padding: 2px 7px; letter-spacing: .6px; }
+  .card-sum {
+    font-size: 12px;
+    color: var(--gray-2);
+    margin: 0 0 10px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    flex: 1;
+  }
+  .card-foot {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; font-family: var(--mono); color: var(--gray-3);
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+  .card-foot .k {
+    text-transform: uppercase; letter-spacing: .8px; font-size: 10px;
+    color: var(--gray-2);
+  }
+  .card-foot .entries { color: var(--amethyst-deep); }
+
+  footer {
+    max-width: var(--container);
+    margin: 40px auto 0;
+    padding: 22px 22px 0;
+    border-top: 1px solid var(--border);
+    color: var(--gray-3);
+    font-size: 12px;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+  }
+  footer .brand-sm { font-family: "Slackey", cursive; color: var(--gray-2); }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10,10,10,.72);
+    backdrop-filter: blur(4px);
+    padding: 30px;
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-inner {
+    max-width: min(1000px, 92vw);
+    max-height: 90vh;
+    background: var(--panel);
+    border: 2px solid var(--amethyst);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 0 0 4px rgba(124,58,237,.25), 0 30px 80px -30px rgba(0,0,0,.7);
+    display: flex;
+    flex-direction: column;
+    cursor: default;
+  }
+  .lightbox-inner img {
+    display: block;
+    max-width: 100%;
+    max-height: calc(90vh - 46px);
+    object-fit: contain;
+    background: #111;
+  }
+  .lightbox-cap {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--gray-1);
+    font-family: var(--mono);
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .lightbox-cap .dotmk { color: var(--amethyst); }
+  .lightbox-close {
+    position: absolute;
+    top: 18px; right: 22px;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.35);
+    background: rgba(255,255,255,.12);
+    color: #fff;
+    font-size: 20px;
+    display: grid; place-items: center;
+    cursor: pointer;
+  }
+  .lightbox-close:hover { background: var(--amethyst); border-color: var(--amethyst); }
+
+  @media (max-width: 900px) {
+    .index-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 720px) {
+    .detail-title { font-size: 24px; }
+    .nav-links { display: none; }
+    .hero-band img { height: 240px; }
+  }
+  @media (max-width: 460px) {
+    .index-grid { grid-template-columns: 1fr; }
+    .stat-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Top nav strip -->
+  <nav class="topnav">
+    <div class="topnav-inner">
+      <span class="skull" aria-hidden="true">&#128128;</span>
+      <span class="brand">kpow<span class="dot">.</span></span>
+      <span class="nav-label">build log</span>
+      <span class="nav-spacer"></span>
+      <span class="nav-links">
+        <a href="#">projects</a>
+        <a href="#">music</a>
+        <a href="#">about</a>
+      </span>
+    </div>
+  </nav>
+
+  <main class="page">
+
+    <div class="crumbs">
+      <a href="#">build log</a>
+      <span class="sep">/</span>
+      <span>NoodleLab v2</span>
+    </div>
+
+    <!-- DETAIL HEADER (black title bar) -->
+    <header class="detail-head">
+      <div class="dh-top">
+        <h1 class="detail-title">NoodleLab v2</h1>
+        <span class="pill active"><span class="led"></span>active</span>
+        <span class="kind-tag">hardware</span>
+      </div>
+      <p class="detail-summary">A modular LED light instrument that turned into a distributed system.</p>
+    </header>
+
+    <div class="detail-body-card">
+      <div class="meta-block">
+        <div class="chip-row">
+          <span class="meta-label">Stack</span>
+          <span class="chip">ESP32-S3</span>
+          <span class="chip">ESP32-C3</span>
+          <span class="chip">ESP-NOW</span>
+          <span class="chip">FastLED</span>
+          <span class="chip">FreeRTOS</span>
+          <span class="chip">PCA9685</span>
+          <span class="chip">PlatformIO</span>
+        </div>
+        <div class="chip-row">
+          <span class="meta-label">Tags</span>
+          <span class="chip tag">led</span>
+          <span class="chip tag">esp-now</span>
+          <span class="chip tag">firmware</span>
+          <span class="chip tag">distributed</span>
+        </div>
+      </div>
+
+      <!-- stat strip: stats + facts -->
+      <div class="stat-strip">
+        <div class="stat accent"><span class="num">16</span><span class="lab">Entries</span></div>
+        <div class="stat"><span class="num">5</span><span class="lab">Photos</span></div>
+        <div class="stat"><span class="num">169</span><span class="lab">Days active</span></div>
+        <div class="stat accent"><span class="num">7</span><span class="lab">Satellites</span></div>
+        <div class="stat accent"><span class="num">16</span><span class="lab">Effects</span></div>
+        <div class="stat"><span class="sub">Mar 25 –<br />Sep 07 &rsquo;26</span><span class="lab">Range</span></div>
+      </div>
+
+      <div class="links-row">
+        <a class="link-btn" href="https://github.com/kpow/noodlez-v2" target="_blank" rel="noopener">&#128279; repo</a>
+        <span class="chip">started 2026-03-23</span>
+      </div>
+    </div>
+
+    <!-- HERO BAND -->
+    <figure class="hero-band">
+      <img data-img="noodle.hero" alt="The full instrument lit" />
+      <figcaption class="hero-cap"><span class="dotmk">&#9670;</span> The full instrument lit</figcaption>
+    </figure>
+
+    <!-- BODY -->
+    <section class="build-body">
+      <p>A modular LED light instrument that turned into a distributed system. It started as one microcontroller driving a few panels — but when it ran out of pins, I gave every panel its own chip and linked them wirelessly. Now I can keep adding surfaces without ever hitting a hardware wall, and they all animate together in real time.</p>
+
+      <h2>Project Info</h2>
+      <p>An <strong>ESP32-S3 core</strong> (Adafruit FeatherS3) commands a fleet of <strong>ESP-NOW satellites</strong> — 8×8, 16×16, and 12×8 matrices, an RGBW bar, a mic satellite, a haptic dial remote, and a motorized disco ball — each its own ESP32-C3. The core broadcasts one <strong>58-byte packet</strong>; every satellite receives the same packet and renders locally, staying frame-synced without the core pushing every pixel.</p>
+      <ul>
+        <li><strong>Dual-core FreeRTOS</strong> — radio on one core, FastLED render on the other, so they never step on each other (the S3&rsquo;s RMT peripheral fights the WiFi radio if you get the startup order wrong).</li>
+        <li><strong>16 FastLED effects</strong>, audio-reactive via a <strong>512-point FFT</strong> on the mic satellite that broadcasts bass/mid/treble/beat to the whole fleet.</li>
+        <li><strong>Control surface:</strong> three NeoPixel encoders, a NeoSlider, a ToF proximity sensor, capacitive touch, PCA9685-driven LED filaments + skull, and a lightning-bolt lane.</li>
+      </ul>
+
+      <h2>Why it&rsquo;s built this way</h2>
+      <p>The distributed architecture wasn&rsquo;t a flourish — it was running out of GPIO and refusing to stop adding panels. Moving each surface to its own wireless board means the system scales by adding <em>boards</em>, not pins.</p>
+    </section>
+
+    <!-- WIP PIX FILMSTRIP -->
+    <section class="wippix">
+      <div class="wippix-head">
+        <h3>WIP Pix</h3>
+        <span class="n">5 shots over time</span>
+      </div>
+      <div class="filmstrip">
+        <figure class="frame">
+          <img data-img="noodle.fiber" alt="Driver board lighting fiber-optic strands" />
+          <figcaption class="frame-meta">
+            <div class="frame-date">2026-04-11</div>
+            <div class="frame-cap">Driver board lighting fiber-optic strands</div>
+          </figcaption>
+        </figure>
+        <figure class="frame">
+          <img data-img="noodle.hero" alt="The full instrument lit" />
+          <figcaption class="frame-meta">
+            <div class="frame-date">2026-04-15</div>
+            <div class="frame-cap">The full instrument lit</div>
+          </figcaption>
+        </figure>
+        <figure class="frame">
+          <img data-img="noodle.hex-orb" alt="Hex panels and RGB orb on the bench" />
+          <figcaption class="frame-meta">
+            <div class="frame-date">2026-05-09</div>
+            <div class="frame-cap">Hex panels and RGB orb on the bench</div>
+          </figcaption>
+        </figure>
+        <figure class="frame">
+          <img data-img="noodle.lit-desk" alt="Lit desk with the pixel matrix running" />
+          <figcaption class="frame-meta">
+            <div class="frame-date">2026-05-16</div>
+            <div class="frame-cap">Lit desk with the pixel matrix running</div>
+          </figcaption>
+        </figure>
+        <figure class="frame">
+          <img data-img="noodle.disco-skull" alt="Printed skull over the spinning disco ball" />
+          <figcaption class="frame-meta">
+            <div class="frame-date">2026-05-27</div>
+            <div class="frame-cap">Printed skull over the spinning disco ball</div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- DEVLOG TIMELINE -->
+    <div class="section-head">
+      <h2>Devlog</h2>
+      <span class="count">latest 6 of 16</span>
+      <span class="rule"></span>
+    </div>
+
+    <section class="timeline">
+
+      <article class="entry">
+        <div class="entry-date">2026-09-07</div>
+        <h3 class="entry-title">Landscape TFT + chrome refresh; the Patternflow bank</h3>
+        <div class="entry-tags">
+          <span class="entry-tag">ui</span>
+          <span class="entry-tag">patterns</span>
+        </div>
+        <p class="entry-body">Recomposed the entire UI for a landscape 320×240 ST7789 mount — one-row header, framed menus, Live Control and Chladni re-laid-out. Landed the Patternflow bank too: hand-ported JS shader-style patterns running on all three boards, with the red Qwiic button as a palette dice.</p>
+      </article>
+
+      <article class="entry">
+        <div class="entry-date">2026-08-29</div>
+        <h3 class="entry-title">21 effects, a palette system, and &lsquo;Noodle 2K&rsquo;</h3>
+        <div class="entry-tags">
+          <span class="entry-tag">effects</span>
+          <span class="entry-tag">palettes</span>
+          <span class="entry-tag">milestone</span>
+        </div>
+        <p class="entry-body">Big content wave: a trimmed 2D particle engine and the WLED particle effects (catalog to 21), a real 16-band GEQ spectrum analyzer, and a global palette system with host-parity tests and a dial palette picker. Rebranded the whole thing &ldquo;Noodle 2K&rdquo; with a new layered power-on intro. Also brought up a hub75 MatrixPortal satellite doing native 64×32.</p>
+      </article>
+
+      <article class="entry">
+        <div class="entry-date">2026-08-16</div>
+        <h3 class="entry-title">The big rebuild — bare MCU, Chladni, cyberpunk chrome</h3>
+        <div class="entry-tags">
+          <span class="entry-tag">rebuild</span>
+          <span class="entry-tag">ui</span>
+        </div>
+        <p class="entry-body">Stripped the rig back to a bare MCU and brought it up clean: retired the icon and (later) 8×12 sats, drove the 16×16 locally, moved SparkFun inputs to their own I2C bus, and replaced the wireframe screensaver with a live Chladni-plate visualizer. Also redid the whole UI on an anti-aliased &ldquo;chrome&rdquo; kit and killed the flicker.</p>
+      </article>
+
+      <article class="entry">
+        <div class="entry-date">2026-06-13</div>
+        <h3 class="entry-title">Portability pass + matrix sat moves to an S3</h3>
+        <div class="entry-tags">
+          <span class="entry-tag">firmware</span>
+          <span class="entry-tag">portability</span>
+        </div>
+        <p class="entry-body">Made the whole project portable to a new machine — pinned the pioarduino platform by URL across every board so builds are reproducible. Ported the 12×8 matrix satellite to a dual-core ESP32-S3 SuperMini for a better radio, and added a baked Pac-Chase animation source for the 16×16.</p>
+      </article>
+
+      <article class="entry">
+        <div class="entry-date">2026-05-27</div>
+        <h3 class="entry-title">Disco-ball satellite — and a nasty ground-noise lesson</h3>
+        <div class="entry-tags">
+          <span class="entry-tag">satellites</span>
+          <span class="entry-tag">disco</span>
+          <span class="entry-tag">hardware-lesson</span>
+        </div>
+        <p class="entry-body">Added a motorized disco ball as its own satellite (stepper + spot LED + OLED) with a dedicated LiveTarget. First version ran the stepper off main power and it made the ground filthy — the noise bled into the rest of the Noodle. Its own supply fixed it. Classic motor-on-shared-ground trap.</p>
+        <figure class="entry-fig">
+          <img data-img="noodle.disco-skull" alt="Printed skull over the spinning disco ball" />
+          <figcaption>Printed skull over the spinning disco ball</figcaption>
+        </figure>
+      </article>
+
+      <article class="entry">
+        <div class="entry-date">2026-05-16</div>
+        <h3 class="entry-title">ESP-NOW only, plus a screen-capture path</h3>
+        <div class="entry-tags">
+          <span class="entry-tag">esp-now</span>
+          <span class="entry-tag">streaming</span>
+        </div>
+        <p class="entry-body">Dropped WiFi association entirely — the Console runs pure ESP-NOW now. Started the screen-share path (browser → ingest → matrix) and a LittleFS clip store, so I can push real captured pixels to the 16×16, not just generated effects.</p>
+        <figure class="entry-fig">
+          <img data-img="noodle.lit-desk" alt="Lit desk with the pixel matrix running" />
+          <figcaption>Lit desk with the pixel matrix running</figcaption>
+        </figure>
+      </article>
+
+    </section>
+
+    <!-- INDEX GRID -->
+    <div class="section-head">
+      <h2>All builds</h2>
+      <span class="count">7 projects</span>
+      <span class="rule"></span>
+    </div>
+
+    <section class="index-grid">
+
+      <article class="card">
+        <img class="card-thumb" data-img="thumbs.kfun" alt="kFun" />
+        <div class="card-inner">
+          <div class="card-top">
+            <span class="card-title">kFun</span>
+            <span class="pill active mini"><span class="led"></span>active</span>
+          </div>
+          <p class="card-sum">Two handheld game consoles built from one codebase.</p>
+          <div class="card-foot">
+            <span class="k">hardware · <span class="entries">12 entries</span></span>
+            <span>Sep 16</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card current">
+        <img class="card-thumb" data-img="thumbs.noodle" alt="NoodleLab v2" />
+        <div class="card-inner">
+          <div class="card-top">
+            <span class="card-title">NoodleLab v2</span>
+            <span class="card-here">you are here</span>
+          </div>
+          <p class="card-sum">A modular LED light instrument that turned into a distributed system.</p>
+          <div class="card-foot">
+            <span class="k">hardware · <span class="entries">16 entries</span></span>
+            <span>Sep 07</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <img class="card-thumb" data-img="thumbs.vizbot" alt="vizBot" />
+        <div class="card-inner">
+          <div class="card-top">
+            <span class="card-title">vizBot</span>
+            <span class="pill shipped mini"><span class="led"></span>shipped</span>
+          </div>
+          <p class="card-sum">A companion robot with a face, personalities, and a cloud backend.</p>
+          <div class="card-foot">
+            <span class="k">hardware · <span class="entries">16 entries</span></span>
+            <span>Aug 30</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <img class="card-thumb" data-img="thumbs.radar" alt="ESP32 Plane Radar" />
+        <div class="card-inner">
+          <div class="card-top">
+            <span class="card-title">ESP32 Plane Radar</span>
+            <span class="pill shipped mini"><span class="led"></span>shipped</span>
+          </div>
+          <p class="card-sum">A desktop ADS-B aircraft scope on a round LCD.</p>
+          <div class="card-foot">
+            <span class="k">hardware · <span class="entries">6 entries</span></span>
+            <span>Aug 28</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <img class="card-thumb" data-img="thumbs.phantasyfish" alt="PhantasyFish" />
+        <div class="card-inner">
+          <div class="card-top">
+            <span class="card-title">PhantasyFish</span>
+            <span class="pill live mini"><span class="led"></span>live</span>
+          </div>
+          <p class="card-sum">Fantasy sports for Phish setlists.</p>
+          <div class="card-foot">
+            <span class="k">software · <span class="entries">17 entries</span></span>
+            <span>Aug 10</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <img class="card-thumb" data-img="thumbs.stackled" alt="StackLED" />
+        <div class="card-inner">
+          <div class="card-top">
+            <span class="card-title">StackLED</span>
+            <span class="pill shipped mini"><span class="led"></span>shipped</span>
+          </div>
+          <p class="card-sum">A handheld LED stacker arcade game.</p>
+          <div class="card-foot">
+            <span class="k">hardware · <span class="entries">6 entries</span></span>
+            <span>Aug 04</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <img class="card-thumb" data-img="thumbs.cyberdeck" alt="The Cyberdeck" />
+        <div class="card-inner">
+          <div class="card-top">
+            <span class="card-title">The Cyberdeck (noode-exp)</span>
+            <span class="pill active mini"><span class="led"></span>active</span>
+          </div>
+          <p class="card-sum">A portable Raspberry Pi workstation with a custom ESP32 electronics bench.</p>
+          <div class="card-foot">
+            <span class="k">hardware · <span class="entries">6 entries</span></span>
+            <span>Jul 05</span>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <footer>
+      <span class="brand-sm">kpow.xyz — build log</span>
+      <span>Design comp B · &ldquo;Jewel light&rdquo; · NoodleLab v2</span>
+    </footer>
+
+  </main>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged photo">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+    <div class="lightbox-inner">
+      <img id="lightboxImg" src="" alt="" />
+      <div class="lightbox-cap"><span class="dotmk">&#9670;</span> <span id="lightboxCap"></span></div>
+    </div>
+  </div>
+
+  <script>
+    // Resolve real photos from the global image map.
+    document.querySelectorAll('[data-img]').forEach(function (el) {
+      var parts = el.getAttribute('data-img').split('.');
+      var g = parts[0], k = parts[1];
+      var v = window.COMP_IMG && window.COMP_IMG[g] && window.COMP_IMG[g][k];
+      if (v) el.src = v;
+    });
+
+    // Lightbox
+    (function () {
+      var lb = document.getElementById('lightbox');
+      var lbImg = document.getElementById('lightboxImg');
+      var lbCap = document.getElementById('lightboxCap');
+      var lbClose = document.getElementById('lightboxClose');
+
+      function openLB(src, cap) {
+        lbImg.src = src;
+        lbImg.alt = cap || '';
+        lbCap.textContent = cap || '';
+        lb.classList.add('open');
+      }
+      function closeLB() {
+        lb.classList.remove('open');
+        lbImg.src = '';
+      }
+
+      // Any photo img (hero, filmstrip, entry figures) opens the lightbox.
+      document.querySelectorAll('.hero-band img, .frame img, .entry-fig img').forEach(function (img) {
+        img.addEventListener('click', function () {
+          var cap = img.getAttribute('alt') || '';
+          openLB(img.currentSrc || img.src, cap);
+        });
+      });
+
+      lb.addEventListener('click', function (e) {
+        if (e.target === lb || e.target === lbClose) closeLB();
+      });
+      lbClose.addEventListener('click', closeLB);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && lb.classList.contains('open')) closeLB();
+      });
+    })();
+  </script>
+
+</body>
+</html>

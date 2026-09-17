@@ -1,0 +1,337 @@
+{
+ "index": [
+  {
+   "slug": "kfun",
+   "title": "kFun",
+   "summary": "Two handheld game consoles built from one codebase.",
+   "status": "active",
+   "kind": "hardware",
+   "stack": [
+    "ESP32-S3",
+    "C++",
+    "LovyanGFX",
+    "PlatformIO"
+   ],
+   "tags": [
+    "handheld",
+    "games",
+    "firmware"
+   ],
+   "stats": {
+    "entries": 12,
+    "photos": 4,
+    "daysActive": 51,
+    "firstEntry": "2026-07-28",
+    "lastEntry": "2026-09-16"
+   },
+   "rung": "design",
+   "lastEntry": "2026-09-16"
+  },
+  {
+   "slug": "noodle",
+   "title": "NoodleLab v2",
+   "summary": "A modular LED light instrument that turned into a distributed system.",
+   "status": "active",
+   "kind": "hardware",
+   "stack": [
+    "ESP32-S3",
+    "ESP32-C3",
+    "ESP-NOW",
+    "FastLED"
+   ],
+   "tags": [
+    "led",
+    "esp-now",
+    "firmware",
+    "distributed"
+   ],
+   "stats": {
+    "entries": 16,
+    "photos": 5,
+    "daysActive": 169,
+    "firstEntry": "2026-03-25",
+    "lastEntry": "2026-09-07"
+   },
+   "rung": "light → solder",
+   "lastEntry": "2026-09-07"
+  },
+  {
+   "slug": "vizbot",
+   "title": "vizBot",
+   "summary": "A companion robot with a face, personalities, and a cloud backend.",
+   "status": "shipped",
+   "kind": "hardware",
+   "stack": [
+    "ESP32-S3",
+    "FreeRTOS",
+    "arduinoFFT",
+    "ESP-NOW"
+   ],
+   "tags": [
+    "robot",
+    "cloud",
+    "iot",
+    "firmware"
+   ],
+   "stats": {
+    "entries": 16,
+    "photos": 3,
+    "daysActive": 219,
+    "firstEntry": "2026-01-24",
+    "lastEntry": "2026-08-30"
+   },
+   "rung": "solder → design",
+   "lastEntry": "2026-08-30"
+  },
+  {
+   "slug": "radar",
+   "title": "ESP32 Plane Radar",
+   "summary": "A desktop ADS-B aircraft scope on a round LCD.",
+   "status": "shipped",
+   "kind": "hardware",
+   "stack": [
+    "ESP32-C3",
+    "LovyanGFX",
+    "ADS-B",
+    "PlatformIO"
+   ],
+   "tags": [
+    "display",
+    "adsb",
+    "firmware"
+   ],
+   "stats": {
+    "entries": 6,
+    "photos": 4,
+    "daysActive": 77,
+    "firstEntry": "2026-06-13",
+    "lastEntry": "2026-08-28"
+   },
+   "rung": "solder",
+   "lastEntry": "2026-08-28"
+  },
+  {
+   "slug": "phantasyfish",
+   "title": "PhantasyFish",
+   "summary": "Fantasy sports for Phish setlists.",
+   "status": "live",
+   "kind": "software",
+   "stack": [
+    "React",
+    "TypeScript",
+    "Express",
+    "PostgreSQL"
+   ],
+   "tags": [
+    "web",
+    "fullstack",
+    "phish"
+   ],
+   "stats": {
+    "entries": 17,
+    "photos": 1,
+    "daysActive": 486,
+    "firstEntry": "2025-04-12",
+    "lastEntry": "2026-08-10"
+   },
+   "rung": null,
+   "lastEntry": "2026-08-10"
+  },
+  {
+   "slug": "stackled",
+   "title": "StackLED",
+   "summary": "A handheld LED stacker arcade game.",
+   "status": "shipped",
+   "kind": "hardware",
+   "stack": [
+    "ESP32-C3",
+    "MAX7219",
+    "PlatformIO"
+   ],
+   "tags": [
+    "game",
+    "led",
+    "firmware"
+   ],
+   "stats": {
+    "entries": 6,
+    "photos": 2,
+    "daysActive": 32,
+    "firstEntry": "2026-07-04",
+    "lastEntry": "2026-08-04"
+   },
+   "rung": "solder",
+   "lastEntry": "2026-08-04"
+  },
+  {
+   "slug": "cyberdeck",
+   "title": "The Cyberdeck (noode-exp)",
+   "summary": "A portable Raspberry Pi workstation with a custom ESP32 electronics bench.",
+   "status": "active",
+   "kind": "hardware",
+   "stack": [
+    "Raspberry Pi 5",
+    "ESP32-S3",
+    "ST7789",
+    "WS2812"
+   ],
+   "tags": [
+    "cyberdeck",
+    "pi",
+    "bench"
+   ],
+   "stats": {
+    "entries": 6,
+    "photos": 4,
+    "daysActive": 8,
+    "firstEntry": "2026-06-28",
+    "lastEntry": "2026-07-05"
+   },
+   "rung": "design",
+   "lastEntry": "2026-07-05"
+  }
+ ],
+ "detail": {
+  "slug": "noodle",
+  "title": "NoodleLab v2",
+  "summary": "A modular LED light instrument that turned into a distributed system.",
+  "status": "active",
+  "kind": "hardware",
+  "stack": [
+   "ESP32-S3",
+   "ESP32-C3",
+   "ESP-NOW",
+   "FastLED",
+   "FreeRTOS",
+   "PCA9685",
+   "PlatformIO"
+  ],
+  "tags": [
+   "led",
+   "esp-now",
+   "firmware",
+   "distributed"
+  ],
+  "facts": {
+   "satellites": "7",
+   "effects": "16"
+  },
+  "started": "2026-03-23",
+  "links": [
+   {
+    "label": "repo",
+    "url": "https://github.com/kpow/noodlez-v2"
+   }
+  ],
+  "hero": "/buildlog/noodle/media/hero.jpg",
+  "stats": {
+   "entries": 16,
+   "photos": 5,
+   "daysActive": 169,
+   "firstEntry": "2026-03-25",
+   "lastEntry": "2026-09-07"
+  },
+  "body": "A modular LED light instrument that turned into a distributed system. It started\nas one microcontroller driving a few panels — but when it ran out of pins, I gave\nevery panel its own chip and linked them wirelessly. Now I can keep adding\nsurfaces without ever hitting a hardware wall, and they all animate together in\nreal time.\n\n## How it works\n\nAn **ESP32-S3 core** (Adafruit FeatherS3) commands a fleet of **ESP-NOW\nsatellites** — 8×8, 16×16, and 12×8 matrices, an RGBW bar, a mic satellite, a\nhaptic dial remote, and a motorized disco ball — each its own ESP32-C3. The core\nbroadcasts one **58-byte packet**; every satellite receives the same packet and\nrenders locally, staying frame-synced without the core pushing every pixel.\n\n- **Dual-core FreeRTOS** — radio on one core, FastLED render on the other, so they\n  never step on each other (the S3's RMT peripheral fights the WiFi radio if you\n  get the startup order wrong).\n- **16 FastLED effects**, audio-reactive via a **512-point FFT** on the mic\n  satellite that broadcasts bass/mid/treble/beat to the whole fleet.\n- **Control surface:** three NeoPixel encoders, a NeoSlider, a ToF proximity\n  sensor, capacitive touch, PCA9685-driven LED filaments + skull, and a\n  lightning-bolt lane.\n\n## Why it's built this way\n\nThe distributed architecture wasn't a flourish — it was running out of GPIO and\nrefusing to stop adding panels. Moving each surface to its own wireless board\nmeans the system scales by adding *boards*, not pins.",
+  "entries": [
+   {
+    "date": "2026-09-07",
+    "title": "Landscape TFT + chrome refresh; the Patternflow bank",
+    "tags": [
+     "ui",
+     "patterns"
+    ],
+    "body": "Recomposed the entire UI for a landscape 320×240 ST7789 mount — one-row header, framed menus, Live Control and Chladni re-laid-out. Landed the Patternflow bank too: hand-ported JS shader-style patterns running on all three boards, with the red Qwiic button as a palette dice.",
+    "media": []
+   },
+   {
+    "date": "2026-08-29",
+    "title": "21 effects, a palette system, and 'Noodle 2K'",
+    "tags": [
+     "effects",
+     "palettes",
+     "milestone"
+    ],
+    "body": "Big content wave: a trimmed 2D particle engine and the WLED particle effects (catalog to 21), a real 16-band GEQ spectrum analyzer, and a global palette system with host-parity tests and a dial palette picker. Rebranded the whole thing \"Noodle 2K\" with a new layered power-on intro. Also brought up a hub75 MatrixPortal satellite doing native 64×32.",
+    "media": []
+   },
+   {
+    "date": "2026-08-16",
+    "title": "The big rebuild — bare MCU, Chladni, cyberpunk chrome",
+    "tags": [
+     "rebuild",
+     "ui"
+    ],
+    "body": "Stripped the rig back to a bare MCU and brought it up clean: retired the icon and (later) 8×12 sats, drove the 16×16 locally, moved SparkFun inputs to their own I2C bus, and replaced the wireframe screensaver with a live Chladni-plate visualizer. Also redid the whole UI on an anti-aliased \"chrome\" kit and killed the flicker.",
+    "media": []
+   },
+   {
+    "date": "2026-06-13",
+    "title": "Portability pass + matrix sat moves to an S3",
+    "tags": [
+     "firmware",
+     "portability"
+    ],
+    "body": "Made the whole project portable to a new machine — pinned the pioarduino platform by URL across every board so builds are reproducible. Ported the 12×8 matrix satellite to a dual-core ESP32-S3 SuperMini for a better radio, and added a baked Pac-Chase animation source for the 16×16.",
+    "media": []
+   },
+   {
+    "date": "2026-05-27",
+    "title": "Disco-ball satellite — and a nasty ground-noise lesson",
+    "tags": [
+     "satellites",
+     "disco",
+     "hardware-lesson"
+    ],
+    "body": "Added a motorized disco ball as its own satellite (stepper + spot LED + OLED) with a dedicated LiveTarget. First version ran the stepper off main power and it made the ground filthy — the noise bled into the rest of the Noodle. Its own supply fixed it. Classic motor-on-shared-ground trap.",
+    "media": [
+     {
+      "src": "/buildlog/noodle/media/disco-skull.jpg",
+      "caption": "Printed skull over the spinning disco ball"
+     }
+    ]
+   },
+   {
+    "date": "2026-05-16",
+    "title": "ESP-NOW only, plus a screen-capture path",
+    "tags": [
+     "esp-now",
+     "streaming"
+    ],
+    "body": "Dropped WiFi association entirely — the Console runs pure ESP-NOW now. Started the screen-share path (browser → ingest → matrix) and a LittleFS clip store, so I can push real captured pixels to the 16×16, not just generated effects.",
+    "media": [
+     {
+      "src": "/buildlog/noodle/media/lit-desk.jpg",
+      "caption": "Lit desk with the pixel matrix running"
+     }
+    ]
+   }
+  ],
+  "picturesOverTime": [
+   {
+    "date": "2026-04-11",
+    "src": "/buildlog/noodle/media/fiber.jpg",
+    "caption": "Driver board lighting fiber-optic strands"
+   },
+   {
+    "date": "2026-04-15",
+    "src": "/buildlog/noodle/media/hero.jpg",
+    "caption": "The full instrument lit"
+   },
+   {
+    "date": "2026-05-09",
+    "src": "/buildlog/noodle/media/hex-orb.jpg",
+    "caption": "Hex panels and RGB orb on the bench"
+   },
+   {
+    "date": "2026-05-16",
+    "src": "/buildlog/noodle/media/lit-desk.jpg",
+    "caption": "Lit desk with the pixel matrix running"
+   },
+   {
+    "date": "2026-05-27",
+    "src": "/buildlog/noodle/media/disco-skull.jpg",
+    "caption": "Printed skull over the spinning disco ball"
+   }
+  ]
+ }
+}
