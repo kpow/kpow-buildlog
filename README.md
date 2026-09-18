@@ -66,8 +66,28 @@ markdown + images  ──►  node scripts/build-buildlog.mjs  ──►  builds
 
 ## Daily workflow
 
-1. Drop the day's photos in; agent resizes them into `builds/<slug>/media/`.
-2. Agent writes `builds/<slug>/log/<today>.md` from a sentence or two.
-3. Commit + push. Site rebuilds.
+Open this folder in Claude Code and use the `/buildlog` skill
+(`.claude/skills/buildlog/SKILL.md`):
 
-Two minutes, and the git history is itself a permanent record of the work.
+1. Drop the day's photos in `inbox/` (straight off the phone is fine).
+2. `/buildlog log <build>` — drafts entries from the source repo's new commits and
+   your photos; you correct the draft.
+3. Approve publish — it regenerates, commits, pushes, and (if you say so) redeploys.
+
+`/buildlog` on its own shows every build, how stale it is, and how many commits
+haven't been logged. `/buildlog audit <build>` checks existing entries against the
+source repo and the photo archive.
+
+Photos are always processed by `scripts/photo.mjs`: resized to 1600px, turned
+upright, and stripped of all metadata — **phone photos carry GPS**, so a raw file
+committed here would publish where it was taken.
+
+### Maintenance scripts (no dependencies)
+
+| Script | Does |
+|---|---|
+| `status.mjs` | dashboard: last entry per build, unlogged commits, inbox |
+| `commits.mjs <slug>` | each entry beside the source commits behind it |
+| `photo.mjs` | `info` / `ingest` — resize, orient, strip metadata |
+| `lint.mjs` | format checks the tiny parser won't catch |
+| `redeploy.mjs` | empty commit to kpow_v3 main → DigitalOcean rebuilds the site |

@@ -1,0 +1,192 @@
+---
+name: buildlog
+description: Maintain the kpow.xyz build log — log a day's work on a build, start a new build, audit a build against its source repo, fix wrong content, and publish. Use when the user says "/buildlog", "log today's work", "add an entry", "new build", "the build log is wrong", "audit <build>", "fix <build>", "publish the build log", or drops photos in inbox/.
+---
+
+# buildlog
+
+This repo is the content behind kpow.xyz/builds: markdown + photos, no database.
+kpow_v3 clones it at build time and renders `builds.json`. Work in this repo only.
+
+## Modes
+
+| Command | Does |
+|---|---|
+| `/buildlog` | Status: every build, days since last entry, unlogged commits, inbox, unpushed work |
+| `/buildlog log <slug> [what you did]` | Add entries for recent work — the everyday one |
+| `/buildlog new <slug>` | Start a new build |
+| `/buildlog audit <slug>` | Check a build against its source repo and photos; list what's off |
+| `/buildlog fix <slug> <what's wrong>` | Correct existing content |
+| `/buildlog publish` | Regenerate, commit, push, optionally redeploy the site |
+
+No slug on `log`/`audit`/`fix`: run status and ask which build — one question.
+
+## Tools (all zero-dependency, run from repo root)
+
+```
+node scripts/status.mjs                   # dashboard
+node scripts/commits.mjs <slug>           # each entry + the source commits behind it; UNLOGGED at the end
+node scripts/commits.mjs <slug> --since D # commits after date D
+node scripts/photo.mjs info <files...>    # when each photo was taken, orientation, GPS?
+node scripts/photo.mjs ingest <in> <out>  # resize 1600px, upright, ALL metadata stripped
+node scripts/lint.mjs [slug]              # mechanical checks; must pass before publishing
+node scripts/build-buildlog.mjs ./builds ./builds.json   # regenerate the site data
+node scripts/redeploy.mjs                 # make kpow.xyz rebuild (asks first — see Publish)
+```
+
+Source repos are found automatically: build.md's `repo:` is matched against checkouts
+under ~/projects. The photo archive is `../source-media/` — iPhone exports named
+`YYYY-MM-DD HH.MM.SS.jpg`, so `ls ../source-media | grep '^2026-06-29'` finds a day's
+photos. `IMG_*.HEIC` files aren't dated by name; use `photo.mjs info`.
+
+## The one rule: never invent
+
+Every claim in an entry must trace to one of: a commit (subject or diff), a photo, or
+the user's own words this session. Commit messages say *what* changed; the user knows
+*why* and *what it was like*. If a draft needs a detail you don't have — a number, a
+reason, whether something worked — ask, or leave it out. A shorter true entry beats a
+fuller made-up one. This is how the log got out of whack in the first place.
+
+## log
+
+1. `node scripts/commits.mjs <slug> --since <last entry date>` and list `inbox/`.
+2. Group the commits into **chunks of work**, not one entry per commit. A chunk is what
+   you'd tell a friend you did that day. Date each entry the day that work landed.
+   Several days of small commits on one thing = one entry, dated its last day.
+3. Photos: `photo.mjs info inbox/*`. Match each to an entry by the date it was taken.
+   **Look at every photo** (Read it) before captioning. Photos with no matching work
+   day: ask.
+4. Draft all entries at once and show them. If the user gave a sentence, it leads.
+   Ask **one** question at a time about anything you can't source.
+5. On approval: ingest photos (below), write the files, then **Publish**.
+
+No commits and no photos? It's a hands-on day — ask what they did.
+
+## new
+
+1. Find the source: ask for the repo, confirm the checkout exists under ~/projects.
+2. Read its README and `git log --reverse --format='%cs %s' | head -60` for the story.
+3. Ask the user, in one message: one-line summary · status · hardware or software ·
+   when it started. Offer your own guesses from the repo to confirm or correct.
+4. Draft `build.md` (template below). The body is the evergreen description:
+   what it is, how it works, why it's built that way. `## ` headings are fine.
+5. Hero: best whole-project photo from inbox or `../source-media` → `media/hero.jpg`.
+6. Backfill entries from history like `log`, then **Publish**.
+
+## audit
+
+The correction pass. Goal: a short list the user can say yes/no to.
+
+1. `node scripts/lint.mjs <slug>`. Mechanical errors are findings.
+2. `node scripts/commits.mjs <slug>`. For each entry, compare its claims to the commits
+   in its window. `git -C <source> show --stat <hash>` when a subject is too vague.
+3. `⚠ no commits behind this entry` is **not** automatically wrong — soldering, cases,
+   and assembly don't make commits. Check `../source-media` for photos that day. No
+   commits *and* no photos → ask the user whether it happened.
+4. Check `build.md`: `status` still right? `facts:` numbers still true (grep the code —
+   e.g. count the effects)? `summary` still accurate? `stack` complete?
+5. Report **at most 5 findings per message**, worst first:
+   `date · entry · what's off · evidence · proposed fix`. Then ask for go/no-go.
+6. Apply what's approved via **fix**. Offer the next 5 if there are more.
+
+## fix
+
+Entries are append-only for *new* work — never rewrite an old entry to change what
+happened. Fixing a *mistake* is the exception: wrong date, a claim that isn't true, a
+bad caption, a broken format. Git history keeps the old version.
+
+- Wrong date: `git mv` the file to the right date AND change its `date:`.
+- Show a before/after for any change to entry text, then **Publish**.
+- Something that never happened: delete the entry (ask first, name the file).
+
+## Format — the parser is tiny, so be exact
+
+`build.md`:
+```
+---
+slug: radar
+title: ESP32 Plane Radar
+status: shipped            # active | shipped | live | shelved   (live = deployed software)
+kind: hardware             # hardware | software
+summary: A desktop ADS-B aircraft scope on a round LCD.
+stack: [ESP32-C3, LovyanGFX, ADS-B, PlatformIO]
+tags: [display, adsb, firmware]
+rung: solder               # leave existing values alone; don't invent one
+repo: kpow/ESP32-Plane-Radar
+facts:
+  aircraft: 64             # 0-4 stat chips; must be true and checkable
+hero: media/hero.jpg
+links:
+  - { label: repo, url: https://github.com/kpow/ESP32-Plane-Radar }
+started: 2026-06-13
+---
+
+Evergreen markdown body.
+```
+
+`log/YYYY-MM-DD.md` (a second entry the same day: `YYYY-MM-DD-<word>.md`):
+```
+---
+date: 2026-05-27
+title: "Disco-ball satellite — and a nasty ground-noise lesson"
+tags: [satellites, disco, hardware-lesson]
+media:
+  - { src: media/disco-skull.jpg, caption: "Printed skull over the spinning disco ball" }
+---
+Body.
+```
+Text-only entry: `media: []`.
+
+- `---` on **line 1**, LF endings.
+- `date:` must equal the filename's date.
+- Quote titles and captions with `"…"`. Never `\"` inside — it shows up literally.
+  If the text contains `"`, wrap it in single quotes: `title: 'The 7" touch build'`.
+- `[a, b]` lists split on commas: no commas or quotes inside items.
+- Captions can't contain `}`.
+- `src:` is relative to the build folder: `media/<name>.jpg`.
+
+## Voice — match what's there
+
+- One paragraph. Median ~60 words; 30–120 is the range.
+- Past tense, first person, usually subject-less: "Ported the console to…",
+  "Chased the head stalls to ground…", "Swapped in an FC16 module…".
+- Name the real parts, chips and numbers. No marketing, no "excited to", no emoji.
+- End on the why, the result, or the lesson: "Its own supply fixed it. Classic
+  motor-on-shared-ground trap."
+- Title: short and specific, joins with `—`, `+`, `,` or `:`.
+- Tags: 1–3, lowercase, kebab-case.
+- Renders and screenshots say so in the caption: "(render)", "(screenshot)".
+
+## Photos
+
+Always through `photo.mjs ingest`, never copy a raw file into `media/`. Raw phone
+photos carry GPS; the script strips it and refuses to finish if any survives.
+
+```
+node scripts/photo.mjs ingest inbox/IMG_1234.HEIC builds/<slug>/media/<name>.jpg
+mkdir -p inbox/done && mv inbox/IMG_1234.HEIC inbox/done/
+```
+`<name>`: short kebab-case description of what's in frame — `disco-skull`,
+`hex-orb` — unique in that `media/`. Never delete originals; move them to `inbox/done/`.
+
+## Safety
+
+- Never publish credentials, WiFi names/passwords, IPs, MAC addresses, API keys or
+  coordinates. ESP32-Plane-Radar and vizpow have hardcoded WiFi creds, home lat/lon
+  and a fleet secret in their source — read their history for *what changed*, never
+  quote config values.
+- "Home" is fine; where home is, isn't.
+
+## Publish
+
+1. `node scripts/lint.mjs` — fix errors before going on.
+2. `node scripts/build-buildlog.mjs ./builds ./builds.json`
+3. `git add` the specific build folder(s) + `builds.json`; commit
+   `<slug>: <what changed>` with the attribution line from the system prompt.
+4. **Ask** before pushing: pushing makes it public on GitHub.
+5. `git push`.
+6. Pushing alone doesn't update kpow.xyz. **Ask**: "Redeploy the site now?" On yes:
+   `node scripts/redeploy.mjs` (pushes an empty commit to kpow_v3 main, which
+   triggers DigitalOcean). Batch it — once after a session of edits, not per entry.
+7. Say what's now live in one line, e.g. "2 noodle entries + 3 photos are in; site
+   rebuilds in ~5 min at kpow.xyz/builds/noodle".

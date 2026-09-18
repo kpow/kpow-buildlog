@@ -1,2 +1,6 @@
 .DS_Store
 node_modules/
+
+# photo inbox — raw phone photos carry GPS; only processed copies get committed
+inbox/*
+!inbox/README.md
