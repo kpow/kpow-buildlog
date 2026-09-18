@@ -64,30 +64,8 @@ markdown + images  ──►  node scripts/build-buildlog.mjs  ──►  builds
 4. A GitHub Action here triggers a DigitalOcean redeploy on push, so
    **push to this repo → site republishes.** No DB, no admin panel.
 
-## Daily workflow
+## Workflow
 
-Open this folder in Claude Code and use the `/buildlog` skill
-(`.claude/skills/buildlog/SKILL.md`):
-
-1. Drop the day's photos in `inbox/` (straight off the phone is fine).
-2. `/buildlog log <build>` — drafts entries from the source repo's new commits and
-   your photos; you correct the draft.
-3. Approve publish — it regenerates, commits, pushes, and (if you say so) redeploys.
-
-`/buildlog` on its own shows every build, how stale it is, and how many commits
-haven't been logged. `/buildlog audit <build>` checks existing entries against the
-source repo and the photo archive.
-
-Photos are always processed by `scripts/photo.mjs`: resized to 1600px, turned
-upright, and stripped of all metadata — **phone photos carry GPS**, so a raw file
-committed here would publish where it was taken.
-
-### Maintenance scripts (no dependencies)
-
-| Script | Does |
-|---|---|
-| `status.mjs` | dashboard: last entry per build, unlogged commits, inbox |
-| `commits.mjs <slug>` | each entry beside the source commits behind it |
-| `photo.mjs` | `info` / `ingest` — resize, orient, strip metadata |
-| `lint.mjs` | format checks the tiny parser won't catch |
-| `redeploy.mjs` | empty commit to kpow_v3 main → DigitalOcean rebuilds the site |
+**See [WORKFLOW.md](WORKFLOW.md)**: logging work, fixing existing content,
+starting new builds, publishing, and photos. Short version: open this folder in
+Claude Code and run `/buildlog`.
