@@ -32,7 +32,7 @@ and an HLK-LD2412 mmWave presence radar.
 It runs 11 modes off about 2500 lines of monolithic C++, dual-core with a PSRAM
 framebuffer:
 
-| | |
+| Kind | Modes |
 |---|---|
 | **3D** | Steer Cube, Cube Swarm, Warp Tunnel, Box Physics |
 | **Pattern** | Chladni, Kaleido |
