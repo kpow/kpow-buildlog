@@ -53,12 +53,17 @@ shades generated from one base color in OKLCH so the steps look even.
 
 ## Living in 320 KB
 
-No PSRAM, 4 MB flash, a 2.5 MB app slot and a 1.4 MB LittleFS partition. A TLS
-handshake wants about 50 KB free, so every screen except Home is built on entry
-and freed on exit — that is what stopped sync rebooting the board mid-handshake.
-Icons, palette and pending edits live in the flash cache, so the whole thing
-works with the WiFi off. Sync runs on its own task on core 0 and pulls only what
-changed since its cursor, twelve icons a page.
+| Budget | What's in it |
+|---|---|
+| 320 KB RAM | no PSRAM at all |
+| 4 MB flash | 2.5 MB app slot, 1.4 MB LittleFS |
+| ~50 KB free | what a TLS handshake wants |
+
+That last line is the one that shapes the firmware. Every screen except Home is
+built on entry and freed on exit, and that is what stopped sync rebooting the
+board mid-handshake. Icons, palette and pending edits live in the flash cache, so
+the whole thing works with the WiFi off. Sync runs on its own task on core 0 and
+pulls only what changed since its cursor, twelve icons a page.
 
 Edits made on the device queue in an outbox and upload before the next pull. Each
 draft carries a hash of the server it was drawn against, so an edit can never be
