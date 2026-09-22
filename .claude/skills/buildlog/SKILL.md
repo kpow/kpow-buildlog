@@ -152,17 +152,59 @@ Video entry — `src:` the ingested .mp4, `poster:` a .jpg shown before it plays
 - Captions can't contain `}`.
 - `src:` and `poster:` are relative to the build folder: `media/<name>.jpg` / `.mp4`.
 
-## Voice — match what's there
+### Body markdown
 
-- One paragraph. Median ~60 words; 30–120 is the range.
-- Past tense, first person, usually subject-less: "Ported the console to…",
-  "Chased the head stalls to ground…", "Swapped in an FC16 module…".
+CommonMark plus GFM — tables, strikethrough, task lists, autolinks all parse, and
+`builds.json` carries the body through untouched.
+
+- **Blank line before every list, heading, table, callout and fence.** A `- ` line
+  can otherwise interrupt a paragraph and swallow it.
+- **`***` for a horizontal rule, never `---`.** Directly under a text line, `---`
+  is a setext H2.
+- No raw HTML; it is dropped, not rendered.
+- Tables need a header row. Three columns maximum, short cells — an entry body is
+  about 300px wide on a phone.
+- Links open in a new tab on their own. Don't write the target.
+
+## Voice and shape
+
+Shape follows the content. Most entries are 2–4 short paragraphs (40–140 words),
+and the structure varies because the days varied. A one-paragraph entry is still
+right when the day was one thing.
+
+- **A list** when there are 3+ parallel items: things fixed, parts swapped,
+  options weighed. Lead with a bolded noun label when the items have names —
+  `- **FC16 module:** …` — the renderer styles that first bold run.
+- **A callout**, at most one per entry, for the thing worth shouting at your past
+  self: `> **Trap:**`, `> **Lesson:**`, `> **Dead end:**`, `> **Note:**`,
+  `> **Next:**`. Colon inside the bold. No hard-won lesson, no callout.
+- **A table** only for genuinely tabular facts: settings vs results, before and
+  after, board vs board. Four columns of prose is a design failure, not a table.
+- **Headings** belong in `build.md` bodies and long entries. A 60-word entry with
+  a heading looks like a memo.
+- **First person is earned.** Agentless past tense for plain work ("Swapped in an
+  FC16 module"). "I" for mistakes, guesses, reversals and opinions ("I never
+  actually use it", "until I noticed the tint was still on"). If the commit log
+  knows it, drop the subject. If only you know it, say I.
 - Name the real parts, chips and numbers. No marketing, no "excited to", no emoji.
-- End on the why, the result, or the lesson: "Its own supply fixed it. Classic
-  motor-on-shared-ground trap."
 - Title: short and specific, joins with `—`, `+`, `,` or `:`.
 - Tags: 1–3, lowercase, kebab-case.
 - Renders, screenshots and clips say so in the caption: "(render)", "(screenshot)", "(video)".
+
+### Banned tics — these are what made the log read like a machine
+
+- **Comma-chained dumps.** Three or more clauses welded into one sentence with
+  commas. Break them into a list or into sentences.
+- **"Also …" / "Additionally …" tails** bolted on to cram in leftovers. If it
+  matters, give it its own sentence; if it doesn't, cut it.
+- **Stock editorialising closers**: "This is the backbone everything else hangs
+  off", "Lesson learned", "A good reminder that…". Put the lesson in a callout in
+  your own words or leave it out.
+- **Em dashes: at most one per entry, zero preferred.** They were the loudest
+  tell in the old log — 71 of them across 94 entries. Use a period or a colon.
+- **Hedges**: "a bit", "somewhat", "fairly", "pretty much".
+- **Repeating build.md in an entry.** If the evergreen body says it, link the
+  reader's attention elsewhere.
 
 ## Photos and video
 

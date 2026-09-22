@@ -122,8 +122,11 @@ Do the redeploy once at the end of a session, not after every entry.
    said. If a detail can't be sourced, Claude asks or leaves it out.
 2. **Entries are append-only.** New work gets a new entry. Old entries are only
    edited to fix mistakes: a wrong date, an untrue claim, a broken format.
-3. **Match the voice.** One paragraph, about 60 words, in past tense. Name the real
-   parts, leave out the hype, and end on the why or the lesson.
+3. **Match the voice.** Past tense, real part names, no hype. Shape follows the
+   content: a list for parallel items, a `> **Trap:**` callout for a lesson worth
+   keeping, a table for genuinely tabular facts. First person for mistakes and
+   judgment calls, agentless for plain work. Full rules: "Voice and shape" in
+   `.claude/skills/buildlog/SKILL.md`.
 4. **No secrets.** No WiFi names or passwords, IPs, keys or coordinates. The radar
    and vizpow repos have hardcoded credentials in their source; entries describe
    what changed, never config values.

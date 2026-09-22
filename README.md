@@ -44,7 +44,9 @@ tags: [satellites]
 media:
   - { src: media/disco-skull.jpg, caption: "Skull over the spinning ball" }
 ```
-Body (below the `---`) is Markdown.
+Body (below the `---`) is Markdown — CommonMark plus GFM tables. Lists, callouts
+(`> **Trap:** …`) and small tables all render; see "Body markdown" and "Voice and
+shape" in `.claude/skills/buildlog/SKILL.md`.
 
 ## Publish pipeline (no DB)
 
