@@ -18,7 +18,7 @@ started: 2026-07-28
 ---
 A family of handheld consoles built from one monorepo.
 
-| | tinyfun | bigfun | megafun |
+| Spec | tinyfun | bigfun | megafun |
 |---|---|---|---|
 | Board | LOLIN S3 Mini Pro | ESP32-S3 SuperMini | ESP32-S3 SuperMini |
 | Screen | 128×128 GC9107 | 2.0" 320×240 ST7789 | 2.0" 320×240 ST7789 |

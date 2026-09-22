@@ -1,1 +1,0 @@
-{ "version": "0.0.1", "configurations": [ { "name": "kpow-v3-preview", "runtimeExecutable": "npx", "runtimeArgs": ["--prefix", "/Users/kpow/projects/kpow_v3", "vite", "preview", "--config", "/Users/kpow/projects/kpow_v3/vite.config.ts", "--port", "4174", "--strictPort"], "port": 4174 } ] }
