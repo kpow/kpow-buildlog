@@ -774,6 +774,184 @@
       ]
     },
     {
+      "slug": "vizspot",
+      "title": "vizSpot",
+      "status": "shipped",
+      "kind": "hardware",
+      "summary": "A 64×64 LED matrix that shows what Spotify is playing, and dances to it.",
+      "stack": [
+        "ESP32-S3",
+        "HUB75",
+        "HUB75-DMA",
+        "JPEGDEC",
+        "arduinoFFT",
+        "ESPAsyncWebServer",
+        "PlatformIO"
+      ],
+      "tags": [
+        "led",
+        "spotify",
+        "firmware"
+      ],
+      "rung": null,
+      "facts": {
+        "effects": "22",
+        "palettes": "23",
+        "panel": "64x64"
+      },
+      "repo": "kpow/vizSpot",
+      "hero": "/buildlog/vizspot/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/vizSpot"
+        },
+        {
+          "label": "guide",
+          "url": "https://kpow.xyz/vizspot/guide"
+        },
+        {
+          "label": "control page guide",
+          "url": "https://kpow.xyz/vizspot/controls"
+        }
+      ],
+      "started": "2026-09-07",
+      "body": "A 64×64 LED matrix that shows what Spotify is playing, and dances to it. The\nalbum art is the real cover, fetched and decoded on the device at full bleed,\nwith the artist along the top edge and the title and a progress bar along the\nbottom in a 3×5 pixel face. No app, no cloud service, nothing left running on a\ncomputer.\n\n## What it does\n\n- **Now Playing** — the cover at 64×64, crossfading on every track change.\n- **Visualizer** — 22 effects from the noodlez-v2 catalog, driven by a\n  512-point FFT of the board's own microphones: 16 log-spaced bands and\n  spectral-flux beat detection, through 23 palettes, a new one on every effect\n  change. A kaleidoscope post-filter folds any of them.\n- **Ambient** — slow patterns when nothing is playing, reacting to room audio so\n  it still moves when the music comes from somewhere else. A cover you played\n  earlier fades in with how long ago it was.\n- **Control page** — everything above from a phone on the same WiFi, plus\n  Spotify search and transport. The browser talks to Spotify directly, so the\n  board pays nothing for it.\n\nGiving one away needs no computer: the panel shows a QR code, and the new owner\nconnects their own Spotify from their phone. The sign-in travels encrypted, so\nthe relay can't read it.\n\n## How it's built\n\nArduino on ESP-IDF with five FreeRTOS tasks, one owner per peripheral: render\nand audio and the thumb wheel on core 1, WiFi and Spotify and the web server on\ncore 0. Internal RAM is the scarce resource — the panel's DMA buffers, the WiFi\nstack and one TLS session share 320 KB — so canvases, album art, history and\nJPEG buffers all live in PSRAM, and there is exactly one TLS context, borrowed\nin turn by the Spotify API, the token endpoint and the art CDN.\n\nThe effect catalog is a dated snapshot of the shared library from NoodleLab,\nwith the ESP-NOW wire format cut out.",
+      "stats": {
+        "entries": 6,
+        "photos": 6,
+        "daysActive": 5,
+        "firstEntry": "2026-09-07",
+        "lastEntry": "2026-09-11"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-09-07",
+          "src": "/buildlog/vizspot/media/first-light-colors.jpg",
+          "caption": "First light on the bare panel — album art up, colors nowhere near right yet"
+        },
+        {
+          "date": "2026-09-07",
+          "src": "/buildlog/vizspot/media/brownout-bands.jpg",
+          "caption": "Banded red and dropped bits: the panel browning out on a computer USB port"
+        },
+        {
+          "date": "2026-09-07",
+          "src": "/buildlog/vizspot/media/art-and-effects.mp4",
+          "poster": "/buildlog/vizspot/media/art-and-effects.jpg",
+          "caption": "(video) Art and effects behind a sheet of diffuser, artist and title on the edges"
+        },
+        {
+          "date": "2026-09-11",
+          "src": "/buildlog/vizspot/media/hero.jpg",
+          "caption": "In the case, playing De La Soul — artist on the top edge, title on the bottom"
+        },
+        {
+          "date": "2026-09-11",
+          "src": "/buildlog/vizspot/media/case-unlit.jpg",
+          "caption": "The case unlit: printed frame and stand, diffuser over the panel, skulls cut into the side"
+        },
+        {
+          "date": "2026-09-11",
+          "src": "/buildlog/vizspot/media/in-the-case.mp4",
+          "poster": "/buildlog/vizspot/media/in-the-case.jpg",
+          "caption": "(video) Cover, then the visualizer effects, then the kaleidoscope fold"
+        }
+      ],
+      "lastEntry": "2026-09-11",
+      "entries": [
+        {
+          "date": "2026-09-11",
+          "title": "Phone pairing by QR — and the panel in a finished case",
+          "tags": [
+            "pairing",
+            "enclosure"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizspot/media/hero.jpg",
+              "caption": "In the case, playing De La Soul — artist on the top edge, title on the bottom"
+            },
+            {
+              "src": "/buildlog/vizspot/media/case-unlit.jpg",
+              "caption": "The case unlit: printed frame and stand, diffuser over the panel, skulls cut into the side"
+            },
+            {
+              "src": "/buildlog/vizspot/media/in-the-case.mp4",
+              "poster": "/buildlog/vizspot/media/in-the-case.jpg",
+              "caption": "(video) Cover, then the visualizer effects, then the kaleidoscope fold"
+            }
+          ],
+          "body": "Built phone pairing so a board can be given away without a computer: the panel shows a QR code alternating with a typable base32 card, the phone signs into Spotify, and the envelope comes back AES-256-GCM encrypted for the board to decrypt, apply, verify and acknowledge. Forgetting the credentials restarts on a fresh code. The case is done — printed frame and stand, with a choice of silver, white, grey or translucent diffusers."
+        },
+        {
+          "date": "2026-09-10",
+          "title": "Search straight from the browser, per-card saves, and the docs",
+          "tags": [
+            "spotify",
+            "docs"
+          ],
+          "media": [],
+          "body": "Put Spotify search on the control page, with the browser calling Spotify directly through a token endpoint so the board carries none of it. That turned into a device picker, an explicit device id, a retry on a stale device and plain-language errors — a browser player will not take playback, which the page now warns about. Reorganized the page into cards with their own Save buttons, added speed sliders, and wrote the README, user guide, hardware guide and API reference."
+        },
+        {
+          "date": "2026-09-09",
+          "title": "Memory cards in ambient, kaleidoscope, and a neo-brutalist control page",
+          "tags": [
+            "ambient",
+            "web"
+          ],
+          "media": [],
+          "body": "Gave ambient a memory: 20 tracks of history with cached covers, seeded from recently-played at boot and timed against NTP, so a cover you played earlier fades in with how long ago it was. Added the kaleidoscope post-filter with live controls, retuned Puzzle to 16 px tiles and Snakes to a 2× upscale, and restyled the whole control page neo-brutalist with collapsible cards. Also chased a stuck-on-song bug to a token refresh reusing a dead TLS session."
+        },
+        {
+          "date": "2026-09-08",
+          "title": "Status screens, random palettes, and a wheel that stopped missing presses",
+          "tags": [
+            "ui",
+            "input"
+          ],
+          "media": [],
+          "body": "Redesigned every status screen — boot splash, WiFi connecting, setup and unreachable, Spotify setup, token and waiting — and made the station retry faster behind the hotspot. Added a random palette on every effect change, carried per side through the crossfade. The thumb wheel was dropping presses because loop() was starved under the visualizer and FFT load, so it moved to a dedicated 10 ms key task with latched presses and a tolerant decoder."
+        },
+        {
+          "date": "2026-09-07",
+          "title": "First light: not the board the listing said, and USB can't feed it",
+          "tags": [
+            "hardware-lesson",
+            "panel"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizspot/media/first-light-colors.jpg",
+              "caption": "First light on the bare panel — album art up, colors nowhere near right yet"
+            },
+            {
+              "src": "/buildlog/vizspot/media/brownout-bands.jpg",
+              "caption": "Banded red and dropped bits: the panel browning out on a computer USB port"
+            },
+            {
+              "src": "/buildlog/vizspot/media/art-and-effects.mp4",
+              "poster": "/buildlog/vizspot/media/art-and-effects.jpg",
+              "caption": "(video) Art and effects behind a sheet of diffuser, artist and title on the edges"
+            }
+          ],
+          "body": "First light came up wrong twice. The board turned out to be a Seengreat RGB Matrix HUB75 S3, not the Waveshare its listing reads like. Then the panel banded red and dropped bits, which looked like a timing fault and was a brown-out on a computer's USB port — its own 5 V supply fixed both, and the budget default ended at 500 mA after a hub browned out at 900. Measured the white balance in linear light, then put the artist and title on the top and bottom edges in a 3×5 face."
+        },
+        {
+          "date": "2026-09-07",
+          "title": "Phases 0 to 5 in one sitting",
+          "tags": [
+            "bringup",
+            "spotify"
+          ],
+          "media": [],
+          "body": "Scaffolded the project and took it all the way through in one sitting: the HUB75 DMA panel driver and a boot test pattern, NVS settings with a captive-portal WiFi manager and a JSON web API, a Spotify PKCE helper and the on-device client with backoff, the Now Playing scene with its scroller and progress bar, album art fetched over HTTPS into PSRAM and decoded with JPEGDEC, then the effect catalog, the ES7210 mics, on-device FFT and beat detection, and the mode state machine."
+        }
+      ]
+    },
+    {
       "slug": "vizbot",
       "title": "vizBot",
       "status": "shipped",
@@ -1906,6 +2084,68 @@
       "body": "Built the whole spine in a day: the icon format and its shared library, the C header export, a Postgres-backed API, the catalog and editor and palette pages, and a deploy onto DigitalOcean App Platform. Then scaffolded the firmware and brought up the CYD, with WiFi setup and a first sync landing icons in a LittleFS cache. The panel fought back — colors only came out right as BGR with inversion on, and the ILI9341 has no reset pin, so it keeps its inversion state across warm resets and has to be told again at boot."
     },
     {
+      "build": "vizspot",
+      "buildTitle": "vizSpot",
+      "date": "2026-09-11",
+      "title": "Phone pairing by QR — and the panel in a finished case",
+      "tags": [
+        "pairing",
+        "enclosure"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizspot/media/hero.jpg",
+          "caption": "In the case, playing De La Soul — artist on the top edge, title on the bottom"
+        },
+        {
+          "src": "/buildlog/vizspot/media/case-unlit.jpg",
+          "caption": "The case unlit: printed frame and stand, diffuser over the panel, skulls cut into the side"
+        },
+        {
+          "src": "/buildlog/vizspot/media/in-the-case.mp4",
+          "poster": "/buildlog/vizspot/media/in-the-case.jpg",
+          "caption": "(video) Cover, then the visualizer effects, then the kaleidoscope fold"
+        }
+      ],
+      "body": "Built phone pairing so a board can be given away without a computer: the panel shows a QR code alternating with a typable base32 card, the phone signs into Spotify, and the envelope comes back AES-256-GCM encrypted for the board to decrypt, apply, verify and acknowledge. Forgetting the credentials restarts on a fresh code. The case is done — printed frame and stand, with a choice of silver, white, grey or translucent diffusers."
+    },
+    {
+      "build": "vizspot",
+      "buildTitle": "vizSpot",
+      "date": "2026-09-10",
+      "title": "Search straight from the browser, per-card saves, and the docs",
+      "tags": [
+        "spotify",
+        "docs"
+      ],
+      "media": [],
+      "body": "Put Spotify search on the control page, with the browser calling Spotify directly through a token endpoint so the board carries none of it. That turned into a device picker, an explicit device id, a retry on a stale device and plain-language errors — a browser player will not take playback, which the page now warns about. Reorganized the page into cards with their own Save buttons, added speed sliders, and wrote the README, user guide, hardware guide and API reference."
+    },
+    {
+      "build": "vizspot",
+      "buildTitle": "vizSpot",
+      "date": "2026-09-09",
+      "title": "Memory cards in ambient, kaleidoscope, and a neo-brutalist control page",
+      "tags": [
+        "ambient",
+        "web"
+      ],
+      "media": [],
+      "body": "Gave ambient a memory: 20 tracks of history with cached covers, seeded from recently-played at boot and timed against NTP, so a cover you played earlier fades in with how long ago it was. Added the kaleidoscope post-filter with live controls, retuned Puzzle to 16 px tiles and Snakes to a 2× upscale, and restyled the whole control page neo-brutalist with collapsible cards. Also chased a stuck-on-song bug to a token refresh reusing a dead TLS session."
+    },
+    {
+      "build": "vizspot",
+      "buildTitle": "vizSpot",
+      "date": "2026-09-08",
+      "title": "Status screens, random palettes, and a wheel that stopped missing presses",
+      "tags": [
+        "ui",
+        "input"
+      ],
+      "media": [],
+      "body": "Redesigned every status screen — boot splash, WiFi connecting, setup and unreachable, Spotify setup, token and waiting — and made the station retry faster behind the hotspot. Added a random palette on every effect change, carried per side through the crossfade. The thumb wheel was dropping presses because loop() was starved under the visualizer and FFT load, so it moved to a dedicated 10 ms key task with latched presses and a tolerant decoder."
+    },
+    {
       "build": "noodle",
       "buildTitle": "Noodle 2K",
       "date": "2026-09-07",
@@ -1931,6 +2171,44 @@
         }
       ],
       "body": "Recomposed the entire UI for a landscape 320×240 ST7789 mount — one-row header, framed menus, Live Control and Chladni re-laid-out. Landed the Patternflow bank too: hand-ported JS shader-style patterns running on all three boards, with the red Qwiic button as a palette dice."
+    },
+    {
+      "build": "vizspot",
+      "buildTitle": "vizSpot",
+      "date": "2026-09-07",
+      "title": "First light: not the board the listing said, and USB can't feed it",
+      "tags": [
+        "hardware-lesson",
+        "panel"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizspot/media/first-light-colors.jpg",
+          "caption": "First light on the bare panel — album art up, colors nowhere near right yet"
+        },
+        {
+          "src": "/buildlog/vizspot/media/brownout-bands.jpg",
+          "caption": "Banded red and dropped bits: the panel browning out on a computer USB port"
+        },
+        {
+          "src": "/buildlog/vizspot/media/art-and-effects.mp4",
+          "poster": "/buildlog/vizspot/media/art-and-effects.jpg",
+          "caption": "(video) Art and effects behind a sheet of diffuser, artist and title on the edges"
+        }
+      ],
+      "body": "First light came up wrong twice. The board turned out to be a Seengreat RGB Matrix HUB75 S3, not the Waveshare its listing reads like. Then the panel banded red and dropped bits, which looked like a timing fault and was a brown-out on a computer's USB port — its own 5 V supply fixed both, and the budget default ended at 500 mA after a hub browned out at 900. Measured the white balance in linear light, then put the artist and title on the top and bottom edges in a 3×5 face."
+    },
+    {
+      "build": "vizspot",
+      "buildTitle": "vizSpot",
+      "date": "2026-09-07",
+      "title": "Phases 0 to 5 in one sitting",
+      "tags": [
+        "bringup",
+        "spotify"
+      ],
+      "media": [],
+      "body": "Scaffolded the project and took it all the way through in one sitting: the HUB75 DMA panel driver and a boot test pattern, NVS settings with a captive-portal WiFi manager and a JSON web API, a Spotify PKCE helper and the on-device client with backoff, the Now Playing scene with its scroller and progress bar, album art fetched over HTTPS into PSRAM and decoded with JPEGDEC, then the effect catalog, the ES7210 mics, on-device FFT and beat detection, and the mode state machine."
     },
     {
       "build": "kfun",
@@ -3027,5 +3305,5 @@
       "body": "First commit. The build-a-setlist UI is on screen: drop songs into slots, reorder them,\nand add sets as you go. Seeded the song database by pulling from several phish.net\nendpoints, then cached the result to a local JSON file so the game doesn't hit the API on\nevery load. Prediction saving landed the same day, so the core loop — build a setlist,\nsave it as a prediction — was working end to end from day one."
     }
   ],
-  "generatedAt": "2026-09-22T02:55:37.588Z"
+  "generatedAt": "2026-09-22T19:05:04.731Z"
 }
