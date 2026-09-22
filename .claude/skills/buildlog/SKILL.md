@@ -29,6 +29,8 @@ node scripts/commits.mjs <slug>           # each entry + the source commits behi
 node scripts/commits.mjs <slug> --since D # commits after date D
 node scripts/photo.mjs info <files...>    # when each photo was taken, orientation, GPS?
 node scripts/photo.mjs ingest <in> <out>  # resize 1600px, upright, ALL metadata stripped
+node scripts/video.mjs info <files...>    # when each clip was shot, length, GPS?
+node scripts/video.mjs ingest <in> <out.mp4>  # H.264 1280px, no audio, ALL metadata stripped, poster
 node scripts/lint.mjs [slug]              # mechanical checks; must pass before publishing
 node scripts/build-buildlog.mjs ./builds ./builds.json   # regenerate the site data
 node scripts/redeploy.mjs                 # make kpow.xyz rebuild (asks first — see Publish)
@@ -137,13 +139,18 @@ Body.
 ```
 Text-only entry: `media: []`.
 
+Video entry — `src:` the ingested .mp4, `poster:` a .jpg shown before it plays:
+```
+  - { src: media/matrix-yellow-cross.mp4, poster: media/matrix-yellow-cross.jpg, caption: "(video) 39 icons synced, stepping through them on the matrix" }
+```
+
 - `---` on **line 1**, LF endings.
 - `date:` must equal the filename's date.
 - Quote titles and captions with `"…"`. Never `\"` inside — it shows up literally.
   If the text contains `"`, wrap it in single quotes: `title: 'The 7" touch build'`.
 - `[a, b]` lists split on commas: no commas or quotes inside items.
 - Captions can't contain `}`.
-- `src:` is relative to the build folder: `media/<name>.jpg`.
+- `src:` and `poster:` are relative to the build folder: `media/<name>.jpg` / `.mp4`.
 
 ## Voice — match what's there
 
@@ -155,17 +162,25 @@ Text-only entry: `media: []`.
   motor-on-shared-ground trap."
 - Title: short and specific, joins with `—`, `+`, `,` or `:`.
 - Tags: 1–3, lowercase, kebab-case.
-- Renders and screenshots say so in the caption: "(render)", "(screenshot)".
+- Renders, screenshots and clips say so in the caption: "(render)", "(screenshot)", "(video)".
 
-## Photos
+## Photos and video
 
-Always through `photo.mjs ingest`, never copy a raw file into `media/`. Raw phone
-photos carry GPS; the script strips it and refuses to finish if any survives.
+Anything off the phone is welcome in `inbox/` — .HEIC, .JPG, .PNG, .MOV, .MP4.
+Always through `photo.mjs ingest` / `video.mjs ingest`, never copy a raw file into
+`media/`. Raw phone photos and clips carry GPS and the creation date; the scripts
+strip it and refuse to finish if any survives.
 
 ```
 node scripts/photo.mjs ingest inbox/IMG_1234.HEIC builds/<slug>/media/<name>.jpg
-mkdir -p inbox/done && mv inbox/IMG_1234.HEIC inbox/done/
+node scripts/video.mjs ingest inbox/IMG_4180.MOV builds/<slug>/media/<name>.mp4
+mkdir -p inbox/done && mv inbox/IMG_1234.HEIC inbox/IMG_4180.MOV inbox/done/
 ```
+`video.mjs` also writes `media/<name>.jpg` from ~40% in as the poster, unless that
+.jpg already exists (then it's kept). A still of the same clip already in `media/`
+makes a better poster than a second copy — point `poster:` at it and delete an
+unused auto-poster so lint has no orphans. **Watch clips** (pull frames with
+ffmpeg and Read them) before captioning, same as photos.
 `<name>`: short kebab-case description of what's in frame — `disco-skull`,
 `hex-orb` — unique in that `media/`. Never delete originals; move them to `inbox/done/`.
 

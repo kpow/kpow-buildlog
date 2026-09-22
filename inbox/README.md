@@ -1,6 +1,6 @@
 # inbox
 
-Drop photos here — straight off the phone is fine (HEIC, JPEG, PNG, screenshots).
+Drop photos here — straight off the phone is fine (HEIC, JPEG, PNG, screenshots, MOV/MP4 clips).
 
 Then run `/buildlog log <build>` (or `/buildlog new <build>`). Each photo gets
 resized to 1600px, turned upright, and **stripped of all metadata, GPS

@@ -29,9 +29,13 @@ function checkCommon(where, fm) {
   }
 }
 
-function mediaRefs(fm) {
-  return [...fm.matchAll(/src:\s*["']?([^,"'}\s]+)/g)].map((m) => m[1]);
+// src: and poster: both point at files in the build folder. src may be a
+// photo (.jpg) or a video (.mp4, ingested through video.mjs).
+function mediaRefs(fm, key = "src") {
+  return [...fm.matchAll(new RegExp(`\\b${key}:\\s*["']?([^,"'}\\s]+)`, "g"))].map((m) => m[1]);
 }
+const MEDIA_EXT = /\.(jpe?g|png|webp|gif|mp4|webm)$/i;
+const VIDEO_EXT = /\.(mp4|webm)$/i;
 
 const targets = process.argv.slice(2).length ? process.argv.slice(2) : slugs();
 
@@ -78,6 +82,15 @@ for (const slug of targets) {
     for (const src of mediaRefs(e.fm)) {
       used.add(src);
       if (!existsSync(join(dir, src))) err(where, `media ${src} doesn't exist`);
+      if (!MEDIA_EXT.test(src)) err(where, `media ${src} — raw clips/photos don't play on the site; ingest with video.mjs / photo.mjs`);
+    }
+    for (const poster of mediaRefs(e.fm, "poster")) {
+      used.add(poster);
+      if (!existsSync(join(dir, poster))) err(where, `poster ${poster} doesn't exist`);
+    }
+    for (const line of e.fm.split("\n")) {
+      const src = mediaRefs(line)[0];
+      if (src && VIDEO_EXT.test(src) && !/\bposter:/.test(line)) warn(where, `video ${src} has no poster: — shows a blank frame until it loads`);
     }
     if (/src:/.test(e.fm) && !/caption:\s*\S/.test(e.fm)) warn(where, "media without a caption");
   }

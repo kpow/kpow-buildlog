@@ -101,13 +101,17 @@ Status values: `active` (working on it) · `shipped` (done, physical) ·
 
 Do the redeploy once at the end of a session, not after every entry.
 
-## Photos
+## Photos and video
 
-- Put them in `inbox/`. HEIC, JPEG, PNG and screenshots all work.
-- **Every photo is stripped of all metadata before it's committed.** Phone photos
-  carry GPS; a raw one would publish where it was taken. The script refuses to
-  finish if any metadata survives.
-- They're also resized to 1600px and turned upright.
+- Put them in `inbox/`. HEIC, JPEG, PNG, screenshots, MOV and MP4 all work.
+- **Every photo and clip is stripped of all metadata before it's committed.** Phone
+  photos and videos carry GPS and the date; a raw one would publish where it was
+  taken. The scripts refuse to finish if any metadata survives.
+- Photos are resized to 1600px and turned upright (`photo.mjs`). Clips become a
+  silent 1280px H.264 .mp4 plus a poster .jpg (`video.mjs`, uses ffmpeg — works
+  on any OS). Never copy a raw clip into `media/`.
+- A video entry is `{ src: media/<name>.mp4, poster: media/<name>.jpg, caption: "(video) …" }`.
+  It plays muted and looping on the site; click opens it with controls.
 - The originals move to `inbox/done/`. Clear that out whenever you like; nothing in
   `inbox/` is committed.
 - Captions describe what's in the frame. Renders and screenshots say so.
@@ -136,11 +140,15 @@ Do the redeploy once at the end of a session, not after every entry.
 | `redeploy: kpow_v3 is on '<branch>'` | `git -C ~/projects/kpow_v3 checkout main` |
 | `redeploy: staged changes` | Commit or unstage what's in progress in kpow_v3 first |
 | `photo.mjs: metadata survived` | Don't commit it. Report the file; it's a bug in the script |
+| `video.mjs: metadata survived` / `location atom survived` | Same: don't commit it, report the file |
+| `lint: poster … doesn't exist` | The poster .jpg was deleted or misspelled |
+| `lint: media … raw clips/photos don't play` | A .MOV/.HEIC went into `media/` raw; ingest it |
 
 ## Under the hood
 
 ```
 inbox/ photos ──► photo.mjs ──► builds/<slug>/media/
+inbox/ clips  ──► video.mjs ──► builds/<slug>/media/ (.mp4 + poster .jpg)
 source repo commits ──► commits.mjs ──► drafted entries ──► builds/<slug>/log/
 builds/ ──► build-buildlog.mjs ──► builds.json ──► git push
                                    redeploy.mjs ──► kpow_v3 rebuild ──► kpow.xyz/builds
@@ -151,6 +159,7 @@ builds/ ──► build-buildlog.mjs ──► builds.json ──► git push
 | `scripts/status.mjs` | Dashboard |
 | `scripts/commits.mjs <slug> [--since D]` | Each entry next to the source commits behind it |
 | `scripts/photo.mjs info\|ingest` | Photo dates and GPS check / resize, orient, strip |
+| `scripts/video.mjs info\|ingest` | Clip dates and GPS check / transcode, strip, poster (ffmpeg) |
 | `scripts/lint.mjs [slug]` | Format checks |
 | `scripts/build-buildlog.mjs` | Markdown → `builds.json` |
 | `scripts/redeploy.mjs` | Triggers the site rebuild |

@@ -63,7 +63,11 @@ function parseYaml(txt) {
 }
 
 function rewriteMedia(slug, arr) {
-  return (arr || []).map((m) => ({ ...m, src: `/buildlog/${slug}/${m.src}` }));
+  return (arr || []).map((m) => ({
+    ...m,
+    src: `/buildlog/${slug}/${m.src}`,
+    ...(m.poster ? { poster: `/buildlog/${slug}/${m.poster}` } : {}),
+  }));
 }
 function daysBetween(a, b) {
   if (!a || !b) return null;
