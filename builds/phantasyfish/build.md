@@ -39,7 +39,7 @@ console, and transactional email.
 
 ## Year one
 
-| | |
+| Metric | Total |
 |---|---|
 | Players | 115, across 6 tours and 28 venues |
 | Shows scored | 74 |
