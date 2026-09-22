@@ -1,6 +1,217 @@
 {
   "builds": [
     {
+      "slug": "8x8",
+      "title": "8x8 labz",
+      "status": "active",
+      "kind": "hardware",
+      "summary": "A pocket sketchbook for 8x8 pixel icons, synced to one shared catalog.",
+      "stack": [
+        "ESP32",
+        "LVGL",
+        "FastLED",
+        "PlatformIO",
+        "React",
+        "Postgres"
+      ],
+      "tags": [
+        "led",
+        "firmware",
+        "icons"
+      ],
+      "rung": null,
+      "facts": {
+        "matrix": "8x8",
+        "patterns": "16",
+        "transitions": "9",
+        "seedIcons": "30"
+      },
+      "repo": "kpow/8x8",
+      "hero": "/buildlog/8x8/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/8x8"
+        }
+      ],
+      "started": "2026-09-14",
+      "body": "It started with watching artists at live sketch events, each with a pocket\nsketchbook, catching an idea the moment it showed up. I wanted the same thing in\nmy own medium: a page that is an 8×8 grid and ink that is light. There was a\npractical reason too — old-school 8×8 icons had been hand-typed into C arrays in\nnoodlez-v2 and vizpow, every copy quietly drifting from the others.\n\nSo: one catalog, three ways in. A web app holds every icon and is the source of\ntruth. A handheld syncs it, browses it, draws new ones by touch, and plays them\non a real 8×8 WS2812B matrix. Any other firmware pulls the whole catalog as a\nsingle `icons.h`.\n\n## The handheld\n\nAn ESP32-2432S028 — the \"Cheap Yellow Display\" — with a 2.8\" 320×240 ILI9341\npanel and a resistive XPT2046 touchscreen, running LVGL 9 on PlatformIO. The\nmatrix hangs off a bare GPIO with no level shifter, 5V from VIN. Two build\ntargets: `cyd` puts LED data on GPIO 27, and `cyd-tx` puts it on the TX pin for a\none-cable build, with serial logging switched off so the log does not reach the\nLEDs.\n\nSixty-four WS2812Bs at full white would pull about 3.8 A, so brightness is capped\nat 40/255 and FastLED is held to 450 mA. How the matrix sits in the case is a\nper-device setting rather than a constant — one lookup folds rotation, flips and\nserpentine wiring together.\n\n## The format\n\nA frame is 64 palette indices, 128 hex characters, row-major from the top left.\nThe palette is global, append-only and caps at 256 colors; index 0 is black and\ndoubles as off. Icon numbers are permanent and icons are archived rather than\ndeleted, so nothing downstream ever breaks. Colors carry a family, usually six\nshades generated from one base color in OKLCH so the steps look even.\n\n## Living in 320 KB\n\nNo PSRAM, 4 MB flash, a 2.5 MB app slot and a 1.4 MB LittleFS partition. A TLS\nhandshake wants about 50 KB free, so every screen except Home is built on entry\nand freed on exit — that is what stopped sync rebooting the board mid-handshake.\nIcons, palette and pending edits live in the flash cache, so the whole thing\nworks with the WiFi off. Sync runs on its own task on core 0 and pulls only what\nchanged since its cursor, twelve icons a page.\n\nEdits made on the device queue in an outbox and upload before the next pull. Each\ndraft carries a hash of the server it was drawn against, so an edit can never be\nuploaded somewhere it does not belong. If someone changed the icon first the\nserver answers 409, and the device keeps its version as a copy instead of\nthrowing the drawing away.",
+      "stats": {
+        "entries": 7,
+        "photos": 9,
+        "daysActive": 8,
+        "firstEntry": "2026-09-14",
+        "lastEntry": "2026-09-21"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-09-15",
+          "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg",
+          "caption": "The editor with its paged palette, matrix mirroring the canvas"
+        },
+        {
+          "date": "2026-09-15",
+          "src": "/buildlog/8x8/media/first-build-desk.jpg",
+          "caption": "First build on the desk — matrix in its own frame, knurled knob on the side"
+        },
+        {
+          "date": "2026-09-16",
+          "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
+          "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg",
+          "caption": "(video) 39 icons synced, stepping through them on the matrix with transitions running"
+        },
+        {
+          "date": "2026-09-19",
+          "src": "/buildlog/8x8/media/case-prints.jpg",
+          "caption": "Three printed case bodies on the mat, none of them populated yet"
+        },
+        {
+          "date": "2026-09-20",
+          "src": "/buildlog/8x8/media/case-apart.jpg",
+          "caption": "Base, lid shell, bezel and the four-wire matrix harness, apart on the mat"
+        },
+        {
+          "date": "2026-09-21",
+          "src": "/buildlog/8x8/media/hero.jpg",
+          "caption": "The clamshell open, an invader on the matrix and the home screen below"
+        },
+        {
+          "date": "2026-09-21",
+          "src": "/buildlog/8x8/media/editor-closeup.jpg",
+          "caption": "Drawing on the 8x8 touch canvas with the matrix following along"
+        },
+        {
+          "date": "2026-09-21",
+          "src": "/buildlog/8x8/media/pacghost-editing.mp4",
+          "poster": "/buildlog/8x8/media/pacghost-detail.jpg",
+          "caption": "(video) Drawing an icon by stylus, then the save dialog — new icon or update"
+        },
+        {
+          "date": "2026-09-21",
+          "src": "/buildlog/8x8/media/in-hand.jpg",
+          "caption": "Closed to one hand — 44 icons cached, last synced 52 seconds ago"
+        }
+      ],
+      "lastEntry": "2026-09-21",
+      "entries": [
+        {
+          "date": "2026-09-21",
+          "title": "Clamshell together, and a README",
+          "tags": [
+            "enclosure",
+            "docs"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/hero.jpg",
+              "caption": "The clamshell open, an invader on the matrix and the home screen below"
+            },
+            {
+              "src": "/buildlog/8x8/media/editor-closeup.jpg",
+              "caption": "Drawing on the 8x8 touch canvas with the matrix following along"
+            },
+            {
+              "src": "/buildlog/8x8/media/pacghost-editing.mp4",
+              "poster": "/buildlog/8x8/media/pacghost-detail.jpg",
+              "caption": "(video) Drawing an icon by stylus, then the save dialog — new icon or update"
+            },
+            {
+              "src": "/buildlog/8x8/media/in-hand.jpg",
+              "caption": "Closed to one hand — 44 icons cached, last synced 52 seconds ago"
+            }
+          ],
+          "body": "Got the clamshell together: a printed threaded rod through a two-part hinge with a knurled head on one end, detents at the knuckle interface so tightening holds the angle, and plain chamfers top and bottom because the curved edges never printed clean. Backed out the touch changes made for the second board, which the first one did not want. Then wrote the README, origin story included — a pocket sketchbook where the page is 8×8 and the ink is light."
+        },
+        {
+          "date": "2026-09-20",
+          "title": "Projective touch calibration, and LED rotation per device",
+          "tags": [
+            "touch",
+            "settings"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/case-apart.jpg",
+              "caption": "Base, lid shell, bezel and the four-wire matrix harness, apart on the mat"
+            }
+          ],
+          "body": "Touch was the day's problem. Moved to pressure-based reads, swapped the four-corner min and max map for a projective calibration, and made the handheld run calibration on first boot instead of shipping the bring-up constants. Also made LED rotation a per-device setting in NVS, since every matrix ends up mounted a different way in a different case. Had the whole thing apart on the mat while I did it."
+        },
+        {
+          "date": "2026-09-19",
+          "title": "Another round of case bodies",
+          "tags": [
+            "enclosure",
+            "printing"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/case-prints.jpg",
+              "caption": "Three printed case bodies on the mat, none of them populated yet"
+            }
+          ],
+          "body": "Printed another round of case bodies and lined them up against the last one. No electronics in any of them — these were only to see how the shells come off the plate and how the lid sits when it is shut. Printing a clamshell is mostly a hinge problem. Everything else is a box."
+        },
+        {
+          "date": "2026-09-16",
+          "title": "A day of just using it",
+          "tags": [
+            "bench"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
+              "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg",
+              "caption": "(video) 39 icons synced, stepping through them on the matrix with transitions running"
+            }
+          ],
+          "body": "No commits — a day of just using it. Thirty-nine icons synced, stepping through them on the matrix with the transitions running and the sync age up in the title bar. The matrix still sits in its own frame on printed knurled thumb screws. The firmware is doing what it should; the enclosure is the part that is still open."
+        },
+        {
+          "date": "2026-09-15",
+          "title": "Renamed to 8x8 labz, and color families",
+          "tags": [
+            "design",
+            "palette"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg",
+              "caption": "The editor with its paged palette, matrix mirroring the canvas"
+            },
+            {
+              "src": "/buildlog/8x8/media/first-build-desk.jpg",
+              "caption": "First build on the desk — matrix in its own frame, knurled knob on the side"
+            }
+          ],
+          "body": "Renamed 8x8 Studio to 8x8 labz and redid both front ends neobrutalist: cream paper, black ink, thick borders, hard offset shadows, Slackey headings and lowercase type, with a matching boot title card on the handheld. Split the palette into families of six OKLCH shades, so picking a color on a 320×240 resistive panel is a family dropdown and twelve swatches rather than hunting across a 256-color grid. Home became four big tiles with a live mirror of the LEDs."
+        },
+        {
+          "date": "2026-09-15",
+          "title": "Phases 5 and 6 — matrix player, touch editor, edit uploads",
+          "tags": [
+            "firmware",
+            "editor",
+            "leds"
+          ],
+          "media": [],
+          "body": "Phases 5 and 6 in one sitting. The matrix got a player with nine transitions and sixteen ambient patterns ported over from vizpow, then browse, detail, settings and touch calibration screens, then an on-device editor with pencil, fill, picker, eraser, undo and animation frames. Two bugs worth keeping: the LVGL draw buffer needed aligning or the screen came up blank and noisy, and screens had to be freed on leave so the sync task had the fifty-odd kilobytes its TLS handshake wants."
+        },
+        {
+          "date": "2026-09-14",
+          "title": "Icon format, web app, and first light on the CYD",
+          "tags": [
+            "format",
+            "web",
+            "bringup"
+          ],
+          "media": [],
+          "body": "Built the whole spine in a day: the icon format and its shared library, the C header export, a Postgres-backed API, the catalog and editor and palette pages, and a deploy onto DigitalOcean App Platform. Then scaffolded the firmware and brought up the CYD, with WiFi setup and a first sync landing icons in a LittleFS cache. The panel fought back — colors only came out right as BGR with inversion on, and the ILI9341 has no reset pin, so it keeps its inversion state across warm resets and has to be told again at boot."
+        }
+      ]
+    },
+    {
       "slug": "noodle",
       "title": "NoodleLab v2",
       "status": "active",
@@ -1457,7 +1668,7 @@
         },
         {
           "date": "2026-06-28",
-          "title": "First Pi 5 build — 7\\\" touch, Bluetooth keyboard, Joy-C mouse",
+          "title": "First Pi 5 build — 7\" touch, Bluetooth keyboard, Joy-C mouse",
           "tags": [
             "pi",
             "hardware",
@@ -1470,6 +1681,70 @@
     }
   ],
   "recent": [
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-21",
+      "title": "Clamshell together, and a README",
+      "tags": [
+        "enclosure",
+        "docs"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/hero.jpg",
+          "caption": "The clamshell open, an invader on the matrix and the home screen below"
+        },
+        {
+          "src": "/buildlog/8x8/media/editor-closeup.jpg",
+          "caption": "Drawing on the 8x8 touch canvas with the matrix following along"
+        },
+        {
+          "src": "/buildlog/8x8/media/pacghost-editing.mp4",
+          "poster": "/buildlog/8x8/media/pacghost-detail.jpg",
+          "caption": "(video) Drawing an icon by stylus, then the save dialog — new icon or update"
+        },
+        {
+          "src": "/buildlog/8x8/media/in-hand.jpg",
+          "caption": "Closed to one hand — 44 icons cached, last synced 52 seconds ago"
+        }
+      ],
+      "body": "Got the clamshell together: a printed threaded rod through a two-part hinge with a knurled head on one end, detents at the knuckle interface so tightening holds the angle, and plain chamfers top and bottom because the curved edges never printed clean. Backed out the touch changes made for the second board, which the first one did not want. Then wrote the README, origin story included — a pocket sketchbook where the page is 8×8 and the ink is light."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-20",
+      "title": "Projective touch calibration, and LED rotation per device",
+      "tags": [
+        "touch",
+        "settings"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/case-apart.jpg",
+          "caption": "Base, lid shell, bezel and the four-wire matrix harness, apart on the mat"
+        }
+      ],
+      "body": "Touch was the day's problem. Moved to pressure-based reads, swapped the four-corner min and max map for a projective calibration, and made the handheld run calibration on first boot instead of shipping the bring-up constants. Also made LED rotation a per-device setting in NVS, since every matrix ends up mounted a different way in a different case. Had the whole thing apart on the mat while I did it."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-19",
+      "title": "Another round of case bodies",
+      "tags": [
+        "enclosure",
+        "printing"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/case-prints.jpg",
+          "caption": "Three printed case bodies on the mat, none of them populated yet"
+        }
+      ],
+      "body": "Printed another round of case bodies and lined them up against the last one. No electronics in any of them — these were only to see how the shells come off the plate and how the lid sits when it is shut. Printing a clamshell is mostly a hinge problem. Everything else is a box."
+    },
     {
       "build": "noodle",
       "buildTitle": "NoodleLab v2",
@@ -1486,6 +1761,23 @@
         }
       ],
       "body": "Reworked the motion. It used to slide one section out and back like a tray, and sometimes nothing actually changed. Now every line moves at once while part of the grid rebuilds and a color block slides to a new cell. That turned up a bug where remixing the whole canvas skipped moving the lines at all. The Color knob is now one smooth sweep built on the spacing of Mondrian's own red, blue and yellow, with his palette in the middle. Flashed it to the rig and the colors were off until I noticed the palette tint was still switched on."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-16",
+      "title": "A day of just using it",
+      "tags": [
+        "bench"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
+          "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg",
+          "caption": "(video) 39 icons synced, stepping through them on the matrix with transitions running"
+        }
+      ],
+      "body": "No commits — a day of just using it. Thirty-nine icons synced, stepping through them on the matrix with the transitions running and the sync age up in the title bar. The matrix still sits in its own frame on printed knurled thumb screws. The firmware is doing what it should; the enclosure is the part that is still open."
     },
     {
       "build": "noodle",
@@ -1516,6 +1808,53 @@
       ],
       "media": [],
       "body": "Ported the console to a new m5bigfun target — CoreS3 with the Faces Bottom3 and a\nGamepad3 — and lit its LED strips: effects are ranked by tier, every game gets a\nvoice on the strips, and Backgammon shows whose turn it is. Topped it with a\ntop-level chooser so one device can hold two firmwares and pick between them at boot."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-15",
+      "title": "Renamed to 8x8 labz, and color families",
+      "tags": [
+        "design",
+        "palette"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg",
+          "caption": "The editor with its paged palette, matrix mirroring the canvas"
+        },
+        {
+          "src": "/buildlog/8x8/media/first-build-desk.jpg",
+          "caption": "First build on the desk — matrix in its own frame, knurled knob on the side"
+        }
+      ],
+      "body": "Renamed 8x8 Studio to 8x8 labz and redid both front ends neobrutalist: cream paper, black ink, thick borders, hard offset shadows, Slackey headings and lowercase type, with a matching boot title card on the handheld. Split the palette into families of six OKLCH shades, so picking a color on a 320×240 resistive panel is a family dropdown and twelve swatches rather than hunting across a 256-color grid. Home became four big tiles with a live mirror of the LEDs."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-15",
+      "title": "Phases 5 and 6 — matrix player, touch editor, edit uploads",
+      "tags": [
+        "firmware",
+        "editor",
+        "leds"
+      ],
+      "media": [],
+      "body": "Phases 5 and 6 in one sitting. The matrix got a player with nine transitions and sixteen ambient patterns ported over from vizpow, then browse, detail, settings and touch calibration screens, then an on-device editor with pencil, fill, picker, eraser, undo and animation frames. Two bugs worth keeping: the LVGL draw buffer needed aligning or the screen came up blank and noisy, and screens had to be freed on leave so the sync task had the fifty-odd kilobytes its TLS handshake wants."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-14",
+      "title": "Icon format, web app, and first light on the CYD",
+      "tags": [
+        "format",
+        "web",
+        "bringup"
+      ],
+      "media": [],
+      "body": "Built the whole spine in a day: the icon format and its shared library, the C header export, a Postgres-backed API, the catalog and editor and palette pages, and a deploy onto DigitalOcean App Platform. Then scaffolded the firmware and brought up the CYD, with WiFi setup and a first sync landing icons in a LittleFS cache. The panel fought back — colors only came out right as BGR with inversion on, and the ILI9341 has no reset pin, so it keeps its inversion state across warm resets and has to be told again at boot."
     },
     {
       "build": "noodle",
@@ -1968,7 +2307,7 @@
       "build": "cyberdeck",
       "buildTitle": "The Cyberdeck (noode-exp)",
       "date": "2026-06-28",
-      "title": "First Pi 5 build — 7\\\" touch, Bluetooth keyboard, Joy-C mouse",
+      "title": "First Pi 5 build — 7\" touch, Bluetooth keyboard, Joy-C mouse",
       "tags": [
         "pi",
         "hardware",
@@ -2624,5 +2963,5 @@
       "body": "First commit. The build-a-setlist UI is on screen: drop songs into slots, reorder them,\nand add sets as you go. Seeded the song database by pulling from several phish.net\nendpoints, then cached the result to a local JSON file so the game doesn't hit the API on\nevery load. Prediction saving landed the same day, so the core loop — build a setlist,\nsave it as a prediction — was working end to end from day one."
     }
   ],
-  "generatedAt": "2026-09-18T01:13:58.639Z"
+  "generatedAt": "2026-09-22T02:14:04.447Z"
 }
