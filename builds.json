@@ -38,7 +38,7 @@
       "body": "It started with watching artists at live sketch events, each with a pocket\nsketchbook, catching an idea the moment it showed up. I wanted the same thing in\nmy own medium: a page that is an 8×8 grid and ink that is light. There was a\npractical reason too — old-school 8×8 icons had been hand-typed into C arrays in\nnoodlez-v2 and vizpow, every copy quietly drifting from the others.\n\nSo: one catalog, three ways in. A web app holds every icon and is the source of\ntruth. A handheld syncs it, browses it, draws new ones by touch, and plays them\non a real 8×8 WS2812B matrix. Any other firmware pulls the whole catalog as a\nsingle `icons.h`.\n\n## The handheld\n\nAn ESP32-2432S028 — the \"Cheap Yellow Display\" — with a 2.8\" 320×240 ILI9341\npanel and a resistive XPT2046 touchscreen, running LVGL 9 on PlatformIO. The\nmatrix hangs off a bare GPIO with no level shifter, 5V from VIN. Two build\ntargets: `cyd` puts LED data on GPIO 27, and `cyd-tx` puts it on the TX pin for a\none-cable build, with serial logging switched off so the log does not reach the\nLEDs.\n\nSixty-four WS2812Bs at full white would pull about 3.8 A, so brightness is capped\nat 40/255 and FastLED is held to 450 mA. How the matrix sits in the case is a\nper-device setting rather than a constant — one lookup folds rotation, flips and\nserpentine wiring together.\n\n## The format\n\nA frame is 64 palette indices, 128 hex characters, row-major from the top left.\nThe palette is global, append-only and caps at 256 colors; index 0 is black and\ndoubles as off. Icon numbers are permanent and icons are archived rather than\ndeleted, so nothing downstream ever breaks. Colors carry a family, usually six\nshades generated from one base color in OKLCH so the steps look even.\n\n## Living in 320 KB\n\nNo PSRAM, 4 MB flash, a 2.5 MB app slot and a 1.4 MB LittleFS partition. A TLS\nhandshake wants about 50 KB free, so every screen except Home is built on entry\nand freed on exit — that is what stopped sync rebooting the board mid-handshake.\nIcons, palette and pending edits live in the flash cache, so the whole thing\nworks with the WiFi off. Sync runs on its own task on core 0 and pulls only what\nchanged since its cursor, twelve icons a page.\n\nEdits made on the device queue in an outbox and upload before the next pull. Each\ndraft carries a hash of the server it was drawn against, so an edit can never be\nuploaded somewhere it does not belong. If someone changed the icon first the\nserver answers 409, and the device keeps its version as a copy instead of\nthrowing the drawing away.",
       "stats": {
         "entries": 7,
-        "photos": 9,
+        "photos": 10,
         "daysActive": 8,
         "firstEntry": "2026-09-14",
         "lastEntry": "2026-09-21"
@@ -54,6 +54,11 @@
           "date": "2026-09-15",
           "src": "/buildlog/8x8/media/first-build-desk.jpg",
           "caption": "First build on the desk — matrix in its own frame, knurled knob on the side"
+        },
+        {
+          "date": "2026-09-15",
+          "src": "/buildlog/8x8/media/early-prototype.jpg",
+          "caption": "Early prototype in a clear pink box: the icon browser, 32 icons over two pages, one on the matrix"
         },
         {
           "date": "2026-09-16",
@@ -195,7 +200,12 @@
             "editor",
             "leds"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/early-prototype.jpg",
+              "caption": "Early prototype in a clear pink box: the icon browser, 32 icons over two pages, one on the matrix"
+            }
+          ],
           "body": "Phases 5 and 6 in one sitting. The matrix got a player with nine transitions and sixteen ambient patterns ported over from vizpow, then browse, detail, settings and touch calibration screens, then an on-device editor with pencil, fill, picker, eraser, undo and animation frames. Two bugs worth keeping: the LVGL draw buffer needed aligning or the screen came up blank and noisy, and screens had to be freed on leave so the sync task had the fifty-odd kilobytes its TLS handshake wants."
         },
         {
@@ -213,17 +223,18 @@
     },
     {
       "slug": "noodle",
-      "title": "NoodleLab v2",
+      "title": "Noodle 2K",
       "status": "active",
       "kind": "hardware",
-      "summary": "A modular LED light instrument that turned into a distributed system.",
+      "summary": "A one-tray LED instrument: an ESP32-S3 console driving a wireless fleet of panels, a disco ball and a dial remote.",
       "stack": [
         "ESP32-S3",
         "ESP32-C3",
         "ESP-NOW",
         "FastLED",
         "FreeRTOS",
-        "PCA9685",
+        "MatrixPortal S3",
+        "Protomatter",
         "PlatformIO"
       ],
       "tags": [
@@ -234,11 +245,12 @@
       ],
       "rung": "light → solder",
       "facts": {
-        "satellites": "7",
-        "effects": "16"
+        "satellites": "6",
+        "effects": "22",
+        "palettes": "23"
       },
       "repo": "kpow/noodlez-v2",
-      "hero": "/buildlog/noodle/media/hero.jpg",
+      "hero": "/buildlog/noodle/media/noodle-2k-lit.jpg",
       "links": [
         {
           "label": "repo",
@@ -246,10 +258,10 @@
         }
       ],
       "started": "2026-03-23",
-      "body": "A modular LED light instrument that turned into a distributed system. It started\nas one microcontroller driving a few panels — but when it ran out of pins, I gave\nevery panel its own chip and linked them wirelessly. Now I can keep adding\nsurfaces without ever hitting a hardware wall, and they all animate together in\nreal time.\n\n## How it works\n\nAn **ESP32-S3 core** (Adafruit FeatherS3) commands a fleet of **ESP-NOW\nsatellites** — 8×8, 16×16, and 12×8 matrices, an RGBW bar, a mic satellite, a\nhaptic dial remote, and a motorized disco ball — each its own ESP32-C3. The core\nbroadcasts one **58-byte packet**; every satellite receives the same packet and\nrenders locally, staying frame-synced without the core pushing every pixel.\n\n- **Dual-core FreeRTOS** — radio on one core, FastLED render on the other, so they\n  never step on each other (the S3's RMT peripheral fights the WiFi radio if you\n  get the startup order wrong).\n- **16 FastLED effects**, audio-reactive via a **512-point FFT** on the mic\n  satellite that broadcasts bass/mid/treble/beat to the whole fleet.\n- **Control surface:** three NeoPixel encoders, a NeoSlider, a ToF proximity\n  sensor, capacitive touch, PCA9685-driven LED filaments + skull, and a\n  lightning-bolt lane.\n\n## Why it's built this way\n\nThe distributed architecture wasn't a flourish — it was running out of GPIO and\nrefusing to stop adding panels. Moving each surface to its own wireless board\nmeans the system scales by adding *boards*, not pins.",
+      "body": "A modular LED light instrument that turned into a distributed system, then got\npulled back together onto one tray. It's had three names along the way.\n\n## Noodle → NoodleLab → Noodle 2K\n\n**Noodle** (March 2026) was a breadboard: one controller, a few LED grids and\nfilaments, and a rat's nest of jumpers. It worked, barely, and every new surface\nmeant more wires.\n\n**NoodleLab** (April–July) rebuilt it on an Adafruit FeatherS3 with STEMMA-QT\nparts. When an external 8×8 hit the GPIO wall, every LED surface became its own\nESP32-C3 satellite over ESP-NOW: an audio sat, a 1×30 bar, 8×8, 16×16 and 12×8\nmatrices, a motorized disco ball and a haptic dial remote. It scaled by adding\nboards, not pins.\n\n**Noodle 2K** (from August 29) came out of a strip-to-bare-MCU rebuild. The\nfilaments and the PCA9685 went for good, the 16×16 moved onto a console pin, the\nicon and 12×8 sats were retired, and everything moved onto one tray behind silver\ndiffusers. It's LEDs only now.\n\n## What's running now\n\nThe **console** is still the FeatherS3, now with a 2.4\" ST7789 mounted landscape\nfor a 320×240 UI and a Chladni resonant-plate visualizer as the screensaver. It\ndrives a 12×4 matrix, a 4×8 FeatherWing and the 16×16 directly. It never joins\nWiFi: it scans channels 1, 6 and 11 at boot and runs ESP-NOW on the quietest.\n\nOver ESP-NOW:\n\n- a **1×30 RGBW bar** arc\n- an **audio sat** with an INMP441 mic, broadcasting bass, mid, treble and beat so\n  the whole fleet reacts together\n- the **disco ball**: stepper, spot LED and OLED, on its own supply\n- the **dial**, a round 1.8\" knob with touch and haptics that mirrors the\n  console's state\n- two **HUB75 panels** on MatrixPortal S3 boards, a 64×32 and a 128×64, fed the\n  same packets side by side until one is retired\n\n**22 effects**, including a trimmed port of WLED's 2D particle system and a\n16-band GEQ, all render through **23 palettes**. The hub75 panels also run the\n**Patternflow bank**: JavaScript patterns hand-ported to C++, plus my own Mondrian.\n\n**Controls:** three NeoPixel encoders, a NeoSlider, capacitive touch pads that pick\nthe target (matrix, disco or Patternflow), a nav encoder, and two Qwiic buttons.\nGreen steps patterns; red rolls a random palette.\n\n## Why it's built this way\n\nThe distributed architecture wasn't a flourish — it was running out of GPIO and\nrefusing to stop adding panels. Moving each surface to its own wireless board\nmeans the system scales by adding *boards*, not pins.",
       "stats": {
         "entries": 18,
-        "photos": 7,
+        "photos": 10,
         "daysActive": 179,
         "firstEntry": "2026-03-25",
         "lastEntry": "2026-09-17"
@@ -280,6 +292,23 @@
           "date": "2026-05-27",
           "src": "/buildlog/noodle/media/disco-skull.jpg",
           "caption": "Printed skull over the spinning disco ball"
+        },
+        {
+          "date": "2026-09-07",
+          "src": "/buildlog/noodle/media/kaleido-panels.mp4",
+          "poster": "/buildlog/noodle/media/noodle-2k-lit.jpg",
+          "caption": "(video) Kaleidoscope patterns on the 64×32 hub75 and the 16×16, the dial mirroring along"
+        },
+        {
+          "date": "2026-09-07",
+          "src": "/buildlog/noodle/media/two-hub75.mp4",
+          "poster": "/buildlog/noodle/media/two-hub75.jpg",
+          "caption": "(video) Second hub75 board up: both panels and the 16×16 running together"
+        },
+        {
+          "date": "2026-09-07",
+          "src": "/buildlog/noodle/media/tray-unlit.jpg",
+          "caption": "The tray unlit: silver diffusers, the dial up front, the disco ball top right"
         },
         {
           "date": "2026-09-16",
@@ -331,7 +360,22 @@
             "ui",
             "patterns"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/kaleido-panels.mp4",
+              "poster": "/buildlog/noodle/media/noodle-2k-lit.jpg",
+              "caption": "(video) Kaleidoscope patterns on the 64×32 hub75 and the 16×16, the dial mirroring along"
+            },
+            {
+              "src": "/buildlog/noodle/media/two-hub75.mp4",
+              "poster": "/buildlog/noodle/media/two-hub75.jpg",
+              "caption": "(video) Second hub75 board up: both panels and the 16×16 running together"
+            },
+            {
+              "src": "/buildlog/noodle/media/tray-unlit.jpg",
+              "caption": "The tray unlit: silver diffusers, the dial up front, the disco ball top right"
+            }
+          ],
           "body": "Recomposed the entire UI for a landscape 320×240 ST7789 mount — one-row header, framed menus, Live Control and Chladni re-laid-out. Landed the Patternflow bank too: hand-ported JS shader-style patterns running on all three boards, with the red Qwiic button as a palette dice."
         },
         {
@@ -1747,7 +1791,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-09-17",
       "title": "Mondrian, take two",
       "tags": [
@@ -1781,7 +1825,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-09-16",
       "title": "A Mondrian pattern for the Patternflow bank",
       "tags": [
@@ -1840,7 +1884,12 @@
         "editor",
         "leds"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/early-prototype.jpg",
+          "caption": "Early prototype in a clear pink box: the icon browser, 32 icons over two pages, one on the matrix"
+        }
+      ],
       "body": "Phases 5 and 6 in one sitting. The matrix got a player with nine transitions and sixteen ambient patterns ported over from vizpow, then browse, detail, settings and touch calibration screens, then an on-device editor with pencil, fill, picker, eraser, undo and animation frames. Two bugs worth keeping: the LVGL draw buffer needed aligning or the screen came up blank and noisy, and screens had to be freed on leave so the sync task had the fifty-odd kilobytes its TLS handshake wants."
     },
     {
@@ -1858,14 +1907,29 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-09-07",
       "title": "Landscape TFT + chrome refresh; the Patternflow bank",
       "tags": [
         "ui",
         "patterns"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/kaleido-panels.mp4",
+          "poster": "/buildlog/noodle/media/noodle-2k-lit.jpg",
+          "caption": "(video) Kaleidoscope patterns on the 64×32 hub75 and the 16×16, the dial mirroring along"
+        },
+        {
+          "src": "/buildlog/noodle/media/two-hub75.mp4",
+          "poster": "/buildlog/noodle/media/two-hub75.jpg",
+          "caption": "(video) Second hub75 board up: both panels and the 16×16 running together"
+        },
+        {
+          "src": "/buildlog/noodle/media/tray-unlit.jpg",
+          "caption": "The tray unlit: silver diffusers, the dial up front, the disco ball top right"
+        }
+      ],
       "body": "Recomposed the entire UI for a landscape 320×240 ST7789 mount — one-row header, framed menus, Live Control and Chladni re-laid-out. Landed the Patternflow bank too: hand-ported JS shader-style patterns running on all three boards, with the red Qwiic button as a palette dice."
     },
     {
@@ -1895,7 +1959,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-08-29",
       "title": "21 effects, a palette system, and 'Noodle 2K'",
       "tags": [
@@ -1934,7 +1998,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-08-16",
       "title": "The big rebuild — bare MCU, Chladni, cyberpunk chrome",
       "tags": [
@@ -2380,7 +2444,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-06-13",
       "title": "Portability pass + matrix sat moves to an S3",
       "tags": [
@@ -2423,7 +2487,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-05-27",
       "title": "Disco-ball satellite — and a nasty ground-noise lesson",
       "tags": [
@@ -2466,7 +2530,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-05-16",
       "title": "ESP-NOW only, plus a screen-capture path",
       "tags": [
@@ -2483,7 +2547,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-05-09",
       "title": "Dial remote, sprite overlays, playlists",
       "tags": [
@@ -2500,7 +2564,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-05-05",
       "title": "The fleet takes shape — bar, 8×8, 16×16 satellites",
       "tags": [
@@ -2512,7 +2576,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-04-29",
       "title": "Audio satellite — first ESP-NOW peer, beat detection",
       "tags": [
@@ -2525,7 +2589,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-04-19",
       "title": "Three encoders, per-target ownership, Source Map",
       "tags": [
@@ -2537,7 +2601,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-04-15",
       "title": "Descriptor-table effect engine + the FeatherWing",
       "tags": [
@@ -2554,7 +2618,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-04-12",
       "title": "Ran out of pins — going distributed",
       "tags": [
@@ -2566,7 +2630,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-04-11",
       "title": "Filaments breathing, fiber optics, live Pixelblaze",
       "tags": [
@@ -2583,7 +2647,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-04-06",
       "title": "Dual-core FreeRTOS — network off the render path",
       "tags": [
@@ -2595,7 +2659,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-04-05",
       "title": "Noodle 2.0 — core up and running in a day",
       "tags": [
@@ -2632,7 +2696,7 @@
     },
     {
       "build": "noodle",
-      "buildTitle": "NoodleLab v2",
+      "buildTitle": "Noodle 2K",
       "date": "2026-03-25",
       "title": "Noodle 1 — the breadboard prototype that didn't scale",
       "tags": [
@@ -2963,5 +3027,5 @@
       "body": "First commit. The build-a-setlist UI is on screen: drop songs into slots, reorder them,\nand add sets as you go. Seeded the song database by pulling from several phish.net\nendpoints, then cached the result to a local JSON file so the game doesn't hit the API on\nevery load. Prediction saving landed the same day, so the core loop — build a setlist,\nsave it as a prediction — was working end to end from day one."
     }
   ],
-  "generatedAt": "2026-09-22T02:14:04.447Z"
+  "generatedAt": "2026-09-22T02:55:37.588Z"
 }
