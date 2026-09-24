@@ -114,7 +114,9 @@ Do the redeploy once at the end of a session, not after every entry.
   It plays muted and looping on the site; click opens it with controls.
 - The originals move to `inbox/done/`. Clear that out whenever you like; nothing in
   `inbox/` is committed.
-- Captions describe what's in the frame. Renders and screenshots say so.
+- Captions are optional and usually unnecessary: write one only when it carries
+  something the photo can't (a number, a part name, a failure). Video and renders
+  get a badge from the site, not a "(video)" in the text.
 
 ## The rules Claude follows
 

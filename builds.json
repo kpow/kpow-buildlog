@@ -47,71 +47,63 @@
       "picturesOverTime": [
         {
           "date": "2026-09-15",
-          "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg",
-          "caption": "The editor with its paged palette, matrix mirroring the canvas"
+          "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg"
         },
         {
           "date": "2026-09-15",
           "src": "/buildlog/8x8/media/first-build-desk.jpg",
-          "caption": "First build on the desk — matrix in its own frame, knurled knob on the side"
+          "caption": "First build"
         },
         {
           "date": "2026-09-15",
           "src": "/buildlog/8x8/media/early-prototype.jpg",
-          "caption": "Early prototype in a clear pink box: the icon browser, 32 icons over two pages, one on the matrix"
+          "caption": "32 icons over two pages"
         },
         {
           "date": "2026-09-16",
           "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
-          "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg",
-          "caption": "(video) 39 icons synced, stepping through them on the matrix with transitions running"
+          "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg"
         },
         {
           "date": "2026-09-19",
-          "src": "/buildlog/8x8/media/case-prints.jpg",
-          "caption": "Three printed case bodies on the mat, none of them populated yet"
+          "src": "/buildlog/8x8/media/case-prints.jpg"
         },
         {
           "date": "2026-09-20",
-          "src": "/buildlog/8x8/media/case-apart.jpg",
-          "caption": "Base, lid shell, bezel and the four-wire matrix harness, apart on the mat"
+          "src": "/buildlog/8x8/media/case-apart.jpg"
         },
         {
           "date": "2026-09-21",
-          "src": "/buildlog/8x8/media/hero.jpg",
-          "caption": "The clamshell open, an invader on the matrix and the home screen below"
+          "src": "/buildlog/8x8/media/hero.jpg"
         },
         {
           "date": "2026-09-21",
-          "src": "/buildlog/8x8/media/editor-closeup.jpg",
-          "caption": "Drawing on the 8x8 touch canvas with the matrix following along"
+          "src": "/buildlog/8x8/media/editor-closeup.jpg"
         },
         {
           "date": "2026-09-21",
           "src": "/buildlog/8x8/media/pacghost-editing.mp4",
-          "poster": "/buildlog/8x8/media/pacghost-detail.jpg",
-          "caption": "(video) Drawing an icon by stylus, then the save dialog — new icon or update"
+          "poster": "/buildlog/8x8/media/pacghost-detail.jpg"
         },
         {
           "date": "2026-09-21",
           "src": "/buildlog/8x8/media/in-hand.jpg",
-          "caption": "Closed to one hand — 44 icons cached, last synced 52 seconds ago"
+          "caption": "44 icons cached, last synced 52 seconds ago"
         },
         {
           "date": "2026-09-23",
-          "src": "/buildlog/8x8/media/desktop-case-final.jpg",
-          "caption": "The finished desktop case, shut: silver skull inlay on the lid, silver strip along the base"
+          "src": "/buildlog/8x8/media/desktop-case-final.jpg"
         },
         {
           "date": "2026-09-23",
           "src": "/buildlog/8x8/media/desktop-case-open.mp4",
-          "poster": "/buildlog/8x8/media/desktop-case-open.jpg",
-          "caption": "(video) Opening it in hand, editor on the screen, then closed"
+          "poster": "/buildlog/8x8/media/desktop-case-open.jpg"
         },
         {
           "date": "2026-09-23",
           "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
-          "caption": "(render) The mobile version taking shape: matrix in the lid, screen in the base, that same barrel hinge"
+          "kind": "render",
+          "caption": "The mobile version"
         }
       ],
       "lastEntry": "2026-09-23",
@@ -125,17 +117,16 @@
           ],
           "media": [
             {
-              "src": "/buildlog/8x8/media/desktop-case-final.jpg",
-              "caption": "The finished desktop case, shut: silver skull inlay on the lid, silver strip along the base"
+              "src": "/buildlog/8x8/media/desktop-case-final.jpg"
             },
             {
               "src": "/buildlog/8x8/media/desktop-case-open.mp4",
-              "poster": "/buildlog/8x8/media/desktop-case-open.jpg",
-              "caption": "(video) Opening it in hand, editor on the screen, then closed"
+              "poster": "/buildlog/8x8/media/desktop-case-open.jpg"
             },
             {
               "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
-              "caption": "(render) The mobile version taking shape: matrix in the lid, screen in the base, that same barrel hinge"
+              "kind": "render",
+              "caption": "The mobile version"
             }
           ],
           "body": "Called the desktop case done. This is the last version of it.\n\nExtended the base of the hinge, so an open lid has something behind it to lean on instead of flopping back. It looks better with that mass there too. Then the detailing: a silver skull inlay on the lid and a silver strip running along the base.\n\n> **Next:** a mobile version with a battery, built on this one."
@@ -149,21 +140,18 @@
           ],
           "media": [
             {
-              "src": "/buildlog/8x8/media/hero.jpg",
-              "caption": "The clamshell open, an invader on the matrix and the home screen below"
+              "src": "/buildlog/8x8/media/hero.jpg"
             },
             {
-              "src": "/buildlog/8x8/media/editor-closeup.jpg",
-              "caption": "Drawing on the 8x8 touch canvas with the matrix following along"
+              "src": "/buildlog/8x8/media/editor-closeup.jpg"
             },
             {
               "src": "/buildlog/8x8/media/pacghost-editing.mp4",
-              "poster": "/buildlog/8x8/media/pacghost-detail.jpg",
-              "caption": "(video) Drawing an icon by stylus, then the save dialog — new icon or update"
+              "poster": "/buildlog/8x8/media/pacghost-detail.jpg"
             },
             {
               "src": "/buildlog/8x8/media/in-hand.jpg",
-              "caption": "Closed to one hand — 44 icons cached, last synced 52 seconds ago"
+              "caption": "44 icons cached, last synced 52 seconds ago"
             }
           ],
           "body": "Got the clamshell together. A printed threaded rod runs through a two-part hinge with a knurled head on one end, and there are detents at the knuckle interface so tightening actually holds the angle. Plain chamfers top and bottom, because the curved edges never printed clean and I stopped pretending they would.\n\nBacked out the touch changes I made for the second board. The first board didn't want them.\n\nThen the README, origin story included: a pocket sketchbook where the page is 8×8 and the ink is light."
@@ -177,11 +165,10 @@
           ],
           "media": [
             {
-              "src": "/buildlog/8x8/media/case-apart.jpg",
-              "caption": "Base, lid shell, bezel and the four-wire matrix harness, apart on the mat"
+              "src": "/buildlog/8x8/media/case-apart.jpg"
             }
           ],
-          "body": "Touch was the day. Moved to pressure-based reads, threw out the four-corner min and max map for a projective calibration, and made the handheld run calibration on first boot instead of shipping my bring-up constants to every board.\n\nLED rotation became a per-device setting in NVS too, because every matrix ends up mounted a different way in a different case, and a constant only ever describes the one on my desk.\n\nHad the whole thing apart on the mat while I did it."
+          "body": "Touch was the day. Moved to pressure-based reads, threw out the four-corner min and max map for a projective calibration, and made the handheld run calibration on first boot instead of shipping my bring-up constants to every board.\n\nLED rotation became a per-device setting in NVS too, because every matrix ends up mounted a different way in a different case, and a constant only ever describes the one on my desk."
         },
         {
           "date": "2026-09-19",
@@ -192,8 +179,7 @@
           ],
           "media": [
             {
-              "src": "/buildlog/8x8/media/case-prints.jpg",
-              "caption": "Three printed case bodies on the mat, none of them populated yet"
+              "src": "/buildlog/8x8/media/case-prints.jpg"
             }
           ],
           "body": "Printed another round of case bodies and lined them up against the last one. No electronics in any of them. These were only to see how the shells come off the plate and how the lid sits shut.\n\nPrinting a clamshell is mostly a hinge problem. Everything else is a box."
@@ -207,11 +193,10 @@
           "media": [
             {
               "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
-              "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg",
-              "caption": "(video) 39 icons synced, stepping through them on the matrix with transitions running"
+              "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg"
             }
           ],
-          "body": "No commits. A day of just using it.\n\nThirty-nine icons synced, stepping through them on the matrix with the transitions running and the sync age in the title bar. The matrix is still living in its own frame on printed knurled thumb screws.\n\nThe firmware is doing what it should. The enclosure is the open question."
+          "body": "No commits. A day of just using it.\n\nThirty-nine icons synced, stepping through them with the transitions running and the sync age up in the title bar. The matrix is still living in its own frame on printed knurled thumb screws.\n\nThe firmware is doing what it should. The enclosure is the open question."
         },
         {
           "date": "2026-09-15",
@@ -222,12 +207,11 @@
           ],
           "media": [
             {
-              "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg",
-              "caption": "The editor with its paged palette, matrix mirroring the canvas"
+              "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg"
             },
             {
               "src": "/buildlog/8x8/media/first-build-desk.jpg",
-              "caption": "First build on the desk — matrix in its own frame, knurled knob on the side"
+              "caption": "First build"
             }
           ],
           "body": "Renamed 8x8 Studio to 8x8 labz, and redid both front ends neobrutalist: cream paper, black ink, thick borders, hard offset shadows, Slackey headings, lowercase everywhere, and a matching boot title card on the handheld.\n\nThe palette got split into families of six OKLCH shades. Picking a colour on a 320×240 resistive panel is now a family dropdown and twelve swatches, instead of hunting a 256-colour grid with a fingernail.\n\nHome is four big tiles with a live mirror of the LEDs."
@@ -243,7 +227,7 @@
           "media": [
             {
               "src": "/buildlog/8x8/media/early-prototype.jpg",
-              "caption": "Early prototype in a clear pink box: the icon browser, 32 icons over two pages, one on the matrix"
+              "caption": "32 icons over two pages"
             }
           ],
           "body": "Phases 5 and 6, one sitting. The matrix got a player with nine transitions and sixteen ambient patterns ported from vizpow.\n\nThen the screens went in around it: browse, detail, settings and touch calibration. The editor came last, with pencil, fill, picker, eraser, undo and animation frames.\n\nTwo bugs worth keeping:\n\n- the LVGL draw buffer has to be aligned, or the screen comes up blank and noisy with no error anywhere\n- screens must be freed on leave, because the sync task needs about fifty kilobytes free for its TLS handshake and a leftover screen is exactly what it doesn't have"
@@ -310,55 +294,51 @@
       "picturesOverTime": [
         {
           "date": "2026-04-11",
-          "src": "/buildlog/noodle/media/fiber.jpg",
-          "caption": "Driver board lighting fiber-optic strands"
+          "src": "/buildlog/noodle/media/fiber.jpg"
         },
         {
           "date": "2026-04-15",
-          "src": "/buildlog/noodle/media/hero.jpg",
-          "caption": "The full instrument lit"
+          "src": "/buildlog/noodle/media/hero.jpg"
         },
         {
           "date": "2026-05-09",
-          "src": "/buildlog/noodle/media/hex-orb.jpg",
-          "caption": "Hex panels and RGB orb on the bench"
+          "src": "/buildlog/noodle/media/hex-orb.jpg"
         },
         {
           "date": "2026-05-16",
-          "src": "/buildlog/noodle/media/lit-desk.jpg",
-          "caption": "Lit desk with the pixel matrix running"
+          "src": "/buildlog/noodle/media/lit-desk.jpg"
         },
         {
           "date": "2026-05-27",
-          "src": "/buildlog/noodle/media/disco-skull.jpg",
-          "caption": "Printed skull over the spinning disco ball"
+          "src": "/buildlog/noodle/media/disco-skull.jpg"
         },
         {
           "date": "2026-09-07",
           "src": "/buildlog/noodle/media/kaleido-panels.mp4",
           "poster": "/buildlog/noodle/media/noodle-2k-lit.jpg",
-          "caption": "(video) Kaleidoscope patterns on the 64×32 hub75 and the 16×16, the dial mirroring along"
+          "caption": "Kaleidoscope on the 64×32 hub75 and the 16×16, the dial mirroring"
         },
         {
           "date": "2026-09-07",
           "src": "/buildlog/noodle/media/two-hub75.mp4",
           "poster": "/buildlog/noodle/media/two-hub75.jpg",
-          "caption": "(video) Second hub75 board up: both panels and the 16×16 running together"
+          "caption": "Second hub75 board up, both panels running"
         },
         {
           "date": "2026-09-07",
-          "src": "/buildlog/noodle/media/tray-unlit.jpg",
-          "caption": "The tray unlit: silver diffusers, the dial up front, the disco ball top right"
+          "src": "/buildlog/noodle/media/tray-unlit.jpg"
         },
         {
           "date": "2026-09-16",
           "src": "/buildlog/noodle/media/mondrian-compositions.jpg",
-          "caption": "Three compositions from one run (render)"
+          "kind": "render",
+          "caption": "Three compositions from one run"
         },
         {
           "date": "2026-09-17",
           "src": "/buildlog/noodle/media/mondrian-colors.jpg",
-          "caption": "One layout at five settings of the Color knob (render)"
+          "kind": "render",
+          "caption": "One layout at five settings of the Color knob"
         }
       ],
       "lastEntry": "2026-09-21",
@@ -382,7 +362,8 @@
           "media": [
             {
               "src": "/buildlog/noodle/media/mondrian-colors.jpg",
-              "caption": "One layout at five settings of the Color knob (render)"
+              "kind": "render",
+              "caption": "One layout at five settings of the Color knob"
             }
           ],
           "body": "Reworked the motion. The old version slid one section out and back like a tray, and sometimes nothing actually changed on screen. Now every line moves at once while part of the grid rebuilds and a colour block slides to a new cell.\n\nThat turned up a bug where remixing the whole canvas skipped moving the lines at all.\n\nThe Color knob is one smooth sweep now, built on the spacing between Mondrian's own red, blue and yellow, with his palette sitting in the middle of the range.\n\nFlashed it to the rig and every colour was wrong. Took me a minute to notice the global palette tint was still switched on, quietly re-mapping a pattern that brings its own colours."
@@ -397,7 +378,8 @@
           "media": [
             {
               "src": "/buildlog/noodle/media/mondrian-compositions.jpg",
-              "caption": "Three compositions from one run (render)"
+              "kind": "render",
+              "caption": "Three compositions from one run"
             }
           ],
           "body": "Wrote my first pattern from scratch for the Patternflow bank: a Mondrian grid that keeps rearranging itself.\n\nIt builds a layout by splitting the canvas in two, then splitting the pieces, which is roughly how the paintings are put together. Whatever it lands on is a valid composition rather than a scatter of rectangles.\n\nWorked it out in JavaScript first, in a small browser harness, then hand-ported it to C++ for the hub75. The two versions match pixel for pixel, which is the only reason I trust the port."
@@ -413,16 +395,15 @@
             {
               "src": "/buildlog/noodle/media/kaleido-panels.mp4",
               "poster": "/buildlog/noodle/media/noodle-2k-lit.jpg",
-              "caption": "(video) Kaleidoscope patterns on the 64×32 hub75 and the 16×16, the dial mirroring along"
+              "caption": "Kaleidoscope on the 64×32 hub75 and the 16×16, the dial mirroring"
             },
             {
               "src": "/buildlog/noodle/media/two-hub75.mp4",
               "poster": "/buildlog/noodle/media/two-hub75.jpg",
-              "caption": "(video) Second hub75 board up: both panels and the 16×16 running together"
+              "caption": "Second hub75 board up, both panels running"
             },
             {
-              "src": "/buildlog/noodle/media/tray-unlit.jpg",
-              "caption": "The tray unlit: silver diffusers, the dial up front, the disco ball top right"
+              "src": "/buildlog/noodle/media/tray-unlit.jpg"
             }
           ],
           "body": "Recomposed the whole UI for a landscape 320×240 mount, because the ribbon was blocking the view in portrait: one-row header, framed menus, Live Control and Chladni both re-laid out. Landscape puts text beside its neighbours instead of into dead space, so every variable-length name now goes through a fitter before it's drawn.\n\nThe Patternflow bank landed the same week: JS shader-style patterns hand-ported to C++, running on all three boards. The red Qwiic button got demoted from \"previous pattern\" to a palette dice, because I never once used it as a back button. The dial already has back."
@@ -478,8 +459,7 @@
           ],
           "media": [
             {
-              "src": "/buildlog/noodle/media/disco-skull.jpg",
-              "caption": "Printed skull over the spinning disco ball"
+              "src": "/buildlog/noodle/media/disco-skull.jpg"
             }
           ],
           "body": "Added a motorized disco ball as its own satellite: stepper, spot LED, OLED, and a dedicated live target on the console.\n\nThe first version ran the stepper off main power and made the ground filthy. Noise bled through the whole Noodle, and it read like a data problem until I looked at what I'd just plugged in. Its own supply fixed it.\n\n> **Trap:** a motor and your logic on one ground rail. Classic, and I still walked into it."
@@ -493,8 +473,7 @@
           ],
           "media": [
             {
-              "src": "/buildlog/noodle/media/lit-desk.jpg",
-              "caption": "Lit desk with the pixel matrix running"
+              "src": "/buildlog/noodle/media/lit-desk.jpg"
             }
           ],
           "body": "Dropped WiFi association altogether. The Console brings the radio up for ESP-NOW and never joins an access point, which means no router, no DHCP lease, and nothing to go stale between sessions.\n\nStarted the screen-share path as well, browser to ingest to matrix, with a LittleFS clip store behind it, so I can push real captured pixels at the 16×16 instead of only generated effects."
@@ -508,8 +487,7 @@
           ],
           "media": [
             {
-              "src": "/buildlog/noodle/media/hex-orb.jpg",
-              "caption": "Hex panels and RGB orb on the bench"
+              "src": "/buildlog/noodle/media/hex-orb.jpg"
             }
           ],
           "body": "The dial sat became the remote: a live preview canvas, Qwiic forward and back buttons for the pattern stack, and curated playlists.\n\nAdded a composite overlay source too, a 16×16 pattern with a centred 8×8 icon on top, palette index 0 transparent so the pattern shows through the sprite.\n\nCut the dead DDP path out entirely while I was in there."
@@ -554,8 +532,7 @@
           ],
           "media": [
             {
-              "src": "/buildlog/noodle/media/hero.jpg",
-              "caption": "The full instrument lit"
+              "src": "/buildlog/noodle/media/hero.jpg"
             }
           ],
           "body": "Stood up the real effects engine: a descriptor table with 10 effects to start, so adding one is a function and a row rather than a new branch in the render loop.\n\nA 4×8 NeoPixel FeatherWing went on mirroring the matrix, and the filaments got a TPS61169 driver with gamma correction so a dim setting actually looks dim."
@@ -579,8 +556,7 @@
           ],
           "media": [
             {
-              "src": "/buildlog/noodle/media/fiber.jpg",
-              "caption": "Driver board lighting fiber-optic strands"
+              "src": "/buildlog/noodle/media/fiber.jpg"
             }
           ],
           "body": "PCA9685 filaments breathing on a sine offset, a Pixelblaze websocket path for browsing and streaming patterns live, and the `patterns/` scaffolding underneath.\n\nFirst evening the thing looked less like a prototype and more like an instrument."
@@ -665,8 +641,7 @@
         },
         {
           "date": "2026-08-01",
-          "src": "/buildlog/kfun/media/invaders.jpg",
-          "caption": "Space Invaders running on the TFT"
+          "src": "/buildlog/kfun/media/invaders.jpg"
         },
         {
           "date": "2026-08-04",
@@ -675,8 +650,7 @@
         },
         {
           "date": "2026-08-04",
-          "src": "/buildlog/kfun/media/splash.jpg",
-          "caption": "bigfun boot splash screen"
+          "src": "/buildlog/kfun/media/splash.jpg"
         }
       ],
       "lastEntry": "2026-09-16",
@@ -760,8 +734,7 @@
               "caption": "the finished bigfun"
             },
             {
-              "src": "/buildlog/kfun/media/splash.jpg",
-              "caption": "bigfun boot splash screen"
+              "src": "/buildlog/kfun/media/splash.jpg"
             }
           ],
           "body": "Galaga takes the Invaders slot on bigfun, with auto-fire. Same slot, same launcher, different game depending on which console you picked up.\n\nRebranded the README as kFun, tinyfun and bigfun under one name."
@@ -802,8 +775,7 @@
               "caption": "bigfun next to the smaller tinyfun"
             },
             {
-              "src": "/buildlog/kfun/media/invaders.jpg",
-              "caption": "Space Invaders running on the TFT"
+              "src": "/buildlog/kfun/media/invaders.jpg"
             }
           ],
           "body": "Restructured into the kFun monorepo, a shared `common/` with `tinyfun/` and `bigfun/` as thin board ports on top, and got the full app booting on the SuperMini.\n\nThen art and effects for the wide board, which is where the two consoles start being different games:\n\n- backgammon in landscape, with traditional triangle points\n- Tetris centred, with side panels either side of the well\n- Breakout rebuilt as Arkanoid\n- a sprite pipeline off the Kenney CC0 art\n- attract cards on the launcher, nebula backgrounds with post-FX, a themed game-over screen"
@@ -888,34 +860,31 @@
         {
           "date": "2026-09-07",
           "src": "/buildlog/vizspot/media/first-light-colors.jpg",
-          "caption": "First light on the bare panel — album art up, colors nowhere near right yet"
+          "caption": "First light"
         },
         {
           "date": "2026-09-07",
           "src": "/buildlog/vizspot/media/brownout-bands.jpg",
-          "caption": "Banded red and dropped bits: the panel browning out on a computer USB port"
+          "caption": "Browning out on a laptop USB port"
         },
         {
           "date": "2026-09-07",
           "src": "/buildlog/vizspot/media/art-and-effects.mp4",
-          "poster": "/buildlog/vizspot/media/art-and-effects.jpg",
-          "caption": "(video) Art and effects behind a sheet of diffuser, artist and title on the edges"
+          "poster": "/buildlog/vizspot/media/art-and-effects.jpg"
         },
         {
           "date": "2026-09-11",
           "src": "/buildlog/vizspot/media/hero.jpg",
-          "caption": "In the case, playing De La Soul — artist on the top edge, title on the bottom"
+          "caption": "De La Soul, The Magic Number"
         },
         {
           "date": "2026-09-11",
-          "src": "/buildlog/vizspot/media/case-unlit.jpg",
-          "caption": "The case unlit: printed frame and stand, diffuser over the panel, skulls cut into the side"
+          "src": "/buildlog/vizspot/media/case-unlit.jpg"
         },
         {
           "date": "2026-09-11",
           "src": "/buildlog/vizspot/media/in-the-case.mp4",
-          "poster": "/buildlog/vizspot/media/in-the-case.jpg",
-          "caption": "(video) Cover, then the visualizer effects, then the kaleidoscope fold"
+          "poster": "/buildlog/vizspot/media/in-the-case.jpg"
         }
       ],
       "lastEntry": "2026-09-11",
@@ -930,16 +899,14 @@
           "media": [
             {
               "src": "/buildlog/vizspot/media/hero.jpg",
-              "caption": "In the case, playing De La Soul — artist on the top edge, title on the bottom"
+              "caption": "De La Soul, The Magic Number"
             },
             {
-              "src": "/buildlog/vizspot/media/case-unlit.jpg",
-              "caption": "The case unlit: printed frame and stand, diffuser over the panel, skulls cut into the side"
+              "src": "/buildlog/vizspot/media/case-unlit.jpg"
             },
             {
               "src": "/buildlog/vizspot/media/in-the-case.mp4",
-              "poster": "/buildlog/vizspot/media/in-the-case.jpg",
-              "caption": "(video) Cover, then the visualizer effects, then the kaleidoscope fold"
+              "poster": "/buildlog/vizspot/media/in-the-case.jpg"
             }
           ],
           "body": "A board you hand to someone shouldn't need a computer. So the panel shows a QR code, alternating with a typable base32 card for anyone who would rather not scan:\n\n1. The phone scans it and signs into Spotify on kpow.xyz\n2. The credentials come back as an AES-256-GCM envelope the relay can't read\n3. The board decrypts, applies, verifies against Spotify, and acks\n\nThe first real phone test died on that last step: `ack ok -> http -1`, with the phone sitting on \"Board is connecting\". The Spotify client was holding the only TLS context again. Now the ack frees the keep-alive before it posts and retries for about 15 seconds. Re-tested on the second board: Welcome back, then You're connected.\n\nThe case is finished too. Printed frame and stand, skulls cut into the side panel, and a choice of silver, white, grey or translucent diffusers."
@@ -984,16 +951,15 @@
           "media": [
             {
               "src": "/buildlog/vizspot/media/first-light-colors.jpg",
-              "caption": "First light on the bare panel — album art up, colors nowhere near right yet"
+              "caption": "First light"
             },
             {
               "src": "/buildlog/vizspot/media/brownout-bands.jpg",
-              "caption": "Banded red and dropped bits: the panel browning out on a computer USB port"
+              "caption": "Browning out on a laptop USB port"
             },
             {
               "src": "/buildlog/vizspot/media/art-and-effects.mp4",
-              "poster": "/buildlog/vizspot/media/art-and-effects.jpg",
-              "caption": "(video) Art and effects behind a sheet of diffuser, artist and title on the edges"
+              "poster": "/buildlog/vizspot/media/art-and-effects.jpg"
             }
           ],
           "body": "The board is not what the listing said it was. It reads like a Waveshare ESP32-S3-RGB-Matrix; it is a Seengreat RGB Matrix HUB75 S3, with a different pin map entirely. The giveaway is the module, N16R8 here against Waveshare's N32R16, and `esptool flash_id` will tell you which one you bought.\n\nThen the panel came up banded red with speckled green. I took that for a colour problem and tuned white balance twice, R91 G68 B100, then R20 G38 B98, before doing it properly in linear light. None of it was the bug.\n\n> **Trap:** red with speckled green is a power symptom, not a colour one. Drop brightness to 10%. If the colours come back, it is the supply. Ten seconds, and it saves hours.\n\nIt was browning out on a laptop USB port. Its own 5 V supply fixed the colour and the dropped bits together, and the default budget settled at 500 mA after a hub and a second laptop port both browned out at 900. Artist and title went on the top and bottom edges in a 3×5 face once the panel was honest."
@@ -1056,8 +1022,7 @@
       "picturesOverTime": [
         {
           "date": "2026-06-24",
-          "src": "/buildlog/vizbot/media/hero.jpg",
-          "caption": "The neon-green vizBot with its OLED face"
+          "src": "/buildlog/vizbot/media/hero.jpg"
         },
         {
           "date": "2026-06-24",
@@ -1066,8 +1031,7 @@
         },
         {
           "date": "2026-06-24",
-          "src": "/buildlog/vizbot/media/face-2.jpg",
-          "caption": "Another animated face"
+          "src": "/buildlog/vizbot/media/face-2.jpg"
         }
       ],
       "lastEntry": "2026-08-30",
@@ -1103,16 +1067,14 @@
           ],
           "media": [
             {
-              "src": "/buildlog/vizbot/media/hero.jpg",
-              "caption": "The neon-green vizBot with its OLED face"
+              "src": "/buildlog/vizbot/media/hero.jpg"
             },
             {
               "src": "/buildlog/vizbot/media/face-1.jpg",
               "caption": "One of the 25 procedurally-drawn expressions"
             },
             {
-              "src": "/buildlog/vizbot/media/face-2.jpg",
-              "caption": "Another animated face"
+              "src": "/buildlog/vizbot/media/face-2.jpg"
             }
           ],
           "body": "The bot in the flesh: neon-green shell, OLED face, StackChan base underneath.\n\nFixed the servos refusing to answer after a cold boot. They wake up slower than the firmware asks, so the ping retries now until they answer instead of giving up on the first miss. Also decoupled web control from cloud sync, because a slow sync was making the buttons feel dead, and fixed a registration bug that truncated device names."
@@ -1298,22 +1260,19 @@
         {
           "date": "2026-06-13",
           "src": "/buildlog/radar/media/wired.jpg",
-          "caption": "Round GC9A01 wired up on the bench"
+          "caption": "Round GC9A01 on the bench"
         },
         {
           "date": "2026-06-13",
-          "src": "/buildlog/radar/media/scope.jpg",
-          "caption": "Close on the radar scope — sweep and callsigns"
+          "src": "/buildlog/radar/media/scope.jpg"
         },
         {
           "date": "2026-06-13",
-          "src": "/buildlog/radar/media/housing.jpg",
-          "caption": "Display fitted into the printed slatted housing"
+          "src": "/buildlog/radar/media/housing.jpg"
         },
         {
           "date": "2026-06-13",
-          "src": "/buildlog/radar/media/hero.jpg",
-          "caption": "The finished retro-cube radar, green sweep + traffic"
+          "src": "/buildlog/radar/media/hero.jpg"
         }
       ],
       "lastEntry": "2026-08-28",
@@ -1384,19 +1343,16 @@
           "media": [
             {
               "src": "/buildlog/radar/media/wired.jpg",
-              "caption": "Round GC9A01 wired up on the bench"
+              "caption": "Round GC9A01 on the bench"
             },
             {
-              "src": "/buildlog/radar/media/scope.jpg",
-              "caption": "Close on the radar scope — sweep and callsigns"
+              "src": "/buildlog/radar/media/scope.jpg"
             },
             {
-              "src": "/buildlog/radar/media/housing.jpg",
-              "caption": "Display fitted into the printed slatted housing"
+              "src": "/buildlog/radar/media/housing.jpg"
             },
             {
-              "src": "/buildlog/radar/media/hero.jpg",
-              "caption": "The finished retro-cube radar, green sweep + traffic"
+              "src": "/buildlog/radar/media/hero.jpg"
             }
           ],
           "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3 and then gutted most of it. The stock build locked up every so often: it fired a burst of ADS-B requests and buffered each whole response body. One request on a backoff, plus a stream parse with a field filter so the body is never held whole, and the lockups stopped.\n\nThe rest was one long session:\n\n- **Dual core:** the network fetch on its own task, so a poll never stalls a frame\n- **Interpolation:** targets dead-reckon between the 3-second polls instead of teleporting\n- **ESP32-S3 Super Mini:** a second target, for the better radio, with WiFi retry hardening\n- **Looks:** 16-bit colour at 80 MHz SPI, a sweep with a comet trail, 30 fps pacing\n\nBy the end it was a live scope sitting in the printed slatted cube: round LCD, green grid, real callsigns."
@@ -1692,12 +1648,11 @@
         {
           "date": "2026-08-04",
           "src": "/buildlog/stackled/media/hero.jpg",
-          "caption": "The green wand, tower lit mid-game on the tall 8×32 field"
+          "caption": "Mid-game on the 8×32"
         },
         {
           "date": "2026-08-04",
-          "src": "/buildlog/stackled/media/lit.jpg",
-          "caption": "The lit field — the classic pixel staircase climbing the tower"
+          "src": "/buildlog/stackled/media/lit.jpg"
         }
       ],
       "lastEntry": "2026-08-04",
@@ -1712,11 +1667,10 @@
           "media": [
             {
               "src": "/buildlog/stackled/media/hero.jpg",
-              "caption": "The green wand, tower lit mid-game on the tall 8×32 field"
+              "caption": "Mid-game on the 8×32"
             },
             {
-              "src": "/buildlog/stackled/media/lit.jpg",
-              "caption": "The lit field — the classic pixel staircase climbing the tower"
+              "src": "/buildlog/stackled/media/lit.jpg"
             }
           ],
           "body": "Called it done. It runs off a battery inside the green printed wand now, no laptop tether, and the repo stopped tracking `.DS_Store` on the way out."
@@ -1823,22 +1777,20 @@
         {
           "date": "2026-06-29",
           "src": "/buildlog/cyberdeck/media/v1.jpg",
-          "caption": "The v1 rig: Pi tablet alongside the noode-exp bench"
+          "caption": "v1: the Pi tablet and the noode-exp bench"
         },
         {
           "date": "2026-06-30",
-          "src": "/buildlog/cyberdeck/media/detail.jpg",
-          "caption": "Folded case and the skull-branded bench box"
+          "src": "/buildlog/cyberdeck/media/detail.jpg"
         },
         {
           "date": "2026-07-01",
           "src": "/buildlog/cyberdeck/media/gadget.jpg",
-          "caption": "noode-exp on the ST7789 running a Chladni figure"
+          "caption": "Chladni, one of 42 standing-wave figures"
         },
         {
           "date": "2026-07-04",
-          "src": "/buildlog/cyberdeck/media/hero.jpg",
-          "caption": "The v2 rig with the redesigned keyboard tray"
+          "src": "/buildlog/cyberdeck/media/hero.jpg"
         }
       ],
       "lastEntry": "2026-07-05",
@@ -1865,8 +1817,7 @@
           ],
           "media": [
             {
-              "src": "/buildlog/cyberdeck/media/hero.jpg",
-              "caption": "The v2 rig with the redesigned keyboard tray"
+              "src": "/buildlog/cyberdeck/media/hero.jpg"
             }
           ],
           "body": "Redrew the broken v1 geometry into a v2 case with a proper keyboard tray, and it sits and folds the way it was supposed to. The Mii keyboard drops into the tray, the 7\" screen mounts above it, the bench box docks alongside.\n\nThis is the configuration I actually carry."
@@ -1882,10 +1833,10 @@
           "media": [
             {
               "src": "/buildlog/cyberdeck/media/gadget.jpg",
-              "caption": "noode-exp on the ST7789 running a Chladni figure"
+              "caption": "Chladni, one of 42 standing-wave figures"
             }
           ],
-          "body": "The bench is alive. All 11 modes cycle off the encoder, Steer Cube through Room Radar, with the LEDs running on core 0 and the ST7789 pushed to 80 MHz SPI so nothing tears while a mode is animating.\n\nThe photo is Chladni, one of 42 standing-wave figures, on the 2\" panel. The matrix effects are ported from NoodleLab.\n\nNo WiFi, no Bluetooth, no app. It boots into its own modes and that's the whole contract."
+          "body": "The bench is alive. All 11 modes cycle off the encoder, Steer Cube through Room Radar, with the LEDs running on core 0 and the ST7789 pushed to 80 MHz SPI so nothing tears while a mode is animating.\n\nThe matrix effects are ported from NoodleLab.\n\nNo WiFi, no Bluetooth, no app. It boots into its own modes and that's the whole contract."
         },
         {
           "date": "2026-06-30",
@@ -1897,11 +1848,10 @@
           ],
           "media": [
             {
-              "src": "/buildlog/cyberdeck/media/detail.jpg",
-              "caption": "Folded case and the skull-branded bench box"
+              "src": "/buildlog/cyberdeck/media/detail.jpg"
             }
           ],
-          "body": "Set the colour scheme across both enclosures: black with neon-yellow accents, and a skull on the electronics box to match the branding on everything else I build.\n\nShot the folded case next to the bench box, which is the first time the two read as one rig instead of two projects."
+          "body": "Set the colour scheme across both enclosures: black with neon-yellow accents, and a skull on the electronics box to match the branding on everything else I build.\n\nStood the folded case next to the bench box, and for the first time the two read as one rig instead of two projects."
         },
         {
           "date": "2026-06-29",
@@ -1914,7 +1864,7 @@
           "media": [
             {
               "src": "/buildlog/cyberdeck/media/v1.jpg",
-              "caption": "The v1 rig: Pi tablet alongside the noode-exp bench"
+              "caption": "v1: the Pi tablet and the noode-exp bench"
             }
           ],
           "body": "Got the v1 rig standing: the Pi tablet beside the noode-exp bench, a case each.\n\nThe case geometry is wrong. Parts don't seat cleanly and it won't fold flat, which was the entire point of the hinge. Logging it here rather than fixing it in place, because the tray needs redrawing from scratch."
@@ -1945,17 +1895,16 @@
       ],
       "media": [
         {
-          "src": "/buildlog/8x8/media/desktop-case-final.jpg",
-          "caption": "The finished desktop case, shut: silver skull inlay on the lid, silver strip along the base"
+          "src": "/buildlog/8x8/media/desktop-case-final.jpg"
         },
         {
           "src": "/buildlog/8x8/media/desktop-case-open.mp4",
-          "poster": "/buildlog/8x8/media/desktop-case-open.jpg",
-          "caption": "(video) Opening it in hand, editor on the screen, then closed"
+          "poster": "/buildlog/8x8/media/desktop-case-open.jpg"
         },
         {
           "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
-          "caption": "(render) The mobile version taking shape: matrix in the lid, screen in the base, that same barrel hinge"
+          "kind": "render",
+          "caption": "The mobile version"
         }
       ],
       "body": "Called the desktop case done. This is the last version of it.\n\nExtended the base of the hinge, so an open lid has something behind it to lean on instead of flopping back. It looks better with that mass there too. Then the detailing: a silver skull inlay on the lid and a silver strip running along the base.\n\n> **Next:** a mobile version with a battery, built on this one."
@@ -1971,21 +1920,18 @@
       ],
       "media": [
         {
-          "src": "/buildlog/8x8/media/hero.jpg",
-          "caption": "The clamshell open, an invader on the matrix and the home screen below"
+          "src": "/buildlog/8x8/media/hero.jpg"
         },
         {
-          "src": "/buildlog/8x8/media/editor-closeup.jpg",
-          "caption": "Drawing on the 8x8 touch canvas with the matrix following along"
+          "src": "/buildlog/8x8/media/editor-closeup.jpg"
         },
         {
           "src": "/buildlog/8x8/media/pacghost-editing.mp4",
-          "poster": "/buildlog/8x8/media/pacghost-detail.jpg",
-          "caption": "(video) Drawing an icon by stylus, then the save dialog — new icon or update"
+          "poster": "/buildlog/8x8/media/pacghost-detail.jpg"
         },
         {
           "src": "/buildlog/8x8/media/in-hand.jpg",
-          "caption": "Closed to one hand — 44 icons cached, last synced 52 seconds ago"
+          "caption": "44 icons cached, last synced 52 seconds ago"
         }
       ],
       "body": "Got the clamshell together. A printed threaded rod runs through a two-part hinge with a knurled head on one end, and there are detents at the knuckle interface so tightening actually holds the angle. Plain chamfers top and bottom, because the curved edges never printed clean and I stopped pretending they would.\n\nBacked out the touch changes I made for the second board. The first board didn't want them.\n\nThen the README, origin story included: a pocket sketchbook where the page is 8×8 and the ink is light."
@@ -2012,11 +1958,10 @@
       ],
       "media": [
         {
-          "src": "/buildlog/8x8/media/case-apart.jpg",
-          "caption": "Base, lid shell, bezel and the four-wire matrix harness, apart on the mat"
+          "src": "/buildlog/8x8/media/case-apart.jpg"
         }
       ],
-      "body": "Touch was the day. Moved to pressure-based reads, threw out the four-corner min and max map for a projective calibration, and made the handheld run calibration on first boot instead of shipping my bring-up constants to every board.\n\nLED rotation became a per-device setting in NVS too, because every matrix ends up mounted a different way in a different case, and a constant only ever describes the one on my desk.\n\nHad the whole thing apart on the mat while I did it."
+      "body": "Touch was the day. Moved to pressure-based reads, threw out the four-corner min and max map for a projective calibration, and made the handheld run calibration on first boot instead of shipping my bring-up constants to every board.\n\nLED rotation became a per-device setting in NVS too, because every matrix ends up mounted a different way in a different case, and a constant only ever describes the one on my desk."
     },
     {
       "build": "8x8",
@@ -2029,8 +1974,7 @@
       ],
       "media": [
         {
-          "src": "/buildlog/8x8/media/case-prints.jpg",
-          "caption": "Three printed case bodies on the mat, none of them populated yet"
+          "src": "/buildlog/8x8/media/case-prints.jpg"
         }
       ],
       "body": "Printed another round of case bodies and lined them up against the last one. No electronics in any of them. These were only to see how the shells come off the plate and how the lid sits shut.\n\nPrinting a clamshell is mostly a hinge problem. Everything else is a box."
@@ -2047,7 +1991,8 @@
       "media": [
         {
           "src": "/buildlog/noodle/media/mondrian-colors.jpg",
-          "caption": "One layout at five settings of the Color knob (render)"
+          "kind": "render",
+          "caption": "One layout at five settings of the Color knob"
         }
       ],
       "body": "Reworked the motion. The old version slid one section out and back like a tray, and sometimes nothing actually changed on screen. Now every line moves at once while part of the grid rebuilds and a colour block slides to a new cell.\n\nThat turned up a bug where remixing the whole canvas skipped moving the lines at all.\n\nThe Color knob is one smooth sweep now, built on the spacing between Mondrian's own red, blue and yellow, with his palette sitting in the middle of the range.\n\nFlashed it to the rig and every colour was wrong. Took me a minute to notice the global palette tint was still switched on, quietly re-mapping a pattern that brings its own colours."
@@ -2063,11 +2008,10 @@
       "media": [
         {
           "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
-          "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg",
-          "caption": "(video) 39 icons synced, stepping through them on the matrix with transitions running"
+          "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg"
         }
       ],
-      "body": "No commits. A day of just using it.\n\nThirty-nine icons synced, stepping through them on the matrix with the transitions running and the sync age in the title bar. The matrix is still living in its own frame on printed knurled thumb screws.\n\nThe firmware is doing what it should. The enclosure is the open question."
+      "body": "No commits. A day of just using it.\n\nThirty-nine icons synced, stepping through them with the transitions running and the sync age up in the title bar. The matrix is still living in its own frame on printed knurled thumb screws.\n\nThe firmware is doing what it should. The enclosure is the open question."
     },
     {
       "build": "noodle",
@@ -2081,7 +2025,8 @@
       "media": [
         {
           "src": "/buildlog/noodle/media/mondrian-compositions.jpg",
-          "caption": "Three compositions from one run (render)"
+          "kind": "render",
+          "caption": "Three compositions from one run"
         }
       ],
       "body": "Wrote my first pattern from scratch for the Patternflow bank: a Mondrian grid that keeps rearranging itself.\n\nIt builds a layout by splitting the canvas in two, then splitting the pieces, which is roughly how the paintings are put together. Whatever it lands on is a valid composition rather than a scatter of rectangles.\n\nWorked it out in JavaScript first, in a small browser harness, then hand-ported it to C++ for the hub75. The two versions match pixel for pixel, which is the only reason I trust the port."
@@ -2110,12 +2055,11 @@
       ],
       "media": [
         {
-          "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg",
-          "caption": "The editor with its paged palette, matrix mirroring the canvas"
+          "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg"
         },
         {
           "src": "/buildlog/8x8/media/first-build-desk.jpg",
-          "caption": "First build on the desk — matrix in its own frame, knurled knob on the side"
+          "caption": "First build"
         }
       ],
       "body": "Renamed 8x8 Studio to 8x8 labz, and redid both front ends neobrutalist: cream paper, black ink, thick borders, hard offset shadows, Slackey headings, lowercase everywhere, and a matching boot title card on the handheld.\n\nThe palette got split into families of six OKLCH shades. Picking a colour on a 320×240 resistive panel is now a family dropdown and twelve swatches, instead of hunting a 256-colour grid with a fingernail.\n\nHome is four big tiles with a live mirror of the LEDs."
@@ -2133,7 +2077,7 @@
       "media": [
         {
           "src": "/buildlog/8x8/media/early-prototype.jpg",
-          "caption": "Early prototype in a clear pink box: the icon browser, 32 icons over two pages, one on the matrix"
+          "caption": "32 icons over two pages"
         }
       ],
       "body": "Phases 5 and 6, one sitting. The matrix got a player with nine transitions and sixteen ambient patterns ported from vizpow.\n\nThen the screens went in around it: browse, detail, settings and touch calibration. The editor came last, with pencil, fill, picker, eraser, undo and animation frames.\n\nTwo bugs worth keeping:\n\n- the LVGL draw buffer has to be aligned, or the screen comes up blank and noisy with no error anywhere\n- screens must be freed on leave, because the sync task needs about fifty kilobytes free for its TLS handshake and a leftover screen is exactly what it doesn't have"
@@ -2163,16 +2107,14 @@
       "media": [
         {
           "src": "/buildlog/vizspot/media/hero.jpg",
-          "caption": "In the case, playing De La Soul — artist on the top edge, title on the bottom"
+          "caption": "De La Soul, The Magic Number"
         },
         {
-          "src": "/buildlog/vizspot/media/case-unlit.jpg",
-          "caption": "The case unlit: printed frame and stand, diffuser over the panel, skulls cut into the side"
+          "src": "/buildlog/vizspot/media/case-unlit.jpg"
         },
         {
           "src": "/buildlog/vizspot/media/in-the-case.mp4",
-          "poster": "/buildlog/vizspot/media/in-the-case.jpg",
-          "caption": "(video) Cover, then the visualizer effects, then the kaleidoscope fold"
+          "poster": "/buildlog/vizspot/media/in-the-case.jpg"
         }
       ],
       "body": "A board you hand to someone shouldn't need a computer. So the panel shows a QR code, alternating with a typable base32 card for anyone who would rather not scan:\n\n1. The phone scans it and signs into Spotify on kpow.xyz\n2. The credentials come back as an AES-256-GCM envelope the relay can't read\n3. The board decrypts, applies, verifies against Spotify, and acks\n\nThe first real phone test died on that last step: `ack ok -> http -1`, with the phone sitting on \"Board is connecting\". The Spotify client was holding the only TLS context again. Now the ack frees the keep-alive before it posts and retries for about 15 seconds. Re-tested on the second board: Welcome back, then You're connected.\n\nThe case is finished too. Printed frame and stand, skulls cut into the side panel, and a choice of silver, white, grey or translucent diffusers."
@@ -2226,16 +2168,15 @@
         {
           "src": "/buildlog/noodle/media/kaleido-panels.mp4",
           "poster": "/buildlog/noodle/media/noodle-2k-lit.jpg",
-          "caption": "(video) Kaleidoscope patterns on the 64×32 hub75 and the 16×16, the dial mirroring along"
+          "caption": "Kaleidoscope on the 64×32 hub75 and the 16×16, the dial mirroring"
         },
         {
           "src": "/buildlog/noodle/media/two-hub75.mp4",
           "poster": "/buildlog/noodle/media/two-hub75.jpg",
-          "caption": "(video) Second hub75 board up: both panels and the 16×16 running together"
+          "caption": "Second hub75 board up, both panels running"
         },
         {
-          "src": "/buildlog/noodle/media/tray-unlit.jpg",
-          "caption": "The tray unlit: silver diffusers, the dial up front, the disco ball top right"
+          "src": "/buildlog/noodle/media/tray-unlit.jpg"
         }
       ],
       "body": "Recomposed the whole UI for a landscape 320×240 mount, because the ribbon was blocking the view in portrait: one-row header, framed menus, Live Control and Chladni both re-laid out. Landscape puts text beside its neighbours instead of into dead space, so every variable-length name now goes through a fitter before it's drawn.\n\nThe Patternflow bank landed the same week: JS shader-style patterns hand-ported to C++, running on all three boards. The red Qwiic button got demoted from \"previous pattern\" to a palette dice, because I never once used it as a back button. The dial already has back."
@@ -2252,16 +2193,15 @@
       "media": [
         {
           "src": "/buildlog/vizspot/media/first-light-colors.jpg",
-          "caption": "First light on the bare panel — album art up, colors nowhere near right yet"
+          "caption": "First light"
         },
         {
           "src": "/buildlog/vizspot/media/brownout-bands.jpg",
-          "caption": "Banded red and dropped bits: the panel browning out on a computer USB port"
+          "caption": "Browning out on a laptop USB port"
         },
         {
           "src": "/buildlog/vizspot/media/art-and-effects.mp4",
-          "poster": "/buildlog/vizspot/media/art-and-effects.jpg",
-          "caption": "(video) Art and effects behind a sheet of diffuser, artist and title on the edges"
+          "poster": "/buildlog/vizspot/media/art-and-effects.jpg"
         }
       ],
       "body": "The board is not what the listing said it was. It reads like a Waveshare ESP32-S3-RGB-Matrix; it is a Seengreat RGB Matrix HUB75 S3, with a different pin map entirely. The giveaway is the module, N16R8 here against Waveshare's N32R16, and `esptool flash_id` will tell you which one you bought.\n\nThen the panel came up banded red with speckled green. I took that for a colour problem and tuned white balance twice, R91 G68 B100, then R20 G38 B98, before doing it properly in linear light. None of it was the bug.\n\n> **Trap:** red with speckled green is a power symptom, not a colour one. Drop brightness to 10%. If the colours come back, it is the supply. Ten seconds, and it saves hours.\n\nIt was browning out on a laptop USB port. Its own 5 V supply fixed the colour and the dropped bits together, and the default budget settled at 500 mA after a hub and a second laptop port both browned out at 900. Artist and title went on the top and bottom edges in a 3×5 face once the panel was honest."
@@ -2446,8 +2386,7 @@
           "caption": "the finished bigfun"
         },
         {
-          "src": "/buildlog/kfun/media/splash.jpg",
-          "caption": "bigfun boot splash screen"
+          "src": "/buildlog/kfun/media/splash.jpg"
         }
       ],
       "body": "Galaga takes the Invaders slot on bigfun, with auto-fire. Same slot, same launcher, different game depending on which console you picked up.\n\nRebranded the README as kFun, tinyfun and bigfun under one name."
@@ -2464,11 +2403,10 @@
       "media": [
         {
           "src": "/buildlog/stackled/media/hero.jpg",
-          "caption": "The green wand, tower lit mid-game on the tall 8×32 field"
+          "caption": "Mid-game on the 8×32"
         },
         {
-          "src": "/buildlog/stackled/media/lit.jpg",
-          "caption": "The lit field — the classic pixel staircase climbing the tower"
+          "src": "/buildlog/stackled/media/lit.jpg"
         }
       ],
       "body": "Called it done. It runs off a battery inside the green printed wand now, no laptop tether, and the repo stopped tracking `.DS_Store` on the way out."
@@ -2515,8 +2453,7 @@
           "caption": "bigfun next to the smaller tinyfun"
         },
         {
-          "src": "/buildlog/kfun/media/invaders.jpg",
-          "caption": "Space Invaders running on the TFT"
+          "src": "/buildlog/kfun/media/invaders.jpg"
         }
       ],
       "body": "Restructured into the kFun monorepo, a shared `common/` with `tinyfun/` and `bigfun/` as thin board ports on top, and got the full app booting on the SuperMini.\n\nThen art and effects for the wide board, which is where the two consoles start being different games:\n\n- backgammon in landscape, with traditional triangle points\n- Tetris centred, with side panels either side of the well\n- Breakout rebuilt as Arkanoid\n- a sprite pipeline off the Kenney CC0 art\n- attract cards on the launcher, nebula backgrounds with post-FX, a themed game-over screen"
@@ -2665,8 +2602,7 @@
       ],
       "media": [
         {
-          "src": "/buildlog/cyberdeck/media/hero.jpg",
-          "caption": "The v2 rig with the redesigned keyboard tray"
+          "src": "/buildlog/cyberdeck/media/hero.jpg"
         }
       ],
       "body": "Redrew the broken v1 geometry into a v2 case with a proper keyboard tray, and it sits and folds the way it was supposed to. The Mii keyboard drops into the tray, the 7\" screen mounts above it, the bench box docks alongside.\n\nThis is the configuration I actually carry."
@@ -2684,10 +2620,10 @@
       "media": [
         {
           "src": "/buildlog/cyberdeck/media/gadget.jpg",
-          "caption": "noode-exp on the ST7789 running a Chladni figure"
+          "caption": "Chladni, one of 42 standing-wave figures"
         }
       ],
-      "body": "The bench is alive. All 11 modes cycle off the encoder, Steer Cube through Room Radar, with the LEDs running on core 0 and the ST7789 pushed to 80 MHz SPI so nothing tears while a mode is animating.\n\nThe photo is Chladni, one of 42 standing-wave figures, on the 2\" panel. The matrix effects are ported from NoodleLab.\n\nNo WiFi, no Bluetooth, no app. It boots into its own modes and that's the whole contract."
+      "body": "The bench is alive. All 11 modes cycle off the encoder, Steer Cube through Room Radar, with the LEDs running on core 0 and the ST7789 pushed to 80 MHz SPI so nothing tears while a mode is animating.\n\nThe matrix effects are ported from NoodleLab.\n\nNo WiFi, no Bluetooth, no app. It boots into its own modes and that's the whole contract."
     },
     {
       "build": "cyberdeck",
@@ -2701,11 +2637,10 @@
       ],
       "media": [
         {
-          "src": "/buildlog/cyberdeck/media/detail.jpg",
-          "caption": "Folded case and the skull-branded bench box"
+          "src": "/buildlog/cyberdeck/media/detail.jpg"
         }
       ],
-      "body": "Set the colour scheme across both enclosures: black with neon-yellow accents, and a skull on the electronics box to match the branding on everything else I build.\n\nShot the folded case next to the bench box, which is the first time the two read as one rig instead of two projects."
+      "body": "Set the colour scheme across both enclosures: black with neon-yellow accents, and a skull on the electronics box to match the branding on everything else I build.\n\nStood the folded case next to the bench box, and for the first time the two read as one rig instead of two projects."
     },
     {
       "build": "cyberdeck",
@@ -2720,7 +2655,7 @@
       "media": [
         {
           "src": "/buildlog/cyberdeck/media/v1.jpg",
-          "caption": "The v1 rig: Pi tablet alongside the noode-exp bench"
+          "caption": "v1: the Pi tablet and the noode-exp bench"
         }
       ],
       "body": "Got the v1 rig standing: the Pi tablet beside the noode-exp bench, a case each.\n\nThe case geometry is wrong. Parts don't seat cleanly and it won't fold flat, which was the entire point of the hinge. Logging it here rather than fixing it in place, because the tray needs redrawing from scratch."
@@ -2762,16 +2697,14 @@
       ],
       "media": [
         {
-          "src": "/buildlog/vizbot/media/hero.jpg",
-          "caption": "The neon-green vizBot with its OLED face"
+          "src": "/buildlog/vizbot/media/hero.jpg"
         },
         {
           "src": "/buildlog/vizbot/media/face-1.jpg",
           "caption": "One of the 25 procedurally-drawn expressions"
         },
         {
-          "src": "/buildlog/vizbot/media/face-2.jpg",
-          "caption": "Another animated face"
+          "src": "/buildlog/vizbot/media/face-2.jpg"
         }
       ],
       "body": "The bot in the flesh: neon-green shell, OLED face, StackChan base underneath.\n\nFixed the servos refusing to answer after a cold boot. They wake up slower than the firmware asks, so the ping retries now until they answer instead of giving up on the first miss. Also decoupled web control from cloud sync, because a slow sync was making the buttons feel dead, and fixed a registration bug that truncated device names."
@@ -2826,19 +2759,16 @@
       "media": [
         {
           "src": "/buildlog/radar/media/wired.jpg",
-          "caption": "Round GC9A01 wired up on the bench"
+          "caption": "Round GC9A01 on the bench"
         },
         {
-          "src": "/buildlog/radar/media/scope.jpg",
-          "caption": "Close on the radar scope — sweep and callsigns"
+          "src": "/buildlog/radar/media/scope.jpg"
         },
         {
-          "src": "/buildlog/radar/media/housing.jpg",
-          "caption": "Display fitted into the printed slatted housing"
+          "src": "/buildlog/radar/media/housing.jpg"
         },
         {
-          "src": "/buildlog/radar/media/hero.jpg",
-          "caption": "The finished retro-cube radar, green sweep + traffic"
+          "src": "/buildlog/radar/media/hero.jpg"
         }
       ],
       "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3 and then gutted most of it. The stock build locked up every so often: it fired a burst of ADS-B requests and buffered each whole response body. One request on a backoff, plus a stream parse with a field filter so the body is never held whole, and the lockups stopped.\n\nThe rest was one long session:\n\n- **Dual core:** the network fetch on its own task, so a poll never stalls a frame\n- **Interpolation:** targets dead-reckon between the 3-second polls instead of teleporting\n- **ESP32-S3 Super Mini:** a second target, for the better radio, with WiFi retry hardening\n- **Looks:** 16-bit colour at 80 MHz SPI, a sweep with a comet trail, 30 fps pacing\n\nBy the end it was a live scope sitting in the printed slatted cube: round LCD, green grid, real callsigns."
@@ -2855,8 +2785,7 @@
       ],
       "media": [
         {
-          "src": "/buildlog/noodle/media/disco-skull.jpg",
-          "caption": "Printed skull over the spinning disco ball"
+          "src": "/buildlog/noodle/media/disco-skull.jpg"
         }
       ],
       "body": "Added a motorized disco ball as its own satellite: stepper, spot LED, OLED, and a dedicated live target on the console.\n\nThe first version ran the stepper off main power and made the ground filthy. Noise bled through the whole Noodle, and it read like a data problem until I looked at what I'd just plugged in. Its own supply fixed it.\n\n> **Trap:** a motor and your logic on one ground rail. Classic, and I still walked into it."
@@ -2897,8 +2826,7 @@
       ],
       "media": [
         {
-          "src": "/buildlog/noodle/media/lit-desk.jpg",
-          "caption": "Lit desk with the pixel matrix running"
+          "src": "/buildlog/noodle/media/lit-desk.jpg"
         }
       ],
       "body": "Dropped WiFi association altogether. The Console brings the radio up for ESP-NOW and never joins an access point, which means no router, no DHCP lease, and nothing to go stale between sessions.\n\nStarted the screen-share path as well, browser to ingest to matrix, with a LittleFS clip store behind it, so I can push real captured pixels at the 16×16 instead of only generated effects."
@@ -2914,8 +2842,7 @@
       ],
       "media": [
         {
-          "src": "/buildlog/noodle/media/hex-orb.jpg",
-          "caption": "Hex panels and RGB orb on the bench"
+          "src": "/buildlog/noodle/media/hex-orb.jpg"
         }
       ],
       "body": "The dial sat became the remote: a live preview canvas, Qwiic forward and back buttons for the pattern stack, and curated playlists.\n\nAdded a composite overlay source too, a 16×16 pattern with a centred 8×8 icon on top, palette index 0 transparent so the pattern shows through the sprite.\n\nCut the dead DDP path out entirely while I was in there."
@@ -2968,8 +2895,7 @@
       ],
       "media": [
         {
-          "src": "/buildlog/noodle/media/hero.jpg",
-          "caption": "The full instrument lit"
+          "src": "/buildlog/noodle/media/hero.jpg"
         }
       ],
       "body": "Stood up the real effects engine: a descriptor table with 10 effects to start, so adding one is a function and a row rather than a new branch in the render loop.\n\nA 4×8 NeoPixel FeatherWing went on mirroring the matrix, and the filaments got a TPS61169 driver with gamma correction so a dim setting actually looks dim."
@@ -2997,8 +2923,7 @@
       ],
       "media": [
         {
-          "src": "/buildlog/noodle/media/fiber.jpg",
-          "caption": "Driver board lighting fiber-optic strands"
+          "src": "/buildlog/noodle/media/fiber.jpg"
         }
       ],
       "body": "PCA9685 filaments breathing on a sine offset, a Pixelblaze websocket path for browsing and streaming patterns live, and the `patterns/` scaffolding underneath.\n\nFirst evening the thing looked less like a prototype and more like an instrument."
@@ -3371,5 +3296,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-24T03:54:55.087Z"
+  "generatedAt": "2026-09-24T04:06:11.629Z"
 }

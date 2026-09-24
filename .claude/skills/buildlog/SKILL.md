@@ -56,8 +56,8 @@ fuller made-up one. This is how the log got out of whack in the first place.
    you'd tell a friend you did that day. Date each entry the day that work landed.
    Several days of small commits on one thing = one entry, dated its last day.
 3. Photos: `photo.mjs info inbox/*`. Match each to an entry by the date it was taken.
-   **Look at every photo** (Read it) before captioning. Photos with no matching work
-   day: ask.
+   **Look at every photo** (Read it) before deciding whether it needs a caption at
+   all — see "Captions are optional". Photos with no matching work day: ask.
 4. Draft all entries at once and show them. If the user gave a sentence, it leads.
    Ask **one** question at a time about anything you can't source.
 5. On approval: ingest photos (below), write the files, then **Publish**.
@@ -133,7 +133,7 @@ date: 2026-05-27
 title: "Disco-ball satellite — and a nasty ground-noise lesson"
 tags: [satellites, disco, hardware-lesson]
 media:
-  - { src: media/disco-skull.jpg, caption: "Printed skull over the spinning disco ball" }
+  - { src: media/disco-skull.jpg }
 ---
 Body.
 ```
@@ -141,8 +141,26 @@ Text-only entry: `media: []`.
 
 Video entry — `src:` the ingested .mp4, `poster:` a .jpg shown before it plays:
 ```
-  - { src: media/matrix-yellow-cross.mp4, poster: media/matrix-yellow-cross.jpg, caption: "(video) 39 icons synced, stepping through them on the matrix" }
+  - { src: media/matrix-yellow-cross.mp4, poster: media/matrix-yellow-cross.jpg }
 ```
+
+A still that isn't a photo says so with `kind:` — `render`, `screenshot` or
+`diagram`. Video needs no flag; the site badges it off the `.mp4`.
+```
+  - { src: media/mobile-version-cad.jpg, kind: render, caption: "The mobile version" }
+```
+
+### Captions are optional, and usually wrong
+
+**A caption carries something the photo can't: a number, a part name, a
+failure.** "44 icons cached, last synced 52 seconds ago" earns its place.
+"Three printed case bodies on the mat" does not — the reader has eyes.
+
+- Nothing to add? **Omit the `caption:` key.** Don't write `caption: ""`.
+- Never describe the frame, and never restate a sentence from the body. That
+  duplication was half of what made the log read like filler.
+- Never write "(video)" or "(render)" into caption text. The site draws a badge.
+- Keep one under 90 characters; lint warns past that.
 
 - `---` on **line 1**, LF endings.
 - `date:` must equal the filename's date.
@@ -189,7 +207,7 @@ right when the day was one thing.
 - Name the real parts, chips and numbers. No marketing, no "excited to", no emoji.
 - Title: short and specific, joins with `—`, `+`, `,` or `:`.
 - Tags: 1–3, lowercase, kebab-case.
-- Renders, screenshots and clips say so in the caption: "(render)", "(screenshot)", "(video)".
+- Media says what it is through `kind:` and the badge, never in caption text.
 
 ### Banned tics — these are what made the log read like a machine
 
