@@ -3,7 +3,7 @@ slug: kfun
 title: kFun
 status: active
 kind: hardware
-summary: Two handheld game consoles built from one codebase.
+summary: Three handheld game consoles built from one codebase.
 stack: [ESP32-S3, C++, LovyanGFX, PlatformIO]
 tags: [handheld, games, firmware]
 rung: design
