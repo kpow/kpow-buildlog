@@ -284,11 +284,11 @@
       "started": "2026-03-23",
       "body": "A modular LED light instrument that turned into a distributed system, then got\npulled back together onto one tray. It's had three names along the way.\n\n## Noodle → NoodleLab → Noodle 2K\n\n**Noodle** (March 2026) was a breadboard: one controller, a few LED grids and\nfilaments, and a rat's nest of jumpers. It worked, barely, and every new surface\nmeant more wires.\n\n**NoodleLab** (April–July) rebuilt it on an Adafruit FeatherS3 with STEMMA-QT\nparts. When an external 8×8 hit the GPIO wall, every LED surface became its own\nESP32-C3 satellite over ESP-NOW: an audio sat, a 1×30 bar, 8×8, 16×16 and 12×8\nmatrices, a motorized disco ball and a haptic dial remote. It scaled by adding\nboards, not pins.\n\n**Noodle 2K** (from August 29) came out of a strip-to-bare-MCU rebuild. The\nfilaments and the PCA9685 went for good, the 16×16 moved onto a console pin, the\nicon and 12×8 sats were retired, and everything moved onto one tray behind silver\ndiffusers. It's LEDs only now.\n\n## What's running now\n\nThe **console** is still the FeatherS3, now with a 2.4\" ST7789 mounted landscape\nfor a 320×240 UI and a Chladni resonant-plate visualizer as the screensaver. It\ndrives a 12×4 matrix, a 4×8 FeatherWing and the 16×16 directly. It never joins\nWiFi: it scans channels 1, 6 and 11 at boot and runs ESP-NOW on the quietest.\n\nOver ESP-NOW:\n\n- a **1×30 RGBW bar** arc\n- an **audio sat** with an INMP441 mic, broadcasting bass, mid, treble and beat so\n  the whole fleet reacts together\n- the **disco ball**: stepper, spot LED and OLED, on its own supply\n- the **dial**, a round 1.8\" knob with touch and haptics that mirrors the\n  console's state\n- two **HUB75 panels** on MatrixPortal S3 boards, a 64×32 and a 128×64, fed the\n  same packets side by side until one is retired\n\n**22 effects**, including a trimmed port of WLED's 2D particle system and a\n16-band GEQ, all render through **23 palettes**. The hub75 panels also run the\n**Patternflow bank**: JavaScript patterns hand-ported to C++, plus my own Mondrian.\n\n**Controls:** three NeoPixel encoders, a NeoSlider, capacitive touch pads that pick\nthe target (matrix, disco or Patternflow), a nav encoder, and two Qwiic buttons.\nGreen steps patterns; red rolls a random palette.\n\n## Why it's built this way\n\nThe distributed architecture wasn't a flourish — it was running out of GPIO and\nrefusing to stop adding panels. Moving each surface to its own wireless board\nmeans the system scales by adding *boards*, not pins.",
       "stats": {
-        "entries": 20,
-        "photos": 10,
-        "daysActive": 183,
+        "entries": 22,
+        "photos": 13,
+        "daysActive": 185,
         "firstEntry": "2026-03-25",
-        "lastEntry": "2026-09-21"
+        "lastEntry": "2026-09-23"
       },
       "git": null,
       "picturesOverTime": [
@@ -339,10 +339,63 @@
           "src": "/buildlog/noodle/media/mondrian-colors.jpg",
           "kind": "render",
           "caption": "One layout at five settings of the Color knob"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/noodle/media/dial-bank-list.jpg",
+          "kind": "render",
+          "caption": "The list, and the view after a tap launches it"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/noodle/media/twisted-tunnel.mp4",
+          "poster": "/buildlog/noodle/media/twisted-tunnel.jpg"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/noodle/media/twisted-tunnel-knobs.jpg",
+          "kind": "render",
+          "caption": "Tilt 0, 0.25 and 0.5, then Color at 0.2 and 0.8"
         }
       ],
-      "lastEntry": "2026-09-21",
+      "lastEntry": "2026-09-23",
       "entries": [
+        {
+          "date": "2026-09-23",
+          "title": "Six wall patterns + a list browser on the dial",
+          "tags": [
+            "patternflow",
+            "dial"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/dial-bank-list.jpg",
+              "kind": "render",
+              "caption": "The list, and the view after a tap launches it"
+            }
+          ],
+          "body": "Pulled six more patterns off the Patternflow wall: Fractal Storm, Branched Flow, Hypno Circles, Tri March, Vector Field Flow and Pattern 0522. Hypno Circles only exists as JavaScript, so that one is a hand port.\n\nThe importer had been seeing 44 of the wall's 194 patterns. The site caps a page at 44 whatever you ask for, and the loop read a short page as the end.\n\nThe bank is at 51 slots and still growing, which a grid on a round screen can't hold. The dial got a BANK mode instead: the knob scrolls a list, a tap launches, and once something is playing the knob does nothing. That also killed the old bug where a fast spin skipped patterns. Flashed the dial, Console and hub75, and the panel still lights with 14 KB more static RAM.\n\n> **Next:** the rotation playlist is a 64-bit mask, so 64 slots is the ceiling until the protocol changes."
+        },
+        {
+          "date": "2026-09-23",
+          "title": "Twisted Tunnel: a Bauhaus zoom, rebuilt",
+          "tags": [
+            "patterns",
+            "patternflow"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/twisted-tunnel.mp4",
+              "poster": "/buildlog/noodle/media/twisted-tunnel.jpg"
+            },
+            {
+              "src": "/buildlog/noodle/media/twisted-tunnel-knobs.jpg",
+              "kind": "render",
+              "caption": "Tilt 0, 0.25 and 0.5, then Color at 0.2 and 0.8"
+            }
+          ],
+          "body": "Started from a canvas sketch of Bauhaus rectangles zooming inward and ported it to the Patternflow bank as Nested Frames, bank 44. Named it Twisted Tunnel for the Patternflow wall.\n\nThe sketch claimed to loop seamlessly and didn't. Every five seconds each ring took on its neighbour's colour and shape. Keying every ring on its own index fixed it.\n\nThen it drifted a long way from the original:\n\n- **Tilt:** a twist keyed on ring size, so the frames form a spiral that turns as it falls.\n- **Colour:** the red, blue and yellow from the Mondrian pattern, with true black and white.\n- **Randomness:** each ring gets its own spacing, lean, shape and slow drift.\n- **Fills:** about one ring in five carries dots, a grid, stripes or a checker.\n\nI dropped the yellow square the sketch kept fixed at the centre. It looked weird sitting still while everything else moved.\n\n> **Trap:** one float for zoom depth loses most of each frame's step near its wrap at the lowest speed, and the zoom stutters. Split it into a whole part and a fraction."
+        },
         {
           "date": "2026-09-21",
           "title": "README catches up with Noodle 2K",
@@ -1910,6 +1963,46 @@
       "body": "Called the desktop case done. This is the last version of it.\n\nExtended the base of the hinge, so an open lid has something behind it to lean on instead of flopping back. It looks better with that mass there too. Then the detailing: a silver skull inlay on the lid and a silver strip running along the base.\n\n> **Next:** a mobile version with a battery, built on this one."
     },
     {
+      "build": "noodle",
+      "buildTitle": "Noodle 2K",
+      "date": "2026-09-23",
+      "title": "Six wall patterns + a list browser on the dial",
+      "tags": [
+        "patternflow",
+        "dial"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/dial-bank-list.jpg",
+          "kind": "render",
+          "caption": "The list, and the view after a tap launches it"
+        }
+      ],
+      "body": "Pulled six more patterns off the Patternflow wall: Fractal Storm, Branched Flow, Hypno Circles, Tri March, Vector Field Flow and Pattern 0522. Hypno Circles only exists as JavaScript, so that one is a hand port.\n\nThe importer had been seeing 44 of the wall's 194 patterns. The site caps a page at 44 whatever you ask for, and the loop read a short page as the end.\n\nThe bank is at 51 slots and still growing, which a grid on a round screen can't hold. The dial got a BANK mode instead: the knob scrolls a list, a tap launches, and once something is playing the knob does nothing. That also killed the old bug where a fast spin skipped patterns. Flashed the dial, Console and hub75, and the panel still lights with 14 KB more static RAM.\n\n> **Next:** the rotation playlist is a 64-bit mask, so 64 slots is the ceiling until the protocol changes."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "Noodle 2K",
+      "date": "2026-09-23",
+      "title": "Twisted Tunnel: a Bauhaus zoom, rebuilt",
+      "tags": [
+        "patterns",
+        "patternflow"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/twisted-tunnel.mp4",
+          "poster": "/buildlog/noodle/media/twisted-tunnel.jpg"
+        },
+        {
+          "src": "/buildlog/noodle/media/twisted-tunnel-knobs.jpg",
+          "kind": "render",
+          "caption": "Tilt 0, 0.25 and 0.5, then Color at 0.2 and 0.8"
+        }
+      ],
+      "body": "Started from a canvas sketch of Bauhaus rectangles zooming inward and ported it to the Patternflow bank as Nested Frames, bank 44. Named it Twisted Tunnel for the Patternflow wall.\n\nThe sketch claimed to loop seamlessly and didn't. Every five seconds each ring took on its neighbour's colour and shape. Keying every ring on its own index fixed it.\n\nThen it drifted a long way from the original:\n\n- **Tilt:** a twist keyed on ring size, so the frames form a spiral that turns as it falls.\n- **Colour:** the red, blue and yellow from the Mondrian pattern, with true black and white.\n- **Randomness:** each ring gets its own spacing, lean, shape and slow drift.\n- **Fills:** about one ring in five carries dots, a grid, stripes or a checker.\n\nI dropped the yellow square the sketch kept fixed at the centre. It looked weird sitting still while everything else moved.\n\n> **Trap:** one float for zoom depth loses most of each frame's step near its wrap at the lowest speed, and the zoom stutters. Split it into a whole part and a fraction."
+    },
+    {
       "build": "8x8",
       "buildTitle": "8x8 labz",
       "date": "2026-09-21",
@@ -3296,5 +3389,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-24T04:06:11.629Z"
+  "generatedAt": "2026-09-24T11:51:35.762Z"
 }
