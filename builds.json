@@ -285,7 +285,7 @@
       "body": "A modular LED light instrument that turned into a distributed system, then got\npulled back together onto one tray. It's had three names along the way.\n\n## Noodle → NoodleLab → Noodle 2K\n\n**Noodle** (March 2026) was a breadboard: one controller, a few LED grids and\nfilaments, and a rat's nest of jumpers. It worked, barely, and every new surface\nmeant more wires.\n\n**NoodleLab** (April–July) rebuilt it on an Adafruit FeatherS3 with STEMMA-QT\nparts. When an external 8×8 hit the GPIO wall, every LED surface became its own\nESP32-C3 satellite over ESP-NOW: an audio sat, a 1×30 bar, 8×8, 16×16 and 12×8\nmatrices, a motorized disco ball and a haptic dial remote. It scaled by adding\nboards, not pins.\n\n**Noodle 2K** (from August 29) came out of a strip-to-bare-MCU rebuild. The\nfilaments and the PCA9685 went for good, the 16×16 moved onto a console pin, the\nicon and 12×8 sats were retired, and everything moved onto one tray behind silver\ndiffusers. It's LEDs only now.\n\n## What's running now\n\nThe **console** is still the FeatherS3, now with a 2.4\" ST7789 mounted landscape\nfor a 320×240 UI and a Chladni resonant-plate visualizer as the screensaver. It\ndrives a 12×4 matrix, a 4×8 FeatherWing and the 16×16 directly. It never joins\nWiFi: it scans channels 1, 6 and 11 at boot and runs ESP-NOW on the quietest.\n\nOver ESP-NOW:\n\n- a **1×30 RGBW bar** arc\n- an **audio sat** with an INMP441 mic, broadcasting bass, mid, treble and beat so\n  the whole fleet reacts together\n- the **disco ball**: stepper, spot LED and OLED, on its own supply\n- the **dial**, a round 1.8\" knob with touch and haptics that mirrors the\n  console's state\n- two **HUB75 panels** on MatrixPortal S3 boards, a 64×32 and a 128×64, fed the\n  same packets side by side until one is retired\n\n**22 effects**, including a trimmed port of WLED's 2D particle system and a\n16-band GEQ, all render through **23 palettes**. The hub75 panels also run the\n**Patternflow bank**: JavaScript patterns hand-ported to C++, plus my own Mondrian.\n\n**Controls:** three NeoPixel encoders, a NeoSlider, capacitive touch pads that pick\nthe target (matrix, disco or Patternflow), a nav encoder, and two Qwiic buttons.\nGreen steps patterns; red rolls a random palette.\n\n## Why it's built this way\n\nThe distributed architecture wasn't a flourish — it was running out of GPIO and\nrefusing to stop adding panels. Moving each surface to its own wireless board\nmeans the system scales by adding *boards*, not pins.",
       "stats": {
         "entries": 22,
-        "photos": 13,
+        "photos": 17,
         "daysActive": 185,
         "firstEntry": "2026-03-25",
         "lastEntry": "2026-09-23"
@@ -293,12 +293,31 @@
       "git": null,
       "picturesOverTime": [
         {
+          "date": "2026-03-25",
+          "src": "/buildlog/noodle/media/noodlez-lab-proximity.mp4",
+          "poster": "/buildlog/noodle/media/noodlez-lab-proximity.jpg"
+        },
+        {
+          "date": "2026-04-05",
+          "src": "/buildlog/noodle/media/icon-slideshow.mp4",
+          "poster": "/buildlog/noodle/media/icon-slideshow.jpg"
+        },
+        {
+          "date": "2026-04-06",
+          "src": "/buildlog/noodle/media/feathers3-rig.jpg"
+        },
+        {
           "date": "2026-04-11",
           "src": "/buildlog/noodle/media/fiber.jpg"
         },
         {
           "date": "2026-04-15",
           "src": "/buildlog/noodle/media/hero.jpg"
+        },
+        {
+          "date": "2026-04-19",
+          "src": "/buildlog/noodle/media/neoslider-sweep.mp4",
+          "poster": "/buildlog/noodle/media/neoslider-sweep.jpg"
         },
         {
           "date": "2026-05-09",
@@ -573,7 +592,12 @@
             "controls",
             "ui"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/neoslider-sweep.mp4",
+              "poster": "/buildlog/noodle/media/neoslider-sweep.jpg"
+            }
+          ],
           "body": "Three NeoPixel rotary encoders, each owning a slot on whatever target is live. Slots are assigned by I2C address, highest address takes slot 0, so the wiring order decides the layout and nothing has to be configured.\n\nAdded a Source Map for assigning a source per surface, and retired Pixelblaze in favour of the native engine. Running two effect engines was one more than the rig needed."
         },
         {
@@ -621,7 +645,11 @@
             "firmware",
             "freertos"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/feathers3-rig.jpg"
+            }
+          ],
           "body": "Split the firmware into four FreeRTOS tasks across both cores, with the network moved to core 0 so the radio and the LED render stop fighting over the same core.\n\nEvery piece of hardware gets exactly one owner task. That rule has survived every rebuild since, and it's the reason a WiFi hiccup doesn't stutter an animation."
         },
         {
@@ -631,7 +659,12 @@
             "milestone",
             "bring-up"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/icon-slideshow.mp4",
+              "poster": "/buildlog/noodle/media/icon-slideshow.jpg"
+            }
+          ],
           "body": "Rebuilt onto a FeatherS3, and got further in one sitting than the breadboard managed in a week:\n\n- display, encoder and buttons alive\n- a sensor dashboard for distance, light and the onboard NeoPixel\n- WLED control\n- a direct 4×12 matrix running an 8×8 icon slideshow\n\nSolderless modules on one cable is the whole reason. Nothing came loose all day."
         },
         {
@@ -641,7 +674,12 @@
             "prototype",
             "breadboard"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/noodle/media/noodlez-lab-proximity.mp4",
+              "poster": "/buildlog/noodle/media/noodlez-lab-proximity.jpg"
+            }
+          ],
           "body": "First pass at the idea: one controller driving a row of LED grids and filaments, built on a breadboard with a rat's nest of jumpers behind it.\n\nIt worked, barely. Every new surface meant more wires and more flakiness, and I could see the ceiling from where I was standing. Tore it down and went looking for a sturdier way to prototype, which turned out to be Adafruit's STEMMA QT modules."
         }
       ]
@@ -676,17 +714,21 @@
           "url": "https://github.com/kpow/kfun"
         }
       ],
-      "started": "2026-07-28",
+      "started": "2026-05-28",
       "body": "A family of handheld consoles built from one monorepo.\n\n| Spec | tinyfun | bigfun | megafun |\n|---|---|---|---|\n| Board | LOLIN S3 Mini Pro | ESP32-S3 SuperMini | ESP32-S3 SuperMini |\n| Screen | 128×128 GC9107 | 2.0\" 320×240 ST7789 | 2.0\" 320×240 ST7789 |\n| Input | 3 buttons | d-pad + two triggers | XY joystick + click |\n| Layout | portrait | landscape | landscape |\n\ntinyfun and bigfun run the same six slots, each game adapting to the hardware it\nlands on: lean and legible on three buttons, grown into sprites and particle\njuice on six. Sometimes the slot holds a different game entirely. Invaders\nbecomes Galaga on the wide board, Breakout becomes Arkanoid.\n\nTetris · Breakout · Snake · Invaders/Galaga · SkyGrid · Backgammon\n\nmegafun runs its own set on a joystick-native framework, and shares exactly the\npiece that has to stay in lockstep: the backgammon rules engine and the ESP-NOW\nlink, so all three can play each other.\n\n## How it holds together\n\n`common/` never names a GPIO or a screen size. Pins live only in each board's\n`Config.h`, and shared code branches on two capability flags those boards\ndeclare, `KF_LANDSCAPE` and `KF_DPAD`. megafun is the reason there are two: it's\nlandscape but joystick, which one flag couldn't express. Adding a board means\ndeclaring its capabilities, not adding a device identity.\n\nThe engine is a non-blocking contract (`init` / `update(dt)` / `render`) at a\nfixed 60 Hz, with every game placement-new'd into a single 12 KB arena that fails\nto compile if it won't fit. Two rules earned the hard way: the framebuffer is\npinned to SRAM because PSRAM faults on per-pixel writes, and the quit chord is\nun-swallowable, so a misbehaving game can never trap you inside it.\n\nFavourites among the six: **SkyGrid**, an original software 3D renderer with no\nz-buffer that pushes 128 triangles at 60 fps, and **Backgammon**, fully\nrules-checked and unit-tested, playing 2-ply expectimax on bigfun with a doubling\ncube, Crawford rule and NVS match save.",
       "stats": {
-        "entries": 12,
-        "photos": 4,
-        "daysActive": 51,
-        "firstEntry": "2026-07-28",
+        "entries": 14,
+        "photos": 14,
+        "daysActive": 112,
+        "firstEntry": "2026-05-28",
         "lastEntry": "2026-09-16"
       },
       "git": null,
       "picturesOverTime": [
+        {
+          "date": "2026-05-28",
+          "src": "/buildlog/kfun/media/mini-tetris-parts.jpg"
+        },
         {
           "date": "2026-08-01",
           "src": "/buildlog/kfun/media/pair.jpg",
@@ -697,6 +739,14 @@
           "src": "/buildlog/kfun/media/invaders.jpg"
         },
         {
+          "date": "2026-08-01",
+          "src": "/buildlog/kfun/media/bigfun-pinout.jpg"
+        },
+        {
+          "date": "2026-08-01",
+          "src": "/buildlog/kfun/media/bigfun-button-check.jpg"
+        },
+        {
           "date": "2026-08-04",
           "src": "/buildlog/kfun/media/hero.jpg",
           "caption": "the finished bigfun"
@@ -704,6 +754,37 @@
         {
           "date": "2026-08-04",
           "src": "/buildlog/kfun/media/splash.jpg"
+        },
+        {
+          "date": "2026-08-04",
+          "src": "/buildlog/kfun/media/console-family.jpg"
+        },
+        {
+          "date": "2026-08-10",
+          "src": "/buildlog/kfun/media/megafun-breadboard.jpg"
+        },
+        {
+          "date": "2026-08-10",
+          "src": "/buildlog/kfun/media/megafun-marbles.mp4",
+          "poster": "/buildlog/kfun/media/megafun-marbles.jpg"
+        },
+        {
+          "date": "2026-08-10",
+          "src": "/buildlog/kfun/media/megafun-boot.mp4",
+          "poster": "/buildlog/kfun/media/megafun-boot.jpg"
+        },
+        {
+          "date": "2026-08-10",
+          "src": "/buildlog/kfun/media/megafun-led-studio.mp4",
+          "poster": "/buildlog/kfun/media/megafun-led-studio.jpg"
+        },
+        {
+          "date": "2026-08-14",
+          "src": "/buildlog/kfun/media/tinyfun-shells.jpg"
+        },
+        {
+          "date": "2026-08-19",
+          "src": "/buildlog/kfun/media/tinyfun-purple.jpg"
         }
       ],
       "lastEntry": "2026-09-16",
@@ -737,7 +818,11 @@
             "engine",
             "case"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/tinyfun-purple.jpg"
+            }
+          ],
           "body": "A QMI8658C shake HAL: physically shaking the console restarts the current game. bigfun has no IMU, so it gets a no-op stub and the games don't care which one they're on.\n\nThe engine resumes from NVS too, so a game picks up where you left it. And the enclosure is packaged as a sliceable 3MF project now, one print from a shell."
         },
         {
@@ -748,8 +833,39 @@
             "tinyfun",
             "capabilities"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/tinyfun-shells.jpg"
+            }
+          ],
           "body": "Folded megafun into the monorepo. All three boards share one core now, and the differences live in capability flags each board declares rather than in forks of the code.\n\nPer-board panel profiles landed with it, plus an on-board tuner, and the original tinyfun board is enrolled as profile M1. The launcher auto-rotates its attract cards after idle. Rewrote the README for three boards with a pre-commit guardrail, because a README about three boards will rot in a week otherwise."
+        },
+        {
+          "date": "2026-08-10",
+          "title": "megafun: a tilted screen and a joystick",
+          "tags": [
+            "megafun",
+            "joystick",
+            "marbles"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/megafun-breadboard.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/megafun-marbles.mp4",
+              "poster": "/buildlog/kfun/media/megafun-marbles.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/megafun-boot.mp4",
+              "poster": "/buildlog/kfun/media/megafun-boot.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/megafun-led-studio.mp4",
+              "poster": "/buildlog/kfun/media/megafun-led-studio.jpg"
+            }
+          ],
+          "body": "megafun was a way to keep expanding on what I was doing. I'd seen a tilted plane used as the support for a screen, and I had a small joystick lying around, so the two went together.\n\nI wanted a marbles game, and you can't do marbles without a joystick. It led to exploring a lot of other things on the same base:\n\n- **Marbles:** the tilt maze that started it\n- **Chladni:** a resonant-plate pattern generator\n- **LED Studio:** a menu for driving the LED cap on top"
         },
         {
           "date": "2026-08-10",
@@ -788,6 +904,9 @@
             },
             {
               "src": "/buildlog/kfun/media/splash.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/console-family.jpg"
             }
           ],
           "body": "Galaga takes the Invaders slot on bigfun, with auto-fire. Same slot, same launcher, different game depending on which console you picked up.\n\nRebranded the README as kFun, tinyfun and bigfun under one name."
@@ -829,6 +948,12 @@
             },
             {
               "src": "/buildlog/kfun/media/invaders.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/bigfun-pinout.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/bigfun-button-check.jpg"
             }
           ],
           "body": "Restructured into the kFun monorepo, a shared `common/` with `tinyfun/` and `bigfun/` as thin board ports on top, and got the full app booting on the SuperMini.\n\nThen art and effects for the wide board, which is where the two consoles start being different games:\n\n- backgammon in landscape, with traditional triangle points\n- Tetris centred, with side panels either side of the well\n- Breakout rebuilt as Arkanoid\n- a sprite pipeline off the Kenney CC0 art\n- attract cards on the launcher, nebula backgrounds with post-FX, a themed game-over screen"
@@ -854,6 +979,20 @@
           ],
           "media": [],
           "body": "First working console: a five-game handheld on the LOLIN S3 Mini Pro, 128×128, three buttons.\n\nBoot screen and a custom typeface up, and SkyGrid's ancestor running on the panel as CANYON, a 3D anti-gravity racer. Gave Asteroids a 3-shot spread and thinned out the opening wave, because a full field of rocks on a 128 px screen is not a first level, it's a wall."
+        },
+        {
+          "date": "2026-05-28",
+          "title": "Mini Tetris: parts and a first case",
+          "tags": [
+            "prototype",
+            "case"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/mini-tetris-parts.jpg"
+            }
+          ],
+          "body": "Everything for a small handheld, laid out on the mat: a printed case, a LiPo, a USB-C charge board, a slide switch and the screen board. At the time I was calling it Mini Tetris.\n\nMini Tetris grew up to be tinyfun."
         }
       ]
     },
@@ -1065,14 +1204,62 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 16,
-        "photos": 3,
+        "entries": 19,
+        "photos": 13,
         "daysActive": 219,
         "firstEntry": "2026-01-24",
         "lastEntry": "2026-08-30"
       },
       "git": null,
       "picturesOverTime": [
+        {
+          "date": "2026-02-19",
+          "src": "/buildlog/vizbot/media/wled-matrix-bot.jpg"
+        },
+        {
+          "date": "2026-03-03",
+          "src": "/buildlog/vizbot/media/lime-bot.jpg"
+        },
+        {
+          "date": "2026-03-14",
+          "src": "/buildlog/vizbot/media/lcd13-ready.mp4",
+          "poster": "/buildlog/vizbot/media/lcd13-ready.jpg"
+        },
+        {
+          "date": "2026-04-01",
+          "src": "/buildlog/vizbot/media/lime-bot-wifi.mp4",
+          "poster": "/buildlog/vizbot/media/lime-bot-wifi.jpg"
+        },
+        {
+          "date": "2026-04-01",
+          "src": "/buildlog/vizbot/media/fleet-wled-sign.mp4",
+          "poster": "/buildlog/vizbot/media/fleet-wled-sign.jpg",
+          "caption": "The killer feature: the bots speak on a WLED sign"
+        },
+        {
+          "date": "2026-05-12",
+          "src": "/buildlog/vizbot/media/crab-body.jpg"
+        },
+        {
+          "date": "2026-05-12",
+          "src": "/buildlog/vizbot/media/hologram-stack.mp4",
+          "poster": "/buildlog/vizbot/media/hologram-stack.jpg"
+        },
+        {
+          "date": "2026-05-22",
+          "src": "/buildlog/vizbot/media/stackchan-turn.mp4",
+          "poster": "/buildlog/vizbot/media/stackchan-turn.jpg"
+        },
+        {
+          "date": "2026-05-30",
+          "src": "/buildlog/vizbot/media/spaceman-baseplate.mp4",
+          "poster": "/buildlog/vizbot/media/spaceman-baseplate.jpg"
+        },
+        {
+          "date": "2026-05-30",
+          "src": "/buildlog/vizbot/media/spaceman-faces.mp4",
+          "poster": "/buildlog/vizbot/media/spaceman-faces.jpg"
+        },
         {
           "date": "2026-06-24",
           "src": "/buildlog/vizbot/media/hero.jpg"
@@ -1133,6 +1320,25 @@
           "body": "The bot in the flesh: neon-green shell, OLED face, StackChan base underneath.\n\nFixed the servos refusing to answer after a cold boot. They wake up slower than the firmware asks, so the ping retries now until they answer instead of giving up on the first miss. Also decoupled web control from cloud sync, because a slow sync was making the buttons feel dead, and fixed a registration bug that truncated device names."
         },
         {
+          "date": "2026-05-30",
+          "title": "StackChan head touch: front nods, back shakes",
+          "tags": [
+            "stackchan",
+            "touch"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/spaceman-baseplate.mp4",
+              "poster": "/buildlog/vizbot/media/spaceman-baseplate.jpg"
+            },
+            {
+              "src": "/buildlog/vizbot/media/spaceman-faces.mp4",
+              "poster": "/buildlog/vizbot/media/spaceman-faces.jpg"
+            }
+          ],
+          "body": "The Si12T head touch was firing phantom reactions, and my zone model was wrong. The three pads run front, middle and back along the top of the head, not left to right.\n\n- **Debounce:** M5Unified's button class instead of a hand-rolled state machine\n- **Sensitivity:** raised to match the StackChan BSP reference\n- **Reactions:** front tap nods, back tap shakes, each with a random phrase, a synth sound and an LED flash. Hold for 2 seconds and it goes chill.\n\n> **Trap:** only a full-strength hit on the front or back pad counts. Anything less, and stray capacitive coupling, a ceiling fan included, fires reactions."
+        },
+        {
           "date": "2026-05-24",
           "title": "Audio-reactive ambient effects + kaleidoscope pass",
           "tags": [
@@ -1150,8 +1356,31 @@
             "servos",
             "milestone"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/stackchan-turn.mp4",
+              "poster": "/buildlog/vizbot/media/stackchan-turn.jpg"
+            }
+          ],
           "body": "vizBot 3.0: the face got a body.\n\nA StackChan base, brought up in phases. Minimum-viable build target, then driver bring-up, then web endpoints with the pitch clamped so it can't hurt itself. After that came the parts that make it feel alive: servo expressivity, touch reactions, idle sweeps, and a chill mode.\n\nSwapped the old ambient effects for 16 patterns ported from NoodleLab.\n\n> **Trap:** pin `M5GFX@0.2.19`. Version 0.2.21 gives the Core S3 a black screen, and nothing about the symptom points at the graphics library."
+        },
+        {
+          "date": "2026-05-12",
+          "title": "Bodies: spaceman, crab, hologram, dinosaur, monster",
+          "tags": [
+            "bodies",
+            "enclosures"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/crab-body.jpg"
+            },
+            {
+              "src": "/buildlog/vizbot/media/hologram-stack.mp4",
+              "poster": "/buildlog/vizbot/media/hologram-stack.jpg"
+            }
+          ],
+          "body": "vizBot has worn a lot of bodies. Some I use, some I put away, and some I bring back:\n\n- the spaceman\n- the crab\n- the hologram\n- the dinosaur\n- a little monster\n\nAll of them are explorations in the same space."
         },
         {
           "date": "2026-04-01",
@@ -1160,8 +1389,34 @@
             "platformio",
             "midi"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/lime-bot-wifi.mp4",
+              "poster": "/buildlog/vizbot/media/lime-bot-wifi.jpg"
+            },
+            {
+              "src": "/buildlog/vizbot/media/fleet-wled-sign.mp4",
+              "poster": "/buildlog/vizbot/media/fleet-wled-sign.jpg",
+              "caption": "The killer feature: the bots speak on a WLED sign"
+            }
+          ],
           "body": "Moved vizbot and vizpow off the Arduino IDE and onto PlatformIO, for builds I can reproduce and firmware binaries I can version. Bins publish to a top-level `builds/` directory.\n\nThen a SAM2695 MIDI synth, over several phases, including caching and syncing MIDI sequences from the cloud. It plays tunes now as well as talking."
+        },
+        {
+          "date": "2026-03-14",
+          "title": "LCD 1.3 target, a chill face, a louder web UI",
+          "tags": [
+            "lcd",
+            "web-ui",
+            "expressions"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/lcd13-ready.mp4",
+              "poster": "/buildlog/vizbot/media/lcd13-ready.jpg"
+            }
+          ],
+          "body": "Added the Waveshare ESP32-S3-LCD-1.3 as a target, using the board-first config pattern. Hologram mode flips vertically now instead of horizontally, for the Pepper's-ghost prism.\n\n- **Chill:** replaces Sleepy, with half-lidded eyes instead of closed ones\n- **Brightness:** fixed the LCD slider and raised the default to full\n- **Web UI:** three tabs (Face, Settings, Network) and a neo-brutalist redesign: cream background, thick black borders, hard offset shadows"
         },
         {
           "date": "2026-03-05",
@@ -1192,7 +1447,11 @@
             "graphics",
             "animation"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/lime-bot.jpg"
+            }
+          ],
           "body": "Migrated the LCD target from Arduino_GFX to LovyanGFX, then spent the afternoon chasing a blue tint and dim brightness that came with it.\n\nBuilt a tween system too, with 8 easing functions and wired it through the main loop, which retired a pile of hand-rolled smoothstep and lerp calls. Expression changes and look-around animations ride the curves now, and the difference between a linear blink and an eased one is the whole personality."
         },
         {
@@ -1212,7 +1471,11 @@
             "wled",
             "ddp"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/wled-matrix-bot.jpg"
+            }
+          ],
           "body": "Wanted the bot's speech to appear on a WLED matrix. Spent days driving WLED's built-in scrolling text effect and fighting it the whole way: scroll speed, trails, jump cuts, and the effect reinitialising between consecutive words.\n\nGave up on it and went to direct pixel control over DDP, drawing the text myself. Clean frames immediately.\n\n> **Lesson:** when you're fighting somebody else's effect engine for control of individual frames, stop fighting and take the pixels."
         },
         {
@@ -2372,7 +2635,11 @@
         "engine",
         "case"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/tinyfun-purple.jpg"
+        }
+      ],
       "body": "A QMI8658C shake HAL: physically shaking the console restarts the current game. bigfun has no IMU, so it gets a no-op stub and the games don't care which one they're on.\n\nThe engine resumes from NVS too, so a game picks up where you left it. And the enclosure is packaged as a sliceable 3MF project now, one print from a shell."
     },
     {
@@ -2409,8 +2676,41 @@
         "tinyfun",
         "capabilities"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/tinyfun-shells.jpg"
+        }
+      ],
       "body": "Folded megafun into the monorepo. All three boards share one core now, and the differences live in capability flags each board declares rather than in forks of the code.\n\nPer-board panel profiles landed with it, plus an on-board tuner, and the original tinyfun board is enrolled as profile M1. The launcher auto-rotates its attract cards after idle. Rewrote the README for three boards with a pre-commit guardrail, because a README about three boards will rot in a week otherwise."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-08-10",
+      "title": "megafun: a tilted screen and a joystick",
+      "tags": [
+        "megafun",
+        "joystick",
+        "marbles"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/megafun-breadboard.jpg"
+        },
+        {
+          "src": "/buildlog/kfun/media/megafun-marbles.mp4",
+          "poster": "/buildlog/kfun/media/megafun-marbles.jpg"
+        },
+        {
+          "src": "/buildlog/kfun/media/megafun-boot.mp4",
+          "poster": "/buildlog/kfun/media/megafun-boot.jpg"
+        },
+        {
+          "src": "/buildlog/kfun/media/megafun-led-studio.mp4",
+          "poster": "/buildlog/kfun/media/megafun-led-studio.jpg"
+        }
+      ],
+      "body": "megafun was a way to keep expanding on what I was doing. I'd seen a tilted plane used as the support for a screen, and I had a small joystick lying around, so the two went together.\n\nI wanted a marbles game, and you can't do marbles without a joystick. It led to exploring a lot of other things on the same base:\n\n- **Marbles:** the tilt maze that started it\n- **Chladni:** a resonant-plate pattern generator\n- **LED Studio:** a menu for driving the LED cap on top"
     },
     {
       "build": "kfun",
@@ -2480,6 +2780,9 @@
         },
         {
           "src": "/buildlog/kfun/media/splash.jpg"
+        },
+        {
+          "src": "/buildlog/kfun/media/console-family.jpg"
         }
       ],
       "body": "Galaga takes the Invaders slot on bigfun, with auto-fire. Same slot, same launcher, different game depending on which console you picked up.\n\nRebranded the README as kFun, tinyfun and bigfun under one name."
@@ -2547,6 +2850,12 @@
         },
         {
           "src": "/buildlog/kfun/media/invaders.jpg"
+        },
+        {
+          "src": "/buildlog/kfun/media/bigfun-pinout.jpg"
+        },
+        {
+          "src": "/buildlog/kfun/media/bigfun-button-check.jpg"
         }
       ],
       "body": "Restructured into the kFun monorepo, a shared `common/` with `tinyfun/` and `bigfun/` as thin board ports on top, and got the full app booting on the SuperMini.\n\nThen art and effects for the wide board, which is where the two consoles start being different games:\n\n- backgammon in landscape, with traditional triangle points\n- Tetris centred, with side panels either side of the well\n- Breakout rebuilt as Arkanoid\n- a sprite pipeline off the Kenney CC0 art\n- attract cards on the launcher, nebula backgrounds with post-FX, a themed game-over screen"
@@ -2867,6 +3176,43 @@
       "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3 and then gutted most of it. The stock build locked up every so often: it fired a burst of ADS-B requests and buffered each whole response body. One request on a backoff, plus a stream parse with a field filter so the body is never held whole, and the lockups stopped.\n\nThe rest was one long session:\n\n- **Dual core:** the network fetch on its own task, so a poll never stalls a frame\n- **Interpolation:** targets dead-reckon between the 3-second polls instead of teleporting\n- **ESP32-S3 Super Mini:** a second target, for the better radio, with WiFi retry hardening\n- **Looks:** 16-bit colour at 80 MHz SPI, a sweep with a comet trail, 30 fps pacing\n\nBy the end it was a live scope sitting in the printed slatted cube: round LCD, green grid, real callsigns."
     },
     {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-05-30",
+      "title": "StackChan head touch: front nods, back shakes",
+      "tags": [
+        "stackchan",
+        "touch"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/spaceman-baseplate.mp4",
+          "poster": "/buildlog/vizbot/media/spaceman-baseplate.jpg"
+        },
+        {
+          "src": "/buildlog/vizbot/media/spaceman-faces.mp4",
+          "poster": "/buildlog/vizbot/media/spaceman-faces.jpg"
+        }
+      ],
+      "body": "The Si12T head touch was firing phantom reactions, and my zone model was wrong. The three pads run front, middle and back along the top of the head, not left to right.\n\n- **Debounce:** M5Unified's button class instead of a hand-rolled state machine\n- **Sensitivity:** raised to match the StackChan BSP reference\n- **Reactions:** front tap nods, back tap shakes, each with a random phrase, a synth sound and an LED flash. Hold for 2 seconds and it goes chill.\n\n> **Trap:** only a full-strength hit on the front or back pad counts. Anything less, and stray capacitive coupling, a ceiling fan included, fires reactions."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-05-28",
+      "title": "Mini Tetris: parts and a first case",
+      "tags": [
+        "prototype",
+        "case"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/mini-tetris-parts.jpg"
+        }
+      ],
+      "body": "Everything for a small handheld, laid out on the mat: a printed case, a LiPo, a USB-C charge board, a slide switch and the screen board. At the time I was calling it Mini Tetris.\n\nMini Tetris grew up to be tinyfun."
+    },
+    {
       "build": "noodle",
       "buildTitle": "Noodle 2K",
       "date": "2026-05-27",
@@ -2905,7 +3251,12 @@
         "servos",
         "milestone"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/stackchan-turn.mp4",
+          "poster": "/buildlog/vizbot/media/stackchan-turn.jpg"
+        }
+      ],
       "body": "vizBot 3.0: the face got a body.\n\nA StackChan base, brought up in phases. Minimum-viable build target, then driver bring-up, then web endpoints with the pitch clamped so it can't hurt itself. After that came the parts that make it feel alive: servo expressivity, touch reactions, idle sweeps, and a chill mode.\n\nSwapped the old ambient effects for 16 patterns ported from NoodleLab.\n\n> **Trap:** pin `M5GFX@0.2.19`. Version 0.2.21 gives the Core S3 a black screen, and nothing about the symptom points at the graphics library."
     },
     {
@@ -2923,6 +3274,26 @@
         }
       ],
       "body": "Dropped WiFi association altogether. The Console brings the radio up for ESP-NOW and never joins an access point, which means no router, no DHCP lease, and nothing to go stale between sessions.\n\nStarted the screen-share path as well, browser to ingest to matrix, with a LittleFS clip store behind it, so I can push real captured pixels at the 16×16 instead of only generated effects."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-05-12",
+      "title": "Bodies: spaceman, crab, hologram, dinosaur, monster",
+      "tags": [
+        "bodies",
+        "enclosures"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/crab-body.jpg"
+        },
+        {
+          "src": "/buildlog/vizbot/media/hologram-stack.mp4",
+          "poster": "/buildlog/vizbot/media/hologram-stack.jpg"
+        }
+      ],
+      "body": "vizBot has worn a lot of bodies. Some I use, some I put away, and some I bring back:\n\n- the spaceman\n- the crab\n- the hologram\n- the dinosaur\n- a little monster\n\nAll of them are explorations in the same space."
     },
     {
       "build": "noodle",
@@ -2974,7 +3345,12 @@
         "controls",
         "ui"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/neoslider-sweep.mp4",
+          "poster": "/buildlog/noodle/media/neoslider-sweep.jpg"
+        }
+      ],
       "body": "Three NeoPixel rotary encoders, each owning a slot on whatever target is live. Slots are assigned by I2C address, highest address takes slot 0, so the wiring order decides the layout and nothing has to be configured.\n\nAdded a Source Map for assigning a source per surface, and retired Pixelblaze in favour of the native engine. Running two effect engines was one more than the rig needed."
     },
     {
@@ -3030,7 +3406,11 @@
         "firmware",
         "freertos"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/feathers3-rig.jpg"
+        }
+      ],
       "body": "Split the firmware into four FreeRTOS tasks across both cores, with the network moved to core 0 so the radio and the LED render stop fighting over the same core.\n\nEvery piece of hardware gets exactly one owner task. That rule has survived every rebuild since, and it's the reason a WiFi hiccup doesn't stutter an animation."
     },
     {
@@ -3042,7 +3422,12 @@
         "milestone",
         "bring-up"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/icon-slideshow.mp4",
+          "poster": "/buildlog/noodle/media/icon-slideshow.jpg"
+        }
+      ],
       "body": "Rebuilt onto a FeatherS3, and got further in one sitting than the breadboard managed in a week:\n\n- display, encoder and buttons alive\n- a sensor dashboard for distance, light and the onboard NeoPixel\n- WLED control\n- a direct 4×12 matrix running an 8×8 icon slideshow\n\nSolderless modules on one cable is the whole reason. Nothing came loose all day."
     },
     {
@@ -3054,7 +3439,17 @@
         "platformio",
         "midi"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/lime-bot-wifi.mp4",
+          "poster": "/buildlog/vizbot/media/lime-bot-wifi.jpg"
+        },
+        {
+          "src": "/buildlog/vizbot/media/fleet-wled-sign.mp4",
+          "poster": "/buildlog/vizbot/media/fleet-wled-sign.jpg",
+          "caption": "The killer feature: the bots speak on a WLED sign"
+        }
+      ],
       "body": "Moved vizbot and vizpow off the Arduino IDE and onto PlatformIO, for builds I can reproduce and firmware binaries I can version. Bins publish to a top-level `builds/` directory.\n\nThen a SAM2695 MIDI synth, over several phases, including caching and syncing MIDI sequences from the cloud. It plays tunes now as well as talking."
     },
     {
@@ -3079,8 +3474,31 @@
         "prototype",
         "breadboard"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/noodle/media/noodlez-lab-proximity.mp4",
+          "poster": "/buildlog/noodle/media/noodlez-lab-proximity.jpg"
+        }
+      ],
       "body": "First pass at the idea: one controller driving a row of LED grids and filaments, built on a breadboard with a rat's nest of jumpers behind it.\n\nIt worked, barely. Every new surface meant more wires and more flakiness, and I could see the ceiling from where I was standing. Tore it down and went looking for a sturdier way to prototype, which turned out to be Adafruit's STEMMA QT modules."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-03-14",
+      "title": "LCD 1.3 target, a chill face, a louder web UI",
+      "tags": [
+        "lcd",
+        "web-ui",
+        "expressions"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/lcd13-ready.mp4",
+          "poster": "/buildlog/vizbot/media/lcd13-ready.jpg"
+        }
+      ],
+      "body": "Added the Waveshare ESP32-S3-LCD-1.3 as a target, using the board-first config pattern. Hologram mode flips vertically now instead of horizontally, for the Pepper's-ghost prism.\n\n- **Chill:** replaces Sleepy, with half-lidded eyes instead of closed ones\n- **Brightness:** fixed the LCD slider and raised the default to full\n- **Web UI:** three tabs (Face, Settings, Network) and a neo-brutalist redesign: cream background, thick black borders, hard offset shadows"
     },
     {
       "build": "vizbot",
@@ -3117,7 +3535,11 @@
         "graphics",
         "animation"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/lime-bot.jpg"
+        }
+      ],
       "body": "Migrated the LCD target from Arduino_GFX to LovyanGFX, then spent the afternoon chasing a blue tint and dim brightness that came with it.\n\nBuilt a tween system too, with 8 easing functions and wired it through the main loop, which retired a pile of hand-rolled smoothstep and lerp calls. Expression changes and look-around animations ride the curves now, and the difference between a linear blink and an eased one is the whole personality."
     },
     {
@@ -3141,7 +3563,11 @@
         "wled",
         "ddp"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/wled-matrix-bot.jpg"
+        }
+      ],
       "body": "Wanted the bot's speech to appear on a WLED matrix. Spent days driving WLED's built-in scrolling text effect and fighting it the whole way: scroll speed, trails, jump cuts, and the effect reinitialising between consecutive words.\n\nGave up on it and went to direct pixel control over DDP, drawing the text myself. Clean frames immediately.\n\n> **Lesson:** when you're fighting somebody else's effect engine for control of individual frames, stop fighting and take the pixels."
     },
     {
@@ -3389,5 +3815,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-24T11:51:35.762Z"
+  "generatedAt": "2026-09-24T14:49:56.829Z"
 }

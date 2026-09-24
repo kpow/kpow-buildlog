@@ -14,7 +14,7 @@ facts:
 hero: media/hero.jpg
 links:
   - { label: repo, url: https://github.com/kpow/kfun }
-started: 2026-07-28
+started: 2026-05-28
 ---
 A family of handheld consoles built from one monorepo.
 
