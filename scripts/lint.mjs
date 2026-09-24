@@ -36,6 +36,33 @@ function mediaRefs(fm, key = "src") {
 }
 const MEDIA_EXT = /\.(jpe?g|png|webp|gif|mp4|webm)$/i;
 const VIDEO_EXT = /\.(mp4|webm)$/i;
+// kind: tells the site to badge a still. Video badges itself off the extension,
+// so kind: video is a second source of truth and is rejected.
+const MEDIA_KINDS = ["render", "screenshot", "diagram"];
+const CAPTION_MAX = 90;
+
+/** Every entry under `media:`, as { raw, inline }. `inline` means it sat on the
+ *  `media:` line itself — the `[]` and the legacy `[a, b]` forms. Mirrors how
+ *  parseYaml in build-buildlog.mjs walks the same block. */
+function mediaItems(fm) {
+  const out = [];
+  let inMedia = false;
+  for (const line of fm.split("\n")) {
+    const head = line.match(/^media:\s*(\S.*)?$/);
+    if (head) { inMedia = true; if (head[1]) out.push({ raw: head[1].trim(), inline: true }); continue; }
+    if (!inMedia) continue;
+    const item = line.match(/^\s+-\s+(.*)$/);
+    if (item) { out.push({ raw: item[1].trim(), inline: false }); continue; }
+    if (/^\S/.test(line)) inMedia = false;   // next top-level key
+  }
+  return out;
+}
+
+/** The caption text of one media item, or "" when it has none. */
+function captionOf(raw) {
+  const m = raw.match(/\bcaption:\s*(?:"([^"]*)"|'([^']*)'|([^,}]+))/);
+  return (m?.[1] ?? m?.[2] ?? m?.[3] ?? "").trim();
+}
 
 const targets = process.argv.slice(2).length ? process.argv.slice(2) : slugs();
 
@@ -92,7 +119,23 @@ for (const slug of targets) {
       const src = mediaRefs(line)[0];
       if (src && VIDEO_EXT.test(src) && !/\bposter:/.test(line)) warn(where, `video ${src} has no poster: — shows a blank frame until it loads`);
     }
-    if (/src:/.test(e.fm) && !/caption:\s*\S/.test(e.fm)) warn(where, "media without a caption");
+    // A caption is optional now: it earns its place by carrying a fact the photo
+    // can't. What the site cannot survive is a malformed item.
+    for (const it of mediaItems(e.fm)) {
+      if (it.inline) {
+        if (it.raw !== "[]") err(where, `media: ${it.raw} — a bare list builds src: .../undefined and a broken image; use "- { src: media/x.jpg }" lines`);
+        continue;
+      }
+      if (!it.raw.startsWith("{")) { err(where, `media item "${it.raw}" must be an inline object: - { src: media/x.jpg }`); continue; }
+      if (!/\bsrc:/.test(it.raw)) err(where, `media item "${it.raw}" has no src:`);
+
+      const kind = it.raw.match(/\bkind:\s*([A-Za-z-]+)/)?.[1];
+      if (kind && !MEDIA_KINDS.includes(kind)) err(where, `kind: ${kind} — use ${MEDIA_KINDS.join(" | ")} (video badges itself from the .mp4)`);
+
+      const caption = captionOf(it.raw);
+      if (caption.length > CAPTION_MAX) warn(where, `caption is ${caption.length} chars — trim it to the fact, or drop it if the photo already says it`);
+      if (/^\((video|render|screenshot)\)|\((video|render|screenshot)\)$/i.test(caption)) warn(where, `caption carries a "(…)" marker — the site badges media itself; use kind: or drop the marker`);
+    }
   }
 
   const mediaDir = join(dir, "media");

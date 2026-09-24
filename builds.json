@@ -1455,22 +1455,8 @@
       "git": null,
       "picturesOverTime": [
         {
-          "0": "m",
-          "1": "e",
-          "2": "d",
-          "3": "i",
-          "4": "a",
-          "5": "/",
-          "6": "h",
-          "7": "e",
-          "8": "r",
-          "9": "o",
-          "10": ".",
-          "11": "j",
-          "12": "p",
-          "13": "g",
           "date": "2025-04-12",
-          "src": "/buildlog/phantasyfish/undefined"
+          "src": "/buildlog/phantasyfish/media/hero.jpg"
         }
       ],
       "lastEntry": "2026-08-10",
@@ -1656,21 +1642,7 @@
           ],
           "media": [
             {
-              "0": "m",
-              "1": "e",
-              "2": "d",
-              "3": "i",
-              "4": "a",
-              "5": "/",
-              "6": "h",
-              "7": "e",
-              "8": "r",
-              "9": "o",
-              "10": ".",
-              "11": "j",
-              "12": "p",
-              "13": "g",
-              "src": "/buildlog/phantasyfish/undefined"
+              "src": "/buildlog/phantasyfish/media/hero.jpg"
             }
           ],
           "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
@@ -3393,25 +3365,11 @@
       ],
       "media": [
         {
-          "0": "m",
-          "1": "e",
-          "2": "d",
-          "3": "i",
-          "4": "a",
-          "5": "/",
-          "6": "h",
-          "7": "e",
-          "8": "r",
-          "9": "o",
-          "10": ".",
-          "11": "j",
-          "12": "p",
-          "13": "g",
-          "src": "/buildlog/phantasyfish/undefined"
+          "src": "/buildlog/phantasyfish/media/hero.jpg"
         }
       ],
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-24T03:05:23.540Z"
+  "generatedAt": "2026-09-24T03:54:55.087Z"
 }
