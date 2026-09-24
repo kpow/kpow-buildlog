@@ -707,7 +707,7 @@
         "games": "6"
       },
       "repo": "kpow/kfun",
-      "hero": "/buildlog/kfun/media/hero.jpg",
+      "hero": "/buildlog/kfun/media/megafun-hero.jpg",
       "links": [
         {
           "label": "repo",
@@ -3815,5 +3815,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-24T14:49:56.829Z"
+  "generatedAt": "2026-09-24T15:00:31.039Z"
 }

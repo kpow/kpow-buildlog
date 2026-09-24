@@ -11,7 +11,7 @@ repo: kpow/kfun
 facts:
   consoles: 3
   games: 6
-hero: media/hero.jpg
+hero: media/megafun-hero.jpg
 links:
   - { label: repo, url: https://github.com/kpow/kfun }
 started: 2026-05-28
