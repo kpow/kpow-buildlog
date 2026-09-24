@@ -37,11 +37,11 @@
       "started": "2026-09-14",
       "body": "It started with watching artists at live sketch events, each with a pocket\nsketchbook, catching an idea the moment it showed up. I wanted the same thing in\nmy own medium: a page that is an 8×8 grid and ink that is light. There was a\npractical reason too — old-school 8×8 icons had been hand-typed into C arrays in\nnoodlez-v2 and vizpow, every copy quietly drifting from the others.\n\nSo: one catalog, three ways in. A web app holds every icon and is the source of\ntruth. A handheld syncs it, browses it, draws new ones by touch, and plays them\non a real 8×8 WS2812B matrix. Any other firmware pulls the whole catalog as a\nsingle `icons.h`.\n\n## The handheld\n\nAn ESP32-2432S028 — the \"Cheap Yellow Display\" — with a 2.8\" 320×240 ILI9341\npanel and a resistive XPT2046 touchscreen, running LVGL 9 on PlatformIO. The\nmatrix hangs off a bare GPIO with no level shifter, 5V from VIN. Two build\ntargets: `cyd` puts LED data on GPIO 27, and `cyd-tx` puts it on the TX pin for a\none-cable build, with serial logging switched off so the log does not reach the\nLEDs.\n\nSixty-four WS2812Bs at full white would pull about 3.8 A, so brightness is capped\nat 40/255 and FastLED is held to 450 mA. How the matrix sits in the case is a\nper-device setting rather than a constant — one lookup folds rotation, flips and\nserpentine wiring together.\n\n## The format\n\nA frame is 64 palette indices, 128 hex characters, row-major from the top left.\nThe palette is global, append-only and caps at 256 colors; index 0 is black and\ndoubles as off. Icon numbers are permanent and icons are archived rather than\ndeleted, so nothing downstream ever breaks. Colors carry a family, usually six\nshades generated from one base color in OKLCH so the steps look even.\n\n## Living in 320 KB\n\n| Budget | What's in it |\n|---|---|\n| 320 KB RAM | no PSRAM at all |\n| 4 MB flash | 2.5 MB app slot, 1.4 MB LittleFS |\n| ~50 KB free | what a TLS handshake wants |\n\nThat last line is the one that shapes the firmware. Every screen except Home is\nbuilt on entry and freed on exit, and that is what stopped sync rebooting the\nboard mid-handshake. Icons, palette and pending edits live in the flash cache, so\nthe whole thing works with the WiFi off. Sync runs on its own task on core 0 and\npulls only what changed since its cursor, twelve icons a page.\n\nEdits made on the device queue in an outbox and upload before the next pull. Each\ndraft carries a hash of the server it was drawn against, so an edit can never be\nuploaded somewhere it does not belong. If someone changed the icon first the\nserver answers 409, and the device keeps its version as a copy instead of\nthrowing the drawing away.",
       "stats": {
-        "entries": 7,
-        "photos": 10,
-        "daysActive": 8,
+        "entries": 8,
+        "photos": 13,
+        "daysActive": 10,
         "firstEntry": "2026-09-14",
-        "lastEntry": "2026-09-21"
+        "lastEntry": "2026-09-23"
       },
       "git": null,
       "picturesOverTime": [
@@ -96,10 +96,50 @@
           "date": "2026-09-21",
           "src": "/buildlog/8x8/media/in-hand.jpg",
           "caption": "Closed to one hand — 44 icons cached, last synced 52 seconds ago"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/8x8/media/desktop-case-final.jpg",
+          "caption": "The finished desktop case, shut: silver skull inlay on the lid, silver strip along the base"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/8x8/media/desktop-case-open.mp4",
+          "poster": "/buildlog/8x8/media/desktop-case-open.jpg",
+          "caption": "(video) Opening it in hand, editor on the screen, then closed"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
+          "caption": "(render) The mobile version taking shape: matrix in the lid, screen in the base, that same barrel hinge"
         }
       ],
-      "lastEntry": "2026-09-21",
+      "lastEntry": "2026-09-23",
       "entries": [
+        {
+          "date": "2026-09-23",
+          "title": "Last desktop case: the hinge holds the screen up",
+          "tags": [
+            "enclosure",
+            "case"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/desktop-case-final.jpg",
+              "caption": "The finished desktop case, shut: silver skull inlay on the lid, silver strip along the base"
+            },
+            {
+              "src": "/buildlog/8x8/media/desktop-case-open.mp4",
+              "poster": "/buildlog/8x8/media/desktop-case-open.jpg",
+              "caption": "(video) Opening it in hand, editor on the screen, then closed"
+            },
+            {
+              "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
+              "caption": "(render) The mobile version taking shape: matrix in the lid, screen in the base, that same barrel hinge"
+            }
+          ],
+          "body": "Called the desktop case done. This is the last version of it.\n\nExtended the base of the hinge, so an open lid has something behind it to lean on instead of flopping back. It looks better with that mass there too. Then the detailing: a silver skull inlay on the lid and a silver strip running along the base.\n\n> **Next:** a mobile version with a battery, built on this one."
+        },
         {
           "date": "2026-09-21",
           "title": "Clamshell together, and a README",
@@ -1925,6 +1965,32 @@
     {
       "build": "8x8",
       "buildTitle": "8x8 labz",
+      "date": "2026-09-23",
+      "title": "Last desktop case: the hinge holds the screen up",
+      "tags": [
+        "enclosure",
+        "case"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/desktop-case-final.jpg",
+          "caption": "The finished desktop case, shut: silver skull inlay on the lid, silver strip along the base"
+        },
+        {
+          "src": "/buildlog/8x8/media/desktop-case-open.mp4",
+          "poster": "/buildlog/8x8/media/desktop-case-open.jpg",
+          "caption": "(video) Opening it in hand, editor on the screen, then closed"
+        },
+        {
+          "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
+          "caption": "(render) The mobile version taking shape: matrix in the lid, screen in the base, that same barrel hinge"
+        }
+      ],
+      "body": "Called the desktop case done. This is the last version of it.\n\nExtended the base of the hinge, so an open lid has something behind it to lean on instead of flopping back. It looks better with that mass there too. Then the detailing: a silver skull inlay on the lid and a silver strip running along the base.\n\n> **Next:** a mobile version with a battery, built on this one."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
       "date": "2026-09-21",
       "title": "Clamshell together, and a README",
       "tags": [
@@ -3347,5 +3413,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-22T20:35:53.996Z"
+  "generatedAt": "2026-09-24T03:05:23.540Z"
 }
