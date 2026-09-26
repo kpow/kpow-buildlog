@@ -38,8 +38,8 @@
       "started": "2026-09-24",
       "body": "A Mac menu bar app that takes over the lighting on a ROCCAT Vulcan Pro TKL, one\nkey at a time, plus a small desk controller that picks and previews the effects.\n\n## The keyboard side\n\nvizKeys talks to the Vulcan over USB HID in its direct mode and redraws every key\non a fixed frame rate. It backs up the keyboard's own lighting first and puts it\nback on every exit path, so quitting leaves the keyboard as it was.\n\nThe effects come in four groups:\n\n- **Keys:** reactive, ripple and heatmap, driven by the keyboard's own keypress reports.\n- **Audio:** spectrum and pulse, from whatever the Mac is playing, via a Core Audio process tap.\n- **Ambient:** rainbow, noise and solid.\n- **Noodle:** 17 effects and 23 palettes from Noodle 2K, the same C++ compiled unchanged into a Mac library and rendered on a 36×12 canvas that each key samples.\n\nIt runs as vizKeys.app: a skull in the menu bar, a web UI for settings, start at\nlogin, and it reconnects on its own after unplug or sleep.\n\n## The desk controller\n\nA Waveshare ESP32-S3-Tiny with a 2.4\" ST7789 screen, a rotary encoder and two\nchained 8×8 WS2812 panels as a 16×8 preview. It finds vizKeys on Wi-Fi over\nBonjour, pairs with a 6-character code, and turns the knob into effect and setting\nchanges.\n\nIt doesn't receive pixels. vizKeys sends a small sync packet each frame (clock,\naudio, keypresses) and the controller renders the same effects itself at 40 fps on\nthe screen and the panels. Firmware updates come over Wi-Fi, from the web UI.",
       "stats": {
-        "entries": 4,
-        "photos": 7,
+        "entries": 5,
+        "photos": 10,
         "daysActive": 3,
         "firstEntry": "2026-09-24",
         "lastEntry": "2026-09-26"
@@ -76,10 +76,47 @@
         {
           "date": "2026-09-25",
           "src": "/buildlog/vizkeys/media/bringup-screen.jpg"
+        },
+        {
+          "date": "2026-09-26",
+          "src": "/buildlog/vizkeys/media/final-case.mp4",
+          "poster": "/buildlog/vizkeys/media/final-case.jpg"
+        },
+        {
+          "date": "2026-09-26",
+          "src": "/buildlog/vizkeys/media/final-case-effects.mp4",
+          "poster": "/buildlog/vizkeys/media/final-case-effects.jpg"
+        },
+        {
+          "date": "2026-09-26",
+          "src": "/buildlog/vizkeys/media/final-case-open.jpg"
         }
       ],
       "lastEntry": "2026-09-26",
       "entries": [
+        {
+          "date": "2026-09-26",
+          "title": "Final case, Wi-Fi setup from a phone, knob fixes",
+          "tags": [
+            "case",
+            "firmware",
+            "wifi-setup"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizkeys/media/final-case.mp4",
+              "poster": "/buildlog/vizkeys/media/final-case.jpg"
+            },
+            {
+              "src": "/buildlog/vizkeys/media/final-case-effects.mp4",
+              "poster": "/buildlog/vizkeys/media/final-case-effects.jpg"
+            },
+            {
+              "src": "/buildlog/vizkeys/media/final-case-open.jpg"
+            }
+          ],
+          "body": "Whipped up the final case once the white test prints had settled the fit: a black shell with a silver face, a skull badge, and a cover over the two LED panels.\n\nThe firmware got a round of polish the same day:\n\n- **Wi-Fi setup from a phone:** the firmware no longer carries any Wi-Fi details. Setup opens the controller's own WPA2 network and shows a QR code for it. The phone's setup page scans it, joins, and reports back. The controller keeps its network and pairing code in its own storage. Tested with a phone.\n- **Releases:** the bundled firmware now builds without credentials, and the OTA password is the pairing code.\n- **Knob:** turning right now moves right and down.\n- **Buttons:** a small high-priority task samples them every 2 ms and queues events, so a quick tap during a screen redraw isn't lost.\n- **Effect name:** no more flash of the old name after picking a new one."
+        },
         {
           "date": "2026-09-26",
           "title": "Controller updates over Wi-Fi, from the web UI",
@@ -2355,6 +2392,31 @@
       "build": "vizkeys",
       "buildTitle": "vizKeys",
       "date": "2026-09-26",
+      "title": "Final case, Wi-Fi setup from a phone, knob fixes",
+      "tags": [
+        "case",
+        "firmware",
+        "wifi-setup"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizkeys/media/final-case.mp4",
+          "poster": "/buildlog/vizkeys/media/final-case.jpg"
+        },
+        {
+          "src": "/buildlog/vizkeys/media/final-case-effects.mp4",
+          "poster": "/buildlog/vizkeys/media/final-case-effects.jpg"
+        },
+        {
+          "src": "/buildlog/vizkeys/media/final-case-open.jpg"
+        }
+      ],
+      "body": "Whipped up the final case once the white test prints had settled the fit: a black shell with a silver face, a skull badge, and a cover over the two LED panels.\n\nThe firmware got a round of polish the same day:\n\n- **Wi-Fi setup from a phone:** the firmware no longer carries any Wi-Fi details. Setup opens the controller's own WPA2 network and shows a QR code for it. The phone's setup page scans it, joins, and reports back. The controller keeps its network and pairing code in its own storage. Tested with a phone.\n- **Releases:** the bundled firmware now builds without credentials, and the OTA password is the pairing code.\n- **Knob:** turning right now moves right and down.\n- **Buttons:** a small high-priority task samples them every 2 ms and queues events, so a quick tap during a screen redraw isn't lost.\n- **Effect name:** no more flash of the old name after picking a new one."
+    },
+    {
+      "build": "vizkeys",
+      "buildTitle": "vizKeys",
+      "date": "2026-09-26",
       "title": "Controller updates over Wi-Fi, from the web UI",
       "tags": [
         "ota",
@@ -4043,5 +4105,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-26T12:40:39.847Z"
+  "generatedAt": "2026-09-26T20:15:52.898Z"
 }
