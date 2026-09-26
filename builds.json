@@ -1,6 +1,157 @@
 {
   "builds": [
     {
+      "slug": "vizkeys",
+      "title": "vizKeys",
+      "status": "active",
+      "kind": "hybrid",
+      "summary": "Per-key RGB for a ROCCAT Vulcan Pro TKL on macOS, running the Noodle 2K effects, with an ESP32-S3 desk controller.",
+      "stack": [
+        "macOS",
+        "Python",
+        "Swift",
+        "USB HID",
+        "ESP32-S3",
+        "TFT_eSPI",
+        "WS2812",
+        "DDP",
+        "PlatformIO"
+      ],
+      "tags": [
+        "led",
+        "keyboard",
+        "firmware"
+      ],
+      "rung": null,
+      "facts": {
+        "effects": "25",
+        "palettes": "23"
+      },
+      "repo": "kpow/vizKeys",
+      "hero": "/buildlog/vizkeys/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/vizKeys"
+        }
+      ],
+      "started": "2026-09-24",
+      "body": "A Mac menu bar app that takes over the lighting on a ROCCAT Vulcan Pro TKL, one\nkey at a time, plus a small desk controller that picks and previews the effects.\n\n## The keyboard side\n\nvizKeys talks to the Vulcan over USB HID in its direct mode and redraws every key\non a fixed frame rate. It backs up the keyboard's own lighting first and puts it\nback on every exit path, so quitting leaves the keyboard as it was.\n\nThe effects come in four groups:\n\n- **Keys:** reactive, ripple and heatmap, driven by the keyboard's own keypress reports.\n- **Audio:** spectrum and pulse, from whatever the Mac is playing, via a Core Audio process tap.\n- **Ambient:** rainbow, noise and solid.\n- **Noodle:** 17 effects and 23 palettes from Noodle 2K, the same C++ compiled unchanged into a Mac library and rendered on a 36×12 canvas that each key samples.\n\nIt runs as vizKeys.app: a skull in the menu bar, a web UI for settings, start at\nlogin, and it reconnects on its own after unplug or sleep.\n\n## The desk controller\n\nA Waveshare ESP32-S3-Tiny with a 2.4\" ST7789 screen, a rotary encoder and two\nchained 8×8 WS2812 panels as a 16×8 preview. It finds vizKeys on Wi-Fi over\nBonjour, pairs with a 6-character code, and turns the knob into effect and setting\nchanges.\n\nIt doesn't receive pixels. vizKeys sends a small sync packet each frame (clock,\naudio, keypresses) and the controller renders the same effects itself at 40 fps on\nthe screen and the panels. Firmware updates come over Wi-Fi, from the web UI.",
+      "stats": {
+        "entries": 4,
+        "photos": 7,
+        "daysActive": 3,
+        "firstEntry": "2026-09-24",
+        "lastEntry": "2026-09-26"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizkeys/media/keyboard-vortex.mp4",
+          "poster": "/buildlog/vizkeys/media/keyboard-vortex.jpg"
+        },
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizkeys/media/knob-through-effects.mp4",
+          "poster": "/buildlog/vizkeys/media/knob-through-effects.jpg"
+        },
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizkeys/media/case-front-white.jpg"
+        },
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizkeys/media/case-blue.jpg"
+        },
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizkeys/media/two-8x8-panels.jpg"
+        },
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizkeys/media/s3-tiny-wiring.jpg",
+          "caption": "Waveshare ESP32-S3-Tiny: display on GP7-GP12, encoder and buttons on GP13-GP16"
+        },
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizkeys/media/bringup-screen.jpg"
+        }
+      ],
+      "lastEntry": "2026-09-26",
+      "entries": [
+        {
+          "date": "2026-09-26",
+          "title": "Controller updates over Wi-Fi, from the web UI",
+          "tags": [
+            "ota",
+            "firmware"
+          ],
+          "media": [],
+          "body": "The controller is going into its case, so it needed updates without USB.\n\n- **OTA:** `pio run -e ota -t upload` flashes it over Wi-Fi in about 30 seconds. An Updating screen shows on the display, and the LED panels become a progress bar.\n- **From the web UI:** a Controller card lists each controller's firmware and offers the build bundled with vizKeys when it's newer. The controller picks up the request on its next poll, downloads the image, checks its MD5, switches app slots and restarts.\n\nA failed update leaves the running firmware alone. The web path was tested with a bad checksum first, then a real update."
+        },
+        {
+          "date": "2026-09-25",
+          "title": "Controller firmware: Dock UI, then rendering on the device",
+          "tags": [
+            "esp32",
+            "firmware",
+            "ui"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizkeys/media/keyboard-vortex.mp4",
+              "poster": "/buildlog/vizkeys/media/keyboard-vortex.jpg"
+            },
+            {
+              "src": "/buildlog/vizkeys/media/knob-through-effects.mp4",
+              "poster": "/buildlog/vizkeys/media/knob-through-effects.jpg"
+            }
+          ],
+          "body": "Plan steps 3 to 5 all landed the same day:\n\n- **Finding vizKeys:** Wi-Fi access on the Mac with a 6-character pairing code, advertised over Bonjour. The controller found it in one lookup and loaded all 25 effects.\n- **UI:** a design agent drew three concepts at 240x320 portrait, rendered with the real TFT_eSPI fonts. I picked A, \"Dock\": home, quick menu, effect browser, tune, palette picker and status screens, with Slackey for titles.\n- **Knob:** turns pick the effect, applied once it rests for 350 ms. Networking runs on core 0 so the UI on core 1 never blocks.\n- **LED preview:** vizKeys streamed a 16x8 DDP preview of the keyboard to the two panels at 30 fps.\n\nStreaming pixels over Wi-Fi looked chunky. vizKeys now sends a small sync packet each frame (clock, audio, keypresses) instead, and the controller runs the Noodle effects and ported built-ins itself at 40 fps on both the screen and the panels. A frozen rainbow matched the Mac exactly.\n\nWith the panels showing the effect, the mini keyboard on the home screen was redundant, so it came out.\n\n> **Lesson:** don't stream pixels to a device that can render. Send the clock and the inputs and let it draw."
+        },
+        {
+          "date": "2026-09-25",
+          "title": "Desk controller bring-up: S3-Tiny, screen, knob, two 8x8 panels",
+          "tags": [
+            "esp32",
+            "bring-up",
+            "case"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizkeys/media/case-front-white.jpg"
+            },
+            {
+              "src": "/buildlog/vizkeys/media/case-blue.jpg"
+            },
+            {
+              "src": "/buildlog/vizkeys/media/two-8x8-panels.jpg"
+            },
+            {
+              "src": "/buildlog/vizkeys/media/s3-tiny-wiring.jpg",
+              "caption": "Waveshare ESP32-S3-Tiny: display on GP7-GP12, encoder and buttons on GP13-GP16"
+            },
+            {
+              "src": "/buildlog/vizkeys/media/bringup-screen.jpg"
+            }
+          ],
+          "body": "Wired the controller from the plan: a Waveshare ESP32-S3-Tiny, the same 2.4\" ST7789 as the Noodle Console with an EC11 encoder and KO button on its board, and two 8x8 WS2812 panels chained on one data pin as a 16x8 preview. Only the S3-Tiny's edge through-holes get used, so the display sits on one edge in header order with no crossed wires.\n\nBring-up firmware checked each part on its own:\n\n- **Board:** 4 MB flash and 2 MB PSRAM found.\n- **LEDs:** solid colors, a dot walking 0 to 127, corner markers, rainbow. One panel had a dead pixel at #10, so I swapped it. All 128 work.\n- **Screen:** full 320x240 frame, colors in order.\n- **Knob and buttons:** one encoder count per click, push and KO both register.\n\nThe case is printing alongside. The white prints are test pieces for finalizing the fit.\n\n> **Trap:** this ST7789 panel is BGR. With the default RGB order, red showed as blue. The firmware now shows four labeled color bands for 3 seconds at boot to catch it."
+        },
+        {
+          "date": "2026-09-24",
+          "title": "Per-key RGB on the Vulcan, from driver to menu bar app",
+          "tags": [
+            "usb-hid",
+            "macos",
+            "effects"
+          ],
+          "media": [],
+          "body": "Got the ROCCAT Vulcan Pro TKL taking per-key colors from the Mac in one day, built in layers and tested on the keyboard after each one:\n\n- **Driver:** USB HID direct mode, with the onboard lighting backed up and restored on every exit. The key map was checked key by key; Menu and Fn are swapped compared to OpenRGB.\n- **Effects:** a fixed-rate engine on an x/y key grid, the built-ins, and 17 Noodle 2K effects compiled unchanged from noodlez-v2.\n- **Inputs:** keypresses from the keyboard's own HID reports, and Mac system audio through a Core Audio process tap, analyzed the same way as the Noodle audio sat.\n- **App:** vizKeys.app with a skull in the menu bar, a web UI with palette swatches, start at login, and reconnects after unplug or sleep.\n\nIt started as kpowRGBkey and became vizKeys the same day. The plan for an ESP32-S3 desk controller went in last: a knob, a 2.4\" screen and two 8x8 panels as a live preview.\n\n> **Trap:** the keyboard rejects direct mode unless the lighting packet sent just before it is in mode 0x09. Echoing the stored profile only worked while the profile happened to be in that mode. When it flipped to static, vizKeys said \"connected\" and the keys kept their onboard lighting. vizKeys now forces 0x09 and writes the original back on exit."
+        }
+      ]
+    },
+    {
       "slug": "8x8",
       "title": "8x8 labz",
       "status": "active",
@@ -2201,6 +2352,83 @@
   ],
   "recent": [
     {
+      "build": "vizkeys",
+      "buildTitle": "vizKeys",
+      "date": "2026-09-26",
+      "title": "Controller updates over Wi-Fi, from the web UI",
+      "tags": [
+        "ota",
+        "firmware"
+      ],
+      "media": [],
+      "body": "The controller is going into its case, so it needed updates without USB.\n\n- **OTA:** `pio run -e ota -t upload` flashes it over Wi-Fi in about 30 seconds. An Updating screen shows on the display, and the LED panels become a progress bar.\n- **From the web UI:** a Controller card lists each controller's firmware and offers the build bundled with vizKeys when it's newer. The controller picks up the request on its next poll, downloads the image, checks its MD5, switches app slots and restarts.\n\nA failed update leaves the running firmware alone. The web path was tested with a bad checksum first, then a real update."
+    },
+    {
+      "build": "vizkeys",
+      "buildTitle": "vizKeys",
+      "date": "2026-09-25",
+      "title": "Controller firmware: Dock UI, then rendering on the device",
+      "tags": [
+        "esp32",
+        "firmware",
+        "ui"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizkeys/media/keyboard-vortex.mp4",
+          "poster": "/buildlog/vizkeys/media/keyboard-vortex.jpg"
+        },
+        {
+          "src": "/buildlog/vizkeys/media/knob-through-effects.mp4",
+          "poster": "/buildlog/vizkeys/media/knob-through-effects.jpg"
+        }
+      ],
+      "body": "Plan steps 3 to 5 all landed the same day:\n\n- **Finding vizKeys:** Wi-Fi access on the Mac with a 6-character pairing code, advertised over Bonjour. The controller found it in one lookup and loaded all 25 effects.\n- **UI:** a design agent drew three concepts at 240x320 portrait, rendered with the real TFT_eSPI fonts. I picked A, \"Dock\": home, quick menu, effect browser, tune, palette picker and status screens, with Slackey for titles.\n- **Knob:** turns pick the effect, applied once it rests for 350 ms. Networking runs on core 0 so the UI on core 1 never blocks.\n- **LED preview:** vizKeys streamed a 16x8 DDP preview of the keyboard to the two panels at 30 fps.\n\nStreaming pixels over Wi-Fi looked chunky. vizKeys now sends a small sync packet each frame (clock, audio, keypresses) instead, and the controller runs the Noodle effects and ported built-ins itself at 40 fps on both the screen and the panels. A frozen rainbow matched the Mac exactly.\n\nWith the panels showing the effect, the mini keyboard on the home screen was redundant, so it came out.\n\n> **Lesson:** don't stream pixels to a device that can render. Send the clock and the inputs and let it draw."
+    },
+    {
+      "build": "vizkeys",
+      "buildTitle": "vizKeys",
+      "date": "2026-09-25",
+      "title": "Desk controller bring-up: S3-Tiny, screen, knob, two 8x8 panels",
+      "tags": [
+        "esp32",
+        "bring-up",
+        "case"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizkeys/media/case-front-white.jpg"
+        },
+        {
+          "src": "/buildlog/vizkeys/media/case-blue.jpg"
+        },
+        {
+          "src": "/buildlog/vizkeys/media/two-8x8-panels.jpg"
+        },
+        {
+          "src": "/buildlog/vizkeys/media/s3-tiny-wiring.jpg",
+          "caption": "Waveshare ESP32-S3-Tiny: display on GP7-GP12, encoder and buttons on GP13-GP16"
+        },
+        {
+          "src": "/buildlog/vizkeys/media/bringup-screen.jpg"
+        }
+      ],
+      "body": "Wired the controller from the plan: a Waveshare ESP32-S3-Tiny, the same 2.4\" ST7789 as the Noodle Console with an EC11 encoder and KO button on its board, and two 8x8 WS2812 panels chained on one data pin as a 16x8 preview. Only the S3-Tiny's edge through-holes get used, so the display sits on one edge in header order with no crossed wires.\n\nBring-up firmware checked each part on its own:\n\n- **Board:** 4 MB flash and 2 MB PSRAM found.\n- **LEDs:** solid colors, a dot walking 0 to 127, corner markers, rainbow. One panel had a dead pixel at #10, so I swapped it. All 128 work.\n- **Screen:** full 320x240 frame, colors in order.\n- **Knob and buttons:** one encoder count per click, push and KO both register.\n\nThe case is printing alongside. The white prints are test pieces for finalizing the fit.\n\n> **Trap:** this ST7789 panel is BGR. With the default RGB order, red showed as blue. The firmware now shows four labeled color bands for 3 seconds at boot to catch it."
+    },
+    {
+      "build": "vizkeys",
+      "buildTitle": "vizKeys",
+      "date": "2026-09-24",
+      "title": "Per-key RGB on the Vulcan, from driver to menu bar app",
+      "tags": [
+        "usb-hid",
+        "macos",
+        "effects"
+      ],
+      "media": [],
+      "body": "Got the ROCCAT Vulcan Pro TKL taking per-key colors from the Mac in one day, built in layers and tested on the keyboard after each one:\n\n- **Driver:** USB HID direct mode, with the onboard lighting backed up and restored on every exit. The key map was checked key by key; Menu and Fn are swapped compared to OpenRGB.\n- **Effects:** a fixed-rate engine on an x/y key grid, the built-ins, and 17 Noodle 2K effects compiled unchanged from noodlez-v2.\n- **Inputs:** keypresses from the keyboard's own HID reports, and Mac system audio through a Core Audio process tap, analyzed the same way as the Noodle audio sat.\n- **App:** vizKeys.app with a skull in the menu bar, a web UI with palette swatches, start at login, and reconnects after unplug or sleep.\n\nIt started as kpowRGBkey and became vizKeys the same day. The plan for an ESP32-S3 desk controller went in last: a knob, a 2.4\" screen and two 8x8 panels as a live preview.\n\n> **Trap:** the keyboard rejects direct mode unless the lighting packet sent just before it is in mode 0x09. Echoing the stored profile only worked while the profile happened to be in that mode. When it flipped to static, vizKeys said \"connected\" and the keys kept their onboard lighting. vizKeys now forces 0x09 and writes the original back on exit."
+    },
+    {
       "build": "8x8",
       "buildTitle": "8x8 labz",
       "date": "2026-09-23",
@@ -3815,5 +4043,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-24T15:15:00.065Z"
+  "generatedAt": "2026-09-26T12:40:39.847Z"
 }
