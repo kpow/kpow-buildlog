@@ -68,7 +68,7 @@ No commits and no photos? It's a hands-on day — ask what they did.
 
 1. Find the source: ask for the repo, confirm the checkout exists under ~/projects.
 2. Read its README and `git log --reverse --format='%cs %s' | head -60` for the story.
-3. Ask the user, in one message: one-line summary · status · hardware or software ·
+3. Ask the user, in one message: one-line summary · status · hardware, software or hybrid ·
    when it started. Offer your own guesses from the repo to confirm or correct.
 4. Draft `build.md` (template below). The body is the evergreen description:
    what it is, how it works, why it's built that way. `## ` headings are fine.
@@ -109,7 +109,7 @@ bad caption, a broken format. Git history keeps the old version.
 slug: radar
 title: ESP32 Plane Radar
 status: shipped            # active | shipped | live | shelved   (live = deployed software)
-kind: hardware             # hardware | software
+kind: hardware             # hardware | software | hybrid
 summary: A desktop ADS-B aircraft scope on a round LCD.
 stack: [ESP32-C3, LovyanGFX, ADS-B, PlatformIO]
 tags: [display, adsb, firmware]

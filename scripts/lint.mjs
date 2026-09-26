@@ -10,7 +10,7 @@ import { join } from "node:path";
 import { BUILDS, ENTRY_FILE, field, slugs } from "./sources.mjs";
 
 const STATUSES = ["active", "shipped", "live", "shelved"];
-const KINDS = ["hardware", "software"];
+const KINDS = ["hardware", "software", "hybrid"];
 const problems = [];
 const err = (where, msg) => problems.push({ level: "error", where, msg });
 const warn = (where, msg) => problems.push({ level: "warn", where, msg });

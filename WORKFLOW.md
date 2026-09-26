@@ -79,7 +79,7 @@ Tick these off as you go. Suggested order: most suspect first.
 
 1. Claude asks which repo it lives in and reads its README and history.
 2. You confirm or correct four things in one reply: a one-line summary, the status,
-   hardware or software, and the start date.
+   hardware, software or hybrid, and the start date.
 3. Claude drafts the build page, picks a hero photo, and backfills entries from
    the repo history.
 4. Review the draft, then publish.
