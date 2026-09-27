@@ -1,11 +1,11 @@
 {
   "builds": [
     {
-      "slug": "vizkeys",
-      "title": "vizKeys",
+      "slug": "vizmac",
+      "title": "vizMac",
       "status": "active",
       "kind": "hybrid",
-      "summary": "Per-key RGB for a ROCCAT Vulcan Pro TKL on macOS, running the Noodle 2K effects, with an ESP32-S3 desk controller.",
+      "summary": "Per-key RGB for a ROCCAT Vulcan Pro TKL on macOS, plus an ESP32-S3 desk controller with Now Playing, a focus clock and WLED control.",
       "stack": [
         "macOS",
         "Python",
@@ -14,7 +14,7 @@
         "ESP32-S3",
         "TFT_eSPI",
         "WS2812",
-        "DDP",
+        "WLED",
         "PlatformIO"
       ],
       "tags": [
@@ -25,75 +25,151 @@
       "rung": null,
       "facts": {
         "effects": "25",
-        "palettes": "23"
+        "palettes": "23",
+        "modes": "4"
       },
-      "repo": "kpow/vizKeys",
-      "hero": "/buildlog/vizkeys/media/hero.jpg",
+      "repo": "kpow/vizMac",
+      "hero": "/buildlog/vizmac/media/hero.jpg",
       "links": [
         {
           "label": "repo",
-          "url": "https://github.com/kpow/vizKeys"
+          "url": "https://github.com/kpow/vizMac"
         }
       ],
       "started": "2026-09-24",
-      "body": "A Mac menu bar app that takes over the lighting on a ROCCAT Vulcan Pro TKL, one\nkey at a time, plus a small desk controller that picks and previews the effects.\n\n## The keyboard side\n\nvizKeys talks to the Vulcan over USB HID in its direct mode and redraws every key\non a fixed frame rate. It backs up the keyboard's own lighting first and puts it\nback on every exit path, so quitting leaves the keyboard as it was.\n\nThe effects come in four groups:\n\n- **Keys:** reactive, ripple and heatmap, driven by the keyboard's own keypress reports.\n- **Audio:** spectrum and pulse, from whatever the Mac is playing, via a Core Audio process tap.\n- **Ambient:** rainbow, noise and solid.\n- **Noodle:** 17 effects and 23 palettes from Noodle 2K, the same C++ compiled unchanged into a Mac library and rendered on a 36×12 canvas that each key samples.\n\nIt runs as vizKeys.app: a skull in the menu bar, a web UI for settings, start at\nlogin, and it reconnects on its own after unplug or sleep.\n\n## The desk controller\n\nA Waveshare ESP32-S3-Tiny with a 2.4\" ST7789 screen, a rotary encoder and two\nchained 8×8 WS2812 panels as a 16×8 preview. It finds vizKeys on Wi-Fi over\nBonjour, pairs with a 6-character code, and turns the knob into effect and setting\nchanges.\n\nIt doesn't receive pixels. vizKeys sends a small sync packet each frame (clock,\naudio, keypresses) and the controller renders the same effects itself at 40 fps on\nthe screen and the panels. Firmware updates come over Wi-Fi, from the web UI.",
+      "body": "A Mac menu bar app that takes over the lighting on a ROCCAT Vulcan Pro TKL, one\nkey at a time, plus a desk controller next to the keyboard. It started as vizKeys\nand was renamed vizMac once the controller grew past the keyboard.\n\n## The keyboard side\n\nvizMac talks to the Vulcan over USB HID in its direct mode and redraws every key\non a fixed frame rate. It backs up the keyboard's own lighting first and puts it\nback on every exit path, so quitting leaves the keyboard as it was.\n\nThe effects come in four groups:\n\n- **Keys:** reactive, ripple and heatmap, driven by the keyboard's own keypress reports.\n- **Audio:** spectrum and pulse, from whatever the Mac is playing, via a Core Audio process tap.\n- **Ambient:** rainbow, noise and solid.\n- **Noodle:** 17 effects and 23 palettes from Noodle 2K, the same C++ compiled unchanged into a Mac library and rendered on a 36×12 canvas that each key samples.\n\nIt runs as vizMac.app: a skull in the menu bar, a web UI for settings, start at\nlogin, and it reconnects on its own after unplug or sleep.\n\n## The desk controller\n\nA Waveshare ESP32-S3-Tiny with a 2.4\" ST7789 screen, a rotary encoder with push, a\nKO button and two chained 8×8 WS2812 panels as a 16×8 display. It finds vizMac on\nWi-Fi over Bonjour and pairs with a 6-character code.\n\nIt has four modes behind a mode picker:\n\n- **Keys:** pick and tune the keyboard effects. The 16×8 shows the keyboard.\n- **Now Playing:** Spotify or Music with album art. Turn to skip. The 16×8 is a palette EQ.\n- **Clock:** an analog face and a focus timer that flashes the keyboard when it ends.\n- **WLED:** the lights on the network, picked and ordered in the web UI, controlled directly.\n\nIt doesn't receive pixels. vizMac sends a small sync packet each frame (clock,\naudio, keypresses) and the controller renders the effects itself at 40 fps.\n\nWi-Fi is set up from a phone by QR code. Firmware updates come over Wi-Fi from the\nweb UI. The controller sleeps and wakes with the Mac.",
       "stats": {
-        "entries": 5,
-        "photos": 10,
-        "daysActive": 3,
+        "entries": 8,
+        "photos": 16,
+        "daysActive": 4,
         "firstEntry": "2026-09-24",
-        "lastEntry": "2026-09-26"
+        "lastEntry": "2026-09-27"
       },
       "git": null,
       "picturesOverTime": [
         {
           "date": "2026-09-25",
-          "src": "/buildlog/vizkeys/media/keyboard-vortex.mp4",
-          "poster": "/buildlog/vizkeys/media/keyboard-vortex.jpg"
+          "src": "/buildlog/vizmac/media/keyboard-vortex.mp4",
+          "poster": "/buildlog/vizmac/media/keyboard-vortex.jpg"
         },
         {
           "date": "2026-09-25",
-          "src": "/buildlog/vizkeys/media/knob-through-effects.mp4",
-          "poster": "/buildlog/vizkeys/media/knob-through-effects.jpg"
+          "src": "/buildlog/vizmac/media/knob-through-effects.mp4",
+          "poster": "/buildlog/vizmac/media/knob-through-effects.jpg"
         },
         {
           "date": "2026-09-25",
-          "src": "/buildlog/vizkeys/media/case-front-white.jpg"
+          "src": "/buildlog/vizmac/media/case-front-white.jpg"
         },
         {
           "date": "2026-09-25",
-          "src": "/buildlog/vizkeys/media/case-blue.jpg"
+          "src": "/buildlog/vizmac/media/case-blue.jpg"
         },
         {
           "date": "2026-09-25",
-          "src": "/buildlog/vizkeys/media/two-8x8-panels.jpg"
+          "src": "/buildlog/vizmac/media/two-8x8-panels.jpg"
         },
         {
           "date": "2026-09-25",
-          "src": "/buildlog/vizkeys/media/s3-tiny-wiring.jpg",
+          "src": "/buildlog/vizmac/media/s3-tiny-wiring.jpg",
           "caption": "Waveshare ESP32-S3-Tiny: display on GP7-GP12, encoder and buttons on GP13-GP16"
         },
         {
           "date": "2026-09-25",
-          "src": "/buildlog/vizkeys/media/bringup-screen.jpg"
+          "src": "/buildlog/vizmac/media/bringup-screen.jpg"
         },
         {
           "date": "2026-09-26",
-          "src": "/buildlog/vizkeys/media/final-case.mp4",
-          "poster": "/buildlog/vizkeys/media/final-case.jpg"
+          "src": "/buildlog/vizmac/media/final-case.mp4",
+          "poster": "/buildlog/vizmac/media/final-case.jpg"
         },
         {
           "date": "2026-09-26",
-          "src": "/buildlog/vizkeys/media/final-case-effects.mp4",
-          "poster": "/buildlog/vizkeys/media/final-case-effects.jpg"
+          "src": "/buildlog/vizmac/media/final-case-effects.mp4",
+          "poster": "/buildlog/vizmac/media/final-case-effects.jpg"
         },
         {
           "date": "2026-09-26",
-          "src": "/buildlog/vizkeys/media/final-case-open.jpg"
+          "src": "/buildlog/vizmac/media/final-case-open.jpg"
+        },
+        {
+          "date": "2026-09-27",
+          "src": "/buildlog/vizmac/media/now-playing-eq.jpg"
+        },
+        {
+          "date": "2026-09-27",
+          "src": "/buildlog/vizmac/media/now-playing-paused.jpg"
+        },
+        {
+          "date": "2026-09-27",
+          "src": "/buildlog/vizmac/media/clock-face.jpg"
+        },
+        {
+          "date": "2026-09-27",
+          "src": "/buildlog/vizmac/media/wled-list.jpg"
+        },
+        {
+          "date": "2026-09-27",
+          "src": "/buildlog/vizmac/media/desk-now-playing.jpg"
+        },
+        {
+          "date": "2026-09-27",
+          "src": "/buildlog/vizmac/media/mode-keys.jpg"
         }
       ],
-      "lastEntry": "2026-09-26",
+      "lastEntry": "2026-09-27",
       "entries": [
+        {
+          "date": "2026-09-27",
+          "title": "Now Playing with a rainbow EQ, and a focus clock",
+          "tags": [
+            "now-playing",
+            "clock"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizmac/media/now-playing-eq.jpg"
+            },
+            {
+              "src": "/buildlog/vizmac/media/now-playing-paused.jpg"
+            },
+            {
+              "src": "/buildlog/vizmac/media/clock-face.jpg"
+            }
+          ],
+          "body": "**Now Playing** reads Spotify and Music through JavaScript for Automation, only when one is already running. The Mac sends the album art as 120×120 RGB565.\n\n- **Knob:** turn to skip. Turns add up (\"Next ×3\") and go out when the knob rests. Volume stays on the keyboard's own knob.\n- **LEDs:** album art on a 16×8 was unreadable, so the panel is a 16-band EQ in a chosen palette, rainbow by default. vizMac listens to Mac audio only while the EQ shows.\n\n**Clock** started as big Slackey digits. The LEDs already showed the digital time, so the screen became an analog face: an amethyst hour hand, an emerald minute hand, and the focus timer as a draining teal arc. When the timer ends, the controller and the keyboard flash green.\n\n> **Trap:** NTP never set the clock. The Mac now sends its time and time zone with every poll."
+        },
+        {
+          "date": "2026-09-27",
+          "title": "WLED control, sleep with the Mac, and a new name",
+          "tags": [
+            "wled",
+            "rename"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizmac/media/wled-list.jpg"
+            }
+          ],
+          "body": "vizMac finds every WLED light with Bonjour: 13 on the home network. The web UI's new Lights card picks which ones the controller lists and in what order, with an Open link to each light's own page. The controller keeps the list and talks to the lights directly, so it works with the Mac asleep.\n\nThe controller now sleeps when the Mac's screens sleep or lock, and wakes with it.\n\nWith all that it stopped being a keyboard app. vizKeys is now vizMac: the repo, the app, the Bonjour name and the controller. The controller learned the new name first and kept looking for the old one, so it never lost the Mac mid-rename."
+        },
+        {
+          "date": "2026-09-27",
+          "title": "Four modes and a button scheme that sticks",
+          "tags": [
+            "firmware",
+            "ui"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizmac/media/desk-now-playing.jpg"
+            },
+            {
+              "src": "/buildlog/vizmac/media/mode-keys.jpg"
+            }
+          ],
+          "body": "The controller was only used for picking effects, and it sits in the best spot on the desk. It now has four modes behind a card-style mode picker: Keys, Now Playing, Clock and WLED. Each keeps running, opens where it was left, and the controller starts in the last one after a restart.\n\nThe buttons took three tries. The final scheme:\n\n- **Knob push:** back, fired the moment it goes down. A few pushes always land on the mode picker.\n- **Knob hold (2 s):** sleep.\n- **KO:** choose. **KO hold:** the mode's shortcut, like Tune in Keys.\n\nBoost is gone and always on. A Keyboard LEDs setting keeps the keyboard preview on the 16×8 in any mode.\n\n> **Lesson:** A raw button log over UDP showed every \"missed\" press arrived. They were slow presses held past the 0.6 s hold time. It also caught a real bug: a one-count wiggle while pushing counted as a turn. A turn now needs 3 counts past the detent."
+        },
         {
           "date": "2026-09-26",
           "title": "Final case, Wi-Fi setup from a phone, knob fixes",
@@ -104,15 +180,15 @@
           ],
           "media": [
             {
-              "src": "/buildlog/vizkeys/media/final-case.mp4",
-              "poster": "/buildlog/vizkeys/media/final-case.jpg"
+              "src": "/buildlog/vizmac/media/final-case.mp4",
+              "poster": "/buildlog/vizmac/media/final-case.jpg"
             },
             {
-              "src": "/buildlog/vizkeys/media/final-case-effects.mp4",
-              "poster": "/buildlog/vizkeys/media/final-case-effects.jpg"
+              "src": "/buildlog/vizmac/media/final-case-effects.mp4",
+              "poster": "/buildlog/vizmac/media/final-case-effects.jpg"
             },
             {
-              "src": "/buildlog/vizkeys/media/final-case-open.jpg"
+              "src": "/buildlog/vizmac/media/final-case-open.jpg"
             }
           ],
           "body": "Whipped up the final case once the white test prints had settled the fit: a black shell with a silver face, a skull badge, and a cover over the two LED panels.\n\nThe firmware got a round of polish the same day:\n\n- **Wi-Fi setup from a phone:** the firmware no longer carries any Wi-Fi details. Setup opens the controller's own WPA2 network and shows a QR code for it. The phone's setup page scans it, joins, and reports back. The controller keeps its network and pairing code in its own storage. Tested with a phone.\n- **Releases:** the bundled firmware now builds without credentials, and the OTA password is the pairing code.\n- **Knob:** turning right now moves right and down.\n- **Buttons:** a small high-priority task samples them every 2 ms and queues events, so a quick tap during a screen redraw isn't lost.\n- **Effect name:** no more flash of the old name after picking a new one."
@@ -137,12 +213,12 @@
           ],
           "media": [
             {
-              "src": "/buildlog/vizkeys/media/keyboard-vortex.mp4",
-              "poster": "/buildlog/vizkeys/media/keyboard-vortex.jpg"
+              "src": "/buildlog/vizmac/media/keyboard-vortex.mp4",
+              "poster": "/buildlog/vizmac/media/keyboard-vortex.jpg"
             },
             {
-              "src": "/buildlog/vizkeys/media/knob-through-effects.mp4",
-              "poster": "/buildlog/vizkeys/media/knob-through-effects.jpg"
+              "src": "/buildlog/vizmac/media/knob-through-effects.mp4",
+              "poster": "/buildlog/vizmac/media/knob-through-effects.jpg"
             }
           ],
           "body": "Plan steps 3 to 5 all landed the same day:\n\n- **Finding vizKeys:** Wi-Fi access on the Mac with a 6-character pairing code, advertised over Bonjour. The controller found it in one lookup and loaded all 25 effects.\n- **UI:** a design agent drew three concepts at 240x320 portrait, rendered with the real TFT_eSPI fonts. I picked A, \"Dock\": home, quick menu, effect browser, tune, palette picker and status screens, with Slackey for titles.\n- **Knob:** turns pick the effect, applied once it rests for 350 ms. Networking runs on core 0 so the UI on core 1 never blocks.\n- **LED preview:** vizKeys streamed a 16x8 DDP preview of the keyboard to the two panels at 30 fps.\n\nStreaming pixels over Wi-Fi looked chunky. vizKeys now sends a small sync packet each frame (clock, audio, keypresses) instead, and the controller runs the Noodle effects and ported built-ins itself at 40 fps on both the screen and the panels. A frozen rainbow matched the Mac exactly.\n\nWith the panels showing the effect, the mini keyboard on the home screen was redundant, so it came out.\n\n> **Lesson:** don't stream pixels to a device that can render. Send the clock and the inputs and let it draw."
@@ -157,20 +233,20 @@
           ],
           "media": [
             {
-              "src": "/buildlog/vizkeys/media/case-front-white.jpg"
+              "src": "/buildlog/vizmac/media/case-front-white.jpg"
             },
             {
-              "src": "/buildlog/vizkeys/media/case-blue.jpg"
+              "src": "/buildlog/vizmac/media/case-blue.jpg"
             },
             {
-              "src": "/buildlog/vizkeys/media/two-8x8-panels.jpg"
+              "src": "/buildlog/vizmac/media/two-8x8-panels.jpg"
             },
             {
-              "src": "/buildlog/vizkeys/media/s3-tiny-wiring.jpg",
+              "src": "/buildlog/vizmac/media/s3-tiny-wiring.jpg",
               "caption": "Waveshare ESP32-S3-Tiny: display on GP7-GP12, encoder and buttons on GP13-GP16"
             },
             {
-              "src": "/buildlog/vizkeys/media/bringup-screen.jpg"
+              "src": "/buildlog/vizmac/media/bringup-screen.jpg"
             }
           ],
           "body": "Wired the controller from the plan: a Waveshare ESP32-S3-Tiny, the same 2.4\" ST7789 as the Noodle Console with an EC11 encoder and KO button on its board, and two 8x8 WS2812 panels chained on one data pin as a 16x8 preview. Only the S3-Tiny's edge through-holes get used, so the display sits on one edge in header order with no crossed wires.\n\nBring-up firmware checked each part on its own:\n\n- **Board:** 4 MB flash and 2 MB PSRAM found.\n- **LEDs:** solid colors, a dot walking 0 to 127, corner markers, rainbow. One panel had a dead pixel at #10, so I swapped it. All 128 work.\n- **Screen:** full 320x240 frame, colors in order.\n- **Knob and buttons:** one encoder count per click, push and KO both register.\n\nThe case is printing alongside. The white prints are test pieces for finalizing the fit.\n\n> **Trap:** this ST7789 panel is BGR. With the default RGB order, red showed as blue. The firmware now shows four labeled color bands for 3 seconds at boot to catch it."
@@ -2389,8 +2465,65 @@
   ],
   "recent": [
     {
-      "build": "vizkeys",
-      "buildTitle": "vizKeys",
+      "build": "vizmac",
+      "buildTitle": "vizMac",
+      "date": "2026-09-27",
+      "title": "Now Playing with a rainbow EQ, and a focus clock",
+      "tags": [
+        "now-playing",
+        "clock"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizmac/media/now-playing-eq.jpg"
+        },
+        {
+          "src": "/buildlog/vizmac/media/now-playing-paused.jpg"
+        },
+        {
+          "src": "/buildlog/vizmac/media/clock-face.jpg"
+        }
+      ],
+      "body": "**Now Playing** reads Spotify and Music through JavaScript for Automation, only when one is already running. The Mac sends the album art as 120×120 RGB565.\n\n- **Knob:** turn to skip. Turns add up (\"Next ×3\") and go out when the knob rests. Volume stays on the keyboard's own knob.\n- **LEDs:** album art on a 16×8 was unreadable, so the panel is a 16-band EQ in a chosen palette, rainbow by default. vizMac listens to Mac audio only while the EQ shows.\n\n**Clock** started as big Slackey digits. The LEDs already showed the digital time, so the screen became an analog face: an amethyst hour hand, an emerald minute hand, and the focus timer as a draining teal arc. When the timer ends, the controller and the keyboard flash green.\n\n> **Trap:** NTP never set the clock. The Mac now sends its time and time zone with every poll."
+    },
+    {
+      "build": "vizmac",
+      "buildTitle": "vizMac",
+      "date": "2026-09-27",
+      "title": "WLED control, sleep with the Mac, and a new name",
+      "tags": [
+        "wled",
+        "rename"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizmac/media/wled-list.jpg"
+        }
+      ],
+      "body": "vizMac finds every WLED light with Bonjour: 13 on the home network. The web UI's new Lights card picks which ones the controller lists and in what order, with an Open link to each light's own page. The controller keeps the list and talks to the lights directly, so it works with the Mac asleep.\n\nThe controller now sleeps when the Mac's screens sleep or lock, and wakes with it.\n\nWith all that it stopped being a keyboard app. vizKeys is now vizMac: the repo, the app, the Bonjour name and the controller. The controller learned the new name first and kept looking for the old one, so it never lost the Mac mid-rename."
+    },
+    {
+      "build": "vizmac",
+      "buildTitle": "vizMac",
+      "date": "2026-09-27",
+      "title": "Four modes and a button scheme that sticks",
+      "tags": [
+        "firmware",
+        "ui"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizmac/media/desk-now-playing.jpg"
+        },
+        {
+          "src": "/buildlog/vizmac/media/mode-keys.jpg"
+        }
+      ],
+      "body": "The controller was only used for picking effects, and it sits in the best spot on the desk. It now has four modes behind a card-style mode picker: Keys, Now Playing, Clock and WLED. Each keeps running, opens where it was left, and the controller starts in the last one after a restart.\n\nThe buttons took three tries. The final scheme:\n\n- **Knob push:** back, fired the moment it goes down. A few pushes always land on the mode picker.\n- **Knob hold (2 s):** sleep.\n- **KO:** choose. **KO hold:** the mode's shortcut, like Tune in Keys.\n\nBoost is gone and always on. A Keyboard LEDs setting keeps the keyboard preview on the 16×8 in any mode.\n\n> **Lesson:** A raw button log over UDP showed every \"missed\" press arrived. They were slow presses held past the 0.6 s hold time. It also caught a real bug: a one-count wiggle while pushing counted as a turn. A turn now needs 3 counts past the detent."
+    },
+    {
+      "build": "vizmac",
+      "buildTitle": "vizMac",
       "date": "2026-09-26",
       "title": "Final case, Wi-Fi setup from a phone, knob fixes",
       "tags": [
@@ -2400,22 +2533,22 @@
       ],
       "media": [
         {
-          "src": "/buildlog/vizkeys/media/final-case.mp4",
-          "poster": "/buildlog/vizkeys/media/final-case.jpg"
+          "src": "/buildlog/vizmac/media/final-case.mp4",
+          "poster": "/buildlog/vizmac/media/final-case.jpg"
         },
         {
-          "src": "/buildlog/vizkeys/media/final-case-effects.mp4",
-          "poster": "/buildlog/vizkeys/media/final-case-effects.jpg"
+          "src": "/buildlog/vizmac/media/final-case-effects.mp4",
+          "poster": "/buildlog/vizmac/media/final-case-effects.jpg"
         },
         {
-          "src": "/buildlog/vizkeys/media/final-case-open.jpg"
+          "src": "/buildlog/vizmac/media/final-case-open.jpg"
         }
       ],
       "body": "Whipped up the final case once the white test prints had settled the fit: a black shell with a silver face, a skull badge, and a cover over the two LED panels.\n\nThe firmware got a round of polish the same day:\n\n- **Wi-Fi setup from a phone:** the firmware no longer carries any Wi-Fi details. Setup opens the controller's own WPA2 network and shows a QR code for it. The phone's setup page scans it, joins, and reports back. The controller keeps its network and pairing code in its own storage. Tested with a phone.\n- **Releases:** the bundled firmware now builds without credentials, and the OTA password is the pairing code.\n- **Knob:** turning right now moves right and down.\n- **Buttons:** a small high-priority task samples them every 2 ms and queues events, so a quick tap during a screen redraw isn't lost.\n- **Effect name:** no more flash of the old name after picking a new one."
     },
     {
-      "build": "vizkeys",
-      "buildTitle": "vizKeys",
+      "build": "vizmac",
+      "buildTitle": "vizMac",
       "date": "2026-09-26",
       "title": "Controller updates over Wi-Fi, from the web UI",
       "tags": [
@@ -2426,8 +2559,8 @@
       "body": "The controller is going into its case, so it needed updates without USB.\n\n- **OTA:** `pio run -e ota -t upload` flashes it over Wi-Fi in about 30 seconds. An Updating screen shows on the display, and the LED panels become a progress bar.\n- **From the web UI:** a Controller card lists each controller's firmware and offers the build bundled with vizKeys when it's newer. The controller picks up the request on its next poll, downloads the image, checks its MD5, switches app slots and restarts.\n\nA failed update leaves the running firmware alone. The web path was tested with a bad checksum first, then a real update."
     },
     {
-      "build": "vizkeys",
-      "buildTitle": "vizKeys",
+      "build": "vizmac",
+      "buildTitle": "vizMac",
       "date": "2026-09-25",
       "title": "Controller firmware: Dock UI, then rendering on the device",
       "tags": [
@@ -2437,19 +2570,19 @@
       ],
       "media": [
         {
-          "src": "/buildlog/vizkeys/media/keyboard-vortex.mp4",
-          "poster": "/buildlog/vizkeys/media/keyboard-vortex.jpg"
+          "src": "/buildlog/vizmac/media/keyboard-vortex.mp4",
+          "poster": "/buildlog/vizmac/media/keyboard-vortex.jpg"
         },
         {
-          "src": "/buildlog/vizkeys/media/knob-through-effects.mp4",
-          "poster": "/buildlog/vizkeys/media/knob-through-effects.jpg"
+          "src": "/buildlog/vizmac/media/knob-through-effects.mp4",
+          "poster": "/buildlog/vizmac/media/knob-through-effects.jpg"
         }
       ],
       "body": "Plan steps 3 to 5 all landed the same day:\n\n- **Finding vizKeys:** Wi-Fi access on the Mac with a 6-character pairing code, advertised over Bonjour. The controller found it in one lookup and loaded all 25 effects.\n- **UI:** a design agent drew three concepts at 240x320 portrait, rendered with the real TFT_eSPI fonts. I picked A, \"Dock\": home, quick menu, effect browser, tune, palette picker and status screens, with Slackey for titles.\n- **Knob:** turns pick the effect, applied once it rests for 350 ms. Networking runs on core 0 so the UI on core 1 never blocks.\n- **LED preview:** vizKeys streamed a 16x8 DDP preview of the keyboard to the two panels at 30 fps.\n\nStreaming pixels over Wi-Fi looked chunky. vizKeys now sends a small sync packet each frame (clock, audio, keypresses) instead, and the controller runs the Noodle effects and ported built-ins itself at 40 fps on both the screen and the panels. A frozen rainbow matched the Mac exactly.\n\nWith the panels showing the effect, the mini keyboard on the home screen was redundant, so it came out.\n\n> **Lesson:** don't stream pixels to a device that can render. Send the clock and the inputs and let it draw."
     },
     {
-      "build": "vizkeys",
-      "buildTitle": "vizKeys",
+      "build": "vizmac",
+      "buildTitle": "vizMac",
       "date": "2026-09-25",
       "title": "Desk controller bring-up: S3-Tiny, screen, knob, two 8x8 panels",
       "tags": [
@@ -2459,27 +2592,27 @@
       ],
       "media": [
         {
-          "src": "/buildlog/vizkeys/media/case-front-white.jpg"
+          "src": "/buildlog/vizmac/media/case-front-white.jpg"
         },
         {
-          "src": "/buildlog/vizkeys/media/case-blue.jpg"
+          "src": "/buildlog/vizmac/media/case-blue.jpg"
         },
         {
-          "src": "/buildlog/vizkeys/media/two-8x8-panels.jpg"
+          "src": "/buildlog/vizmac/media/two-8x8-panels.jpg"
         },
         {
-          "src": "/buildlog/vizkeys/media/s3-tiny-wiring.jpg",
+          "src": "/buildlog/vizmac/media/s3-tiny-wiring.jpg",
           "caption": "Waveshare ESP32-S3-Tiny: display on GP7-GP12, encoder and buttons on GP13-GP16"
         },
         {
-          "src": "/buildlog/vizkeys/media/bringup-screen.jpg"
+          "src": "/buildlog/vizmac/media/bringup-screen.jpg"
         }
       ],
       "body": "Wired the controller from the plan: a Waveshare ESP32-S3-Tiny, the same 2.4\" ST7789 as the Noodle Console with an EC11 encoder and KO button on its board, and two 8x8 WS2812 panels chained on one data pin as a 16x8 preview. Only the S3-Tiny's edge through-holes get used, so the display sits on one edge in header order with no crossed wires.\n\nBring-up firmware checked each part on its own:\n\n- **Board:** 4 MB flash and 2 MB PSRAM found.\n- **LEDs:** solid colors, a dot walking 0 to 127, corner markers, rainbow. One panel had a dead pixel at #10, so I swapped it. All 128 work.\n- **Screen:** full 320x240 frame, colors in order.\n- **Knob and buttons:** one encoder count per click, push and KO both register.\n\nThe case is printing alongside. The white prints are test pieces for finalizing the fit.\n\n> **Trap:** this ST7789 panel is BGR. With the default RGB order, red showed as blue. The firmware now shows four labeled color bands for 3 seconds at boot to catch it."
     },
     {
-      "build": "vizkeys",
-      "buildTitle": "vizKeys",
+      "build": "vizmac",
+      "buildTitle": "vizMac",
       "date": "2026-09-24",
       "title": "Per-key RGB on the Vulcan, from driver to menu bar app",
       "tags": [
@@ -4105,5 +4238,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-26T20:15:52.898Z"
+  "generatedAt": "2026-09-27T21:08:34.272Z"
 }
