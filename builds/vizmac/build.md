@@ -32,10 +32,10 @@ The effects come in four groups:
 - **Keys:** reactive, ripple and heatmap, driven by the keyboard's own keypress reports.
 - **Audio:** spectrum and pulse, from whatever the Mac is playing, via a Core Audio process tap.
 - **Ambient:** rainbow, noise and solid.
-- **Noodle:** 17 effects and 23 palettes from Noodle 2K, the same C++ compiled unchanged into a Mac library and rendered on a 36×12 canvas that each key samples.
+- **Noodle:** 17 effects and 23 palettes from Noodle 2K. The C++ is compiled unchanged into a Mac library and drawn on a 36×12 canvas that each key samples.
 
-It runs as vizMac.app: a skull in the menu bar, a web UI for settings, start at
-login, and it reconnects on its own after unplug or sleep.
+It runs as vizMac.app: a skull in the menu bar, with a web UI for settings. It
+starts at login and reconnects by itself after an unplug or sleep.
 
 ## The desk controller
 

@@ -13,7 +13,7 @@ Plan steps 3 to 5 all landed the same day:
 - **Knob:** turns pick the effect, applied once it rests for 350 ms. Networking runs on core 0 so the UI on core 1 never blocks.
 - **LED preview:** vizKeys streamed a 16x8 DDP preview of the keyboard to the two panels at 30 fps.
 
-Streaming pixels over Wi-Fi looked chunky. vizKeys now sends a small sync packet each frame (clock, audio, keypresses) instead, and the controller runs the Noodle effects and ported built-ins itself at 40 fps on both the screen and the panels. A frozen rainbow matched the Mac exactly.
+Streaming pixels over Wi-Fi looked chunky. vizKeys now sends a small sync packet each frame instead: the clock, audio and keypresses. The controller runs the Noodle effects and the ported built-ins itself, at 40 fps on the screen and the panels. A frozen rainbow matched the Mac exactly.
 
 With the panels showing the effect, the mini keyboard on the home screen was redundant, so it came out.
 
