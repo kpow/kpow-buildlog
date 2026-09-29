@@ -37,8 +37,8 @@
       "started": "2026-09-14",
       "body": "It started with watching artists at live sketch events, each with a pocket\nsketchbook, catching an idea the moment it showed up. I wanted the same thing in\nmy own medium: a page that is an 8×8 grid and ink that is light. There was a\npractical reason too — old-school 8×8 icons had been hand-typed into C arrays in\nnoodlez-v2 and vizpow, every copy quietly drifting from the others.\n\nSo: one catalog, three ways in. A web app holds every icon and is the source of\ntruth. A handheld syncs it, browses it, draws new ones by touch, and plays them\non a real 8×8 WS2812B matrix. Any other firmware pulls the whole catalog as a\nsingle `icons.h`.\n\n## The handheld\n\nAn ESP32-2432S028 — the \"Cheap Yellow Display\" — with a 2.8\" 320×240 ILI9341\npanel and a resistive XPT2046 touchscreen, running LVGL 9 on PlatformIO. The\nmatrix hangs off a bare GPIO with no level shifter, 5V from VIN. Two build\ntargets: `cyd` puts LED data on GPIO 27, and `cyd-tx` puts it on the TX pin for a\none-cable build, with serial logging switched off so the log does not reach the\nLEDs. USB-C boards want panel inversion off and get their own `elegoo` builds.\n\nSixty-four WS2812Bs at full white would pull about 3.8 A, so brightness starts at\n40/255 on a fresh board and FastLED is held to 450 mA. How the matrix sits in the case is a\nper-device setting rather than a constant — one lookup folds rotation, flips and\nserpentine wiring together.\n\n## The format\n\nA frame is 64 palette indices, 128 hex characters, row-major from the top left.\nThe palette is global, append-only and caps at 256 colors; index 0 is black and\ndoubles as off. Icon numbers are permanent and icons are archived rather than\ndeleted, so nothing downstream ever breaks. Colors carry a family of six shades,\ngenerated for the matrix: spaced evenly by eye, snapped to what the LEDs can show,\nand checked so no two look the same on them. Old colors that icons still use live\nin an archive family.\n\n## Living in 320 KB\n\n| Budget | What's in it |\n|---|---|\n| 320 KB RAM | no PSRAM at all |\n| 4 MB flash | 2.5 MB app slot, 1.4 MB LittleFS |\n| ~50 KB free | what a TLS handshake wants |\n\nThat last line is the one that shapes the firmware. Every screen except Home is\nbuilt on entry and freed on exit, and that is what stopped sync rebooting the\nboard mid-handshake. Icons, palette and pending edits live in the flash cache, so\nthe whole thing works with the WiFi off. Sync runs on its own task on core 0 and\npulls only what changed since its cursor, twelve icons a page.\n\nEdits made on the device queue in an outbox and upload before the next pull. Each\ndraft carries a hash of the server it was drawn against, so an edit can never be\nuploaded somewhere it does not belong. If someone changed the icon first the\nserver answers 409, and the device keeps its version as a copy instead of\nthrowing the drawing away.",
       "stats": {
-        "entries": 10,
-        "photos": 14,
+        "entries": 11,
+        "photos": 17,
         "daysActive": 16,
         "firstEntry": "2026-09-14",
         "lastEntry": "2026-09-29"
@@ -106,6 +106,18 @@
           "caption": "The mobile version"
         },
         {
+          "date": "2026-09-27",
+          "src": "/buildlog/8x8/media/mobile-case-assembled.jpg"
+        },
+        {
+          "date": "2026-09-27",
+          "src": "/buildlog/8x8/media/battery-bay.jpg"
+        },
+        {
+          "date": "2026-09-27",
+          "src": "/buildlog/8x8/media/battery-bench-test.jpg"
+        },
+        {
           "date": "2026-09-29",
           "src": "/buildlog/8x8/media/fleet-v6.mp4",
           "poster": "/buildlog/8x8/media/fleet-v6.jpg"
@@ -128,6 +140,27 @@
             }
           ],
           "body": "The palettes looked right on the screen and wrong on the matrix. Stepping through a family's shades on the LCD often didn't change the LED at all.\n\nEvery color now goes through a calibration on its way to the LEDs: gamma, a gain per channel, and brightness. A new Settings → colors page shows the same test card on the screen and the matrix, with a slider for each. Tuning by eye, I ended at gamma 1.0 with no white balance at brightness 255.\n\nThe families were rebuilt for the matrix:\n\n- **Generated for the LEDs:** every shade is snapped to what the LEDs can show, then checked. None may be off, neighbors must differ by at least 3 drive levels, and no two colors may look the same.\n- **18 starter families:** 15 hues and 3 whites. Vermilion and indigo landed on red's and blue's levels when dim, and an LED can't show brown or grey.\n- **An archive:** colors that existing icons use kept their slots and moved into an archive family, hidden in both editors unless the open icon uses it. Every other slot got a new color. Production's palette is now 155 colors in 19 families.\n\nAll three handhelds run the new firmware: two USB-C boards and the first-batch micro-USB board, which still has its matrix on the TX pin.\n\n> **Note:** enclosure work has stopped. The printer blew up."
+        },
+        {
+          "date": "2026-09-27",
+          "title": "Battery build: charger board, rocker switch, JST harness",
+          "tags": [
+            "battery",
+            "enclosure",
+            "hardware"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/mobile-case-assembled.jpg"
+            },
+            {
+              "src": "/buildlog/8x8/media/battery-bay.jpg"
+            },
+            {
+              "src": "/buildlog/8x8/media/battery-bench-test.jpg"
+            }
+          ],
+          "body": "The mobile version from the render got printed and powered. A 1000 mAh LiPo sits in a bay at the front of the base, feeding the board through a battery charger board and a rocker switch.\n\nJST connector harnesses hook everything up: battery, charger, switch, board and matrix. The wiring was proven on the bench first, with the matrix running off a JST lead, before any of it went into the case."
         },
         {
           "date": "2026-09-27",
@@ -2517,6 +2550,29 @@
       "build": "8x8",
       "buildTitle": "8x8 labz",
       "date": "2026-09-27",
+      "title": "Battery build: charger board, rocker switch, JST harness",
+      "tags": [
+        "battery",
+        "enclosure",
+        "hardware"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/mobile-case-assembled.jpg"
+        },
+        {
+          "src": "/buildlog/8x8/media/battery-bay.jpg"
+        },
+        {
+          "src": "/buildlog/8x8/media/battery-bench-test.jpg"
+        }
+      ],
+      "body": "The mobile version from the render got printed and powered. A 1000 mAh LiPo sits in a bay at the front of the base, feeding the board through a battery charger board and a rocker switch.\n\nJST connector harnesses hook everything up: battery, charger, switch, board and matrix. The wiring was proven on the bench first, with the matrix running off a JST lead, before any of it went into the case."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-27",
       "title": "USB-C boards: same panel, inversion off",
       "tags": [
         "hardware",
@@ -4299,5 +4355,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-29T17:26:01.393Z"
+  "generatedAt": "2026-09-29T18:03:58.690Z"
 }
