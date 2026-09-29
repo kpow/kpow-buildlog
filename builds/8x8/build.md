@@ -36,10 +36,10 @@ panel and a resistive XPT2046 touchscreen, running LVGL 9 on PlatformIO. The
 matrix hangs off a bare GPIO with no level shifter, 5V from VIN. Two build
 targets: `cyd` puts LED data on GPIO 27, and `cyd-tx` puts it on the TX pin for a
 one-cable build, with serial logging switched off so the log does not reach the
-LEDs.
+LEDs. USB-C boards want panel inversion off and get their own `elegoo` builds.
 
-Sixty-four WS2812Bs at full white would pull about 3.8 A, so brightness is capped
-at 40/255 and FastLED is held to 450 mA. How the matrix sits in the case is a
+Sixty-four WS2812Bs at full white would pull about 3.8 A, so brightness starts at
+40/255 on a fresh board and FastLED is held to 450 mA. How the matrix sits in the case is a
 per-device setting rather than a constant — one lookup folds rotation, flips and
 serpentine wiring together.
 
@@ -48,8 +48,10 @@ serpentine wiring together.
 A frame is 64 palette indices, 128 hex characters, row-major from the top left.
 The palette is global, append-only and caps at 256 colors; index 0 is black and
 doubles as off. Icon numbers are permanent and icons are archived rather than
-deleted, so nothing downstream ever breaks. Colors carry a family, usually six
-shades generated from one base color in OKLCH so the steps look even.
+deleted, so nothing downstream ever breaks. Colors carry a family of six shades,
+generated for the matrix: spaced evenly by eye, snapped to what the LEDs can show,
+and checked so no two look the same on them. Old colors that icons still use live
+in an archive family.
 
 ## Living in 320 KB
 

@@ -1,6 +1,282 @@
 {
   "builds": [
     {
+      "slug": "8x8",
+      "title": "8x8 labz",
+      "status": "active",
+      "kind": "hardware",
+      "summary": "A pocket sketchbook for 8x8 pixel icons, synced to one shared catalog.",
+      "stack": [
+        "ESP32",
+        "LVGL",
+        "FastLED",
+        "PlatformIO",
+        "React",
+        "Postgres"
+      ],
+      "tags": [
+        "led",
+        "firmware",
+        "icons"
+      ],
+      "rung": null,
+      "facts": {
+        "matrix": "8x8",
+        "patterns": "16",
+        "transitions": "9",
+        "seedIcons": "30"
+      },
+      "repo": "kpow/8x8",
+      "hero": "/buildlog/8x8/media/hero.jpg",
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/8x8"
+        }
+      ],
+      "started": "2026-09-14",
+      "body": "It started with watching artists at live sketch events, each with a pocket\nsketchbook, catching an idea the moment it showed up. I wanted the same thing in\nmy own medium: a page that is an 8×8 grid and ink that is light. There was a\npractical reason too — old-school 8×8 icons had been hand-typed into C arrays in\nnoodlez-v2 and vizpow, every copy quietly drifting from the others.\n\nSo: one catalog, three ways in. A web app holds every icon and is the source of\ntruth. A handheld syncs it, browses it, draws new ones by touch, and plays them\non a real 8×8 WS2812B matrix. Any other firmware pulls the whole catalog as a\nsingle `icons.h`.\n\n## The handheld\n\nAn ESP32-2432S028 — the \"Cheap Yellow Display\" — with a 2.8\" 320×240 ILI9341\npanel and a resistive XPT2046 touchscreen, running LVGL 9 on PlatformIO. The\nmatrix hangs off a bare GPIO with no level shifter, 5V from VIN. Two build\ntargets: `cyd` puts LED data on GPIO 27, and `cyd-tx` puts it on the TX pin for a\none-cable build, with serial logging switched off so the log does not reach the\nLEDs. USB-C boards want panel inversion off and get their own `elegoo` builds.\n\nSixty-four WS2812Bs at full white would pull about 3.8 A, so brightness starts at\n40/255 on a fresh board and FastLED is held to 450 mA. How the matrix sits in the case is a\nper-device setting rather than a constant — one lookup folds rotation, flips and\nserpentine wiring together.\n\n## The format\n\nA frame is 64 palette indices, 128 hex characters, row-major from the top left.\nThe palette is global, append-only and caps at 256 colors; index 0 is black and\ndoubles as off. Icon numbers are permanent and icons are archived rather than\ndeleted, so nothing downstream ever breaks. Colors carry a family of six shades,\ngenerated for the matrix: spaced evenly by eye, snapped to what the LEDs can show,\nand checked so no two look the same on them. Old colors that icons still use live\nin an archive family.\n\n## Living in 320 KB\n\n| Budget | What's in it |\n|---|---|\n| 320 KB RAM | no PSRAM at all |\n| 4 MB flash | 2.5 MB app slot, 1.4 MB LittleFS |\n| ~50 KB free | what a TLS handshake wants |\n\nThat last line is the one that shapes the firmware. Every screen except Home is\nbuilt on entry and freed on exit, and that is what stopped sync rebooting the\nboard mid-handshake. Icons, palette and pending edits live in the flash cache, so\nthe whole thing works with the WiFi off. Sync runs on its own task on core 0 and\npulls only what changed since its cursor, twelve icons a page.\n\nEdits made on the device queue in an outbox and upload before the next pull. Each\ndraft carries a hash of the server it was drawn against, so an edit can never be\nuploaded somewhere it does not belong. If someone changed the icon first the\nserver answers 409, and the device keeps its version as a copy instead of\nthrowing the drawing away.",
+      "stats": {
+        "entries": 10,
+        "photos": 14,
+        "daysActive": 16,
+        "firstEntry": "2026-09-14",
+        "lastEntry": "2026-09-29"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-09-15",
+          "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg"
+        },
+        {
+          "date": "2026-09-15",
+          "src": "/buildlog/8x8/media/first-build-desk.jpg",
+          "caption": "First build"
+        },
+        {
+          "date": "2026-09-15",
+          "src": "/buildlog/8x8/media/early-prototype.jpg",
+          "caption": "32 icons over two pages"
+        },
+        {
+          "date": "2026-09-16",
+          "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
+          "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg"
+        },
+        {
+          "date": "2026-09-19",
+          "src": "/buildlog/8x8/media/case-prints.jpg"
+        },
+        {
+          "date": "2026-09-20",
+          "src": "/buildlog/8x8/media/case-apart.jpg"
+        },
+        {
+          "date": "2026-09-21",
+          "src": "/buildlog/8x8/media/hero.jpg"
+        },
+        {
+          "date": "2026-09-21",
+          "src": "/buildlog/8x8/media/editor-closeup.jpg"
+        },
+        {
+          "date": "2026-09-21",
+          "src": "/buildlog/8x8/media/pacghost-editing.mp4",
+          "poster": "/buildlog/8x8/media/pacghost-detail.jpg"
+        },
+        {
+          "date": "2026-09-21",
+          "src": "/buildlog/8x8/media/in-hand.jpg",
+          "caption": "44 icons cached, last synced 52 seconds ago"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/8x8/media/desktop-case-final.jpg"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/8x8/media/desktop-case-open.mp4",
+          "poster": "/buildlog/8x8/media/desktop-case-open.jpg"
+        },
+        {
+          "date": "2026-09-23",
+          "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
+          "kind": "render",
+          "caption": "The mobile version"
+        },
+        {
+          "date": "2026-09-29",
+          "src": "/buildlog/8x8/media/fleet-v6.mp4",
+          "poster": "/buildlog/8x8/media/fleet-v6.jpg"
+        }
+      ],
+      "lastEntry": "2026-09-29",
+      "entries": [
+        {
+          "date": "2026-09-29",
+          "title": "LED colors that match the screen, and a clean palette",
+          "tags": [
+            "color",
+            "palette",
+            "firmware"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/fleet-v6.mp4",
+              "poster": "/buildlog/8x8/media/fleet-v6.jpg"
+            }
+          ],
+          "body": "The palettes looked right on the screen and wrong on the matrix. Stepping through a family's shades on the LCD often didn't change the LED at all.\n\nEvery color now goes through a calibration on its way to the LEDs: gamma, a gain per channel, and brightness. A new Settings → colors page shows the same test card on the screen and the matrix, with a slider for each. Tuning by eye, I ended at gamma 1.0 with no white balance at brightness 255.\n\nThe families were rebuilt for the matrix:\n\n- **Generated for the LEDs:** every shade is snapped to what the LEDs can show, then checked. None may be off, neighbors must differ by at least 3 drive levels, and no two colors may look the same.\n- **18 starter families:** 15 hues and 3 whites. Vermilion and indigo landed on red's and blue's levels when dim, and an LED can't show brown or grey.\n- **An archive:** colors that existing icons use kept their slots and moved into an archive family, hidden in both editors unless the open icon uses it. Every other slot got a new color. Production's palette is now 155 colors in 19 families.\n\nAll three handhelds run the new firmware: two USB-C boards and the first-batch micro-USB board, which still has its matrix on the TX pin.\n\n> **Note:** enclosure work has stopped. The printer blew up."
+        },
+        {
+          "date": "2026-09-27",
+          "title": "USB-C boards: same panel, inversion off",
+          "tags": [
+            "hardware",
+            "display"
+          ],
+          "media": [],
+          "body": "The new ELEGOO 2.8\" USB-C boards rendered black as white. Their ILI9341 wants display inversion off, where the micro-USB boards want it on. Driver and BGR color order are the same, so the panel flags moved into one group per board type, with `elegoo`, `elegoo-tx` and `bringup-elegoo` builds beside the old ones.\n\n> **Trap:** guides call the USB-C variant an ST7789. On this board that driver only gave a white screen.\n\nDropped the runtime \"panel colors\" button from the session before. It never worked: it wrote MADCTL through a second, uninitialized TFT_eSPI instance. CN1 (GPIO 27) is wired and working on the USB-C boards."
+        },
+        {
+          "date": "2026-09-23",
+          "title": "Last desktop case: the hinge holds the screen up",
+          "tags": [
+            "enclosure",
+            "case"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/desktop-case-final.jpg"
+            },
+            {
+              "src": "/buildlog/8x8/media/desktop-case-open.mp4",
+              "poster": "/buildlog/8x8/media/desktop-case-open.jpg"
+            },
+            {
+              "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
+              "kind": "render",
+              "caption": "The mobile version"
+            }
+          ],
+          "body": "Called the desktop case done. This is the last version of it.\n\nExtended the base of the hinge, so an open lid has something behind it to lean on instead of flopping back. It looks better with that mass there too. Then the detailing: a silver skull inlay on the lid and a silver strip running along the base.\n\n> **Next:** a mobile version with a battery, built on this one."
+        },
+        {
+          "date": "2026-09-21",
+          "title": "Clamshell together, and a README",
+          "tags": [
+            "enclosure",
+            "docs"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/hero.jpg"
+            },
+            {
+              "src": "/buildlog/8x8/media/editor-closeup.jpg"
+            },
+            {
+              "src": "/buildlog/8x8/media/pacghost-editing.mp4",
+              "poster": "/buildlog/8x8/media/pacghost-detail.jpg"
+            },
+            {
+              "src": "/buildlog/8x8/media/in-hand.jpg",
+              "caption": "44 icons cached, last synced 52 seconds ago"
+            }
+          ],
+          "body": "Got the clamshell together. A printed threaded rod runs through a two-part hinge with a knurled head on one end, and there are detents at the knuckle interface so tightening actually holds the angle. Plain chamfers top and bottom, because the curved edges never printed clean and I stopped pretending they would.\n\nBacked out the touch changes I made for the second board. The first board didn't want them.\n\nThen the README, origin story included: a pocket sketchbook where the page is 8×8 and the ink is light."
+        },
+        {
+          "date": "2026-09-20",
+          "title": "Projective touch calibration, and LED rotation per device",
+          "tags": [
+            "touch",
+            "settings"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/case-apart.jpg"
+            }
+          ],
+          "body": "Touch was the day. Moved to pressure-based reads, threw out the four-corner min and max map for a projective calibration, and made the handheld run calibration on first boot instead of shipping my bring-up constants to every board.\n\nLED rotation became a per-device setting in NVS too, because every matrix ends up mounted a different way in a different case, and a constant only ever describes the one on my desk."
+        },
+        {
+          "date": "2026-09-19",
+          "title": "Another round of case bodies",
+          "tags": [
+            "enclosure",
+            "printing"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/case-prints.jpg"
+            }
+          ],
+          "body": "Printed another round of case bodies and lined them up against the last one. No electronics in any of them. These were only to see how the shells come off the plate and how the lid sits shut.\n\nPrinting a clamshell is mostly a hinge problem. Everything else is a box."
+        },
+        {
+          "date": "2026-09-16",
+          "title": "A day of just using it",
+          "tags": [
+            "bench"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
+              "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg"
+            }
+          ],
+          "body": "No commits. A day of just using it.\n\nThirty-nine icons synced, stepping through them with the transitions running and the sync age up in the title bar. The matrix is still living in its own frame on printed knurled thumb screws.\n\nThe firmware is doing what it should. The enclosure is the open question."
+        },
+        {
+          "date": "2026-09-15",
+          "title": "Renamed to 8x8 labz, and color families",
+          "tags": [
+            "design",
+            "palette"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg"
+            },
+            {
+              "src": "/buildlog/8x8/media/first-build-desk.jpg",
+              "caption": "First build"
+            }
+          ],
+          "body": "Renamed 8x8 Studio to 8x8 labz, and redid both front ends neobrutalist: cream paper, black ink, thick borders, hard offset shadows, Slackey headings, lowercase everywhere, and a matching boot title card on the handheld.\n\nThe palette got split into families of six OKLCH shades. Picking a colour on a 320×240 resistive panel is now a family dropdown and twelve swatches, instead of hunting a 256-colour grid with a fingernail.\n\nHome is four big tiles with a live mirror of the LEDs."
+        },
+        {
+          "date": "2026-09-15",
+          "title": "Phases 5 and 6 — matrix player, touch editor, edit uploads",
+          "tags": [
+            "firmware",
+            "editor",
+            "leds"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/8x8/media/early-prototype.jpg",
+              "caption": "32 icons over two pages"
+            }
+          ],
+          "body": "Phases 5 and 6, one sitting. The matrix got a player with nine transitions and sixteen ambient patterns ported from vizpow.\n\nThen the screens went in around it: browse, detail, settings and touch calibration. The editor came last, with pencil, fill, picker, eraser, undo and animation frames.\n\nTwo bugs worth keeping:\n\n- the LVGL draw buffer has to be aligned, or the screen comes up blank and noisy with no error anywhere\n- screens must be freed on leave, because the sync task needs about fifty kilobytes free for its TLS handshake and a leftover screen is exactly what it doesn't have"
+        },
+        {
+          "date": "2026-09-14",
+          "title": "Icon format, web app, and first light on the CYD",
+          "tags": [
+            "format",
+            "web",
+            "bringup"
+          ],
+          "media": [],
+          "body": "Whole spine in a day, both ends of it.\n\nThe web side first: the icon format and its shared library, a C header export, and a Postgres-backed API under the catalog, editor and palette pages. Deployed onto DigitalOcean App Platform the same afternoon.\n\nThen the firmware. Scaffold, CYD bring-up, WiFi setup, and a first sync landing real icons in a LittleFS cache.\n\nThe panel fought back for an hour. Colours only come out right as BGR with inversion on, and the ILI9341 has no reset pin, so it keeps whatever inversion state it had across a warm reset and has to be told again at every boot."
+        }
+      ]
+    },
+    {
       "slug": "vizmac",
       "title": "vizMac",
       "status": "active",
@@ -261,251 +537,6 @@
           ],
           "media": [],
           "body": "Got the ROCCAT Vulcan Pro TKL taking per-key colors from the Mac in one day, built in layers and tested on the keyboard after each one:\n\n- **Driver:** USB HID direct mode, with the onboard lighting backed up and restored on every exit. The key map was checked key by key; Menu and Fn are swapped compared to OpenRGB.\n- **Effects:** a fixed-rate engine on an x/y key grid, the built-ins, and 17 Noodle 2K effects compiled unchanged from noodlez-v2.\n- **Inputs:** keypresses from the keyboard's own HID reports, and Mac system audio through a Core Audio process tap, analyzed the same way as the Noodle audio sat.\n- **App:** vizKeys.app puts a skull in the menu bar and serves a web UI with palette swatches. It starts at login and reconnects after an unplug or sleep.\n\nIt started as kpowRGBkey and became vizKeys the same day. The plan for an ESP32-S3 desk controller went in last: a knob, a 2.4\" screen and two 8x8 panels as a live preview.\n\n> **Trap:** the keyboard rejects direct mode unless the lighting packet sent just before it is in mode 0x09. Echoing the stored profile only worked while the profile happened to be in that mode. When it flipped to static, vizKeys said \"connected\" and the keys kept their onboard lighting. vizKeys now forces 0x09 and writes the original back on exit."
-        }
-      ]
-    },
-    {
-      "slug": "8x8",
-      "title": "8x8 labz",
-      "status": "active",
-      "kind": "hardware",
-      "summary": "A pocket sketchbook for 8x8 pixel icons, synced to one shared catalog.",
-      "stack": [
-        "ESP32",
-        "LVGL",
-        "FastLED",
-        "PlatformIO",
-        "React",
-        "Postgres"
-      ],
-      "tags": [
-        "led",
-        "firmware",
-        "icons"
-      ],
-      "rung": null,
-      "facts": {
-        "matrix": "8x8",
-        "patterns": "16",
-        "transitions": "9",
-        "seedIcons": "30"
-      },
-      "repo": "kpow/8x8",
-      "hero": "/buildlog/8x8/media/hero.jpg",
-      "links": [
-        {
-          "label": "repo",
-          "url": "https://github.com/kpow/8x8"
-        }
-      ],
-      "started": "2026-09-14",
-      "body": "It started with watching artists at live sketch events, each with a pocket\nsketchbook, catching an idea the moment it showed up. I wanted the same thing in\nmy own medium: a page that is an 8×8 grid and ink that is light. There was a\npractical reason too — old-school 8×8 icons had been hand-typed into C arrays in\nnoodlez-v2 and vizpow, every copy quietly drifting from the others.\n\nSo: one catalog, three ways in. A web app holds every icon and is the source of\ntruth. A handheld syncs it, browses it, draws new ones by touch, and plays them\non a real 8×8 WS2812B matrix. Any other firmware pulls the whole catalog as a\nsingle `icons.h`.\n\n## The handheld\n\nAn ESP32-2432S028 — the \"Cheap Yellow Display\" — with a 2.8\" 320×240 ILI9341\npanel and a resistive XPT2046 touchscreen, running LVGL 9 on PlatformIO. The\nmatrix hangs off a bare GPIO with no level shifter, 5V from VIN. Two build\ntargets: `cyd` puts LED data on GPIO 27, and `cyd-tx` puts it on the TX pin for a\none-cable build, with serial logging switched off so the log does not reach the\nLEDs.\n\nSixty-four WS2812Bs at full white would pull about 3.8 A, so brightness is capped\nat 40/255 and FastLED is held to 450 mA. How the matrix sits in the case is a\nper-device setting rather than a constant — one lookup folds rotation, flips and\nserpentine wiring together.\n\n## The format\n\nA frame is 64 palette indices, 128 hex characters, row-major from the top left.\nThe palette is global, append-only and caps at 256 colors; index 0 is black and\ndoubles as off. Icon numbers are permanent and icons are archived rather than\ndeleted, so nothing downstream ever breaks. Colors carry a family, usually six\nshades generated from one base color in OKLCH so the steps look even.\n\n## Living in 320 KB\n\n| Budget | What's in it |\n|---|---|\n| 320 KB RAM | no PSRAM at all |\n| 4 MB flash | 2.5 MB app slot, 1.4 MB LittleFS |\n| ~50 KB free | what a TLS handshake wants |\n\nThat last line is the one that shapes the firmware. Every screen except Home is\nbuilt on entry and freed on exit, and that is what stopped sync rebooting the\nboard mid-handshake. Icons, palette and pending edits live in the flash cache, so\nthe whole thing works with the WiFi off. Sync runs on its own task on core 0 and\npulls only what changed since its cursor, twelve icons a page.\n\nEdits made on the device queue in an outbox and upload before the next pull. Each\ndraft carries a hash of the server it was drawn against, so an edit can never be\nuploaded somewhere it does not belong. If someone changed the icon first the\nserver answers 409, and the device keeps its version as a copy instead of\nthrowing the drawing away.",
-      "stats": {
-        "entries": 8,
-        "photos": 13,
-        "daysActive": 10,
-        "firstEntry": "2026-09-14",
-        "lastEntry": "2026-09-23"
-      },
-      "git": null,
-      "picturesOverTime": [
-        {
-          "date": "2026-09-15",
-          "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg"
-        },
-        {
-          "date": "2026-09-15",
-          "src": "/buildlog/8x8/media/first-build-desk.jpg",
-          "caption": "First build"
-        },
-        {
-          "date": "2026-09-15",
-          "src": "/buildlog/8x8/media/early-prototype.jpg",
-          "caption": "32 icons over two pages"
-        },
-        {
-          "date": "2026-09-16",
-          "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
-          "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg"
-        },
-        {
-          "date": "2026-09-19",
-          "src": "/buildlog/8x8/media/case-prints.jpg"
-        },
-        {
-          "date": "2026-09-20",
-          "src": "/buildlog/8x8/media/case-apart.jpg"
-        },
-        {
-          "date": "2026-09-21",
-          "src": "/buildlog/8x8/media/hero.jpg"
-        },
-        {
-          "date": "2026-09-21",
-          "src": "/buildlog/8x8/media/editor-closeup.jpg"
-        },
-        {
-          "date": "2026-09-21",
-          "src": "/buildlog/8x8/media/pacghost-editing.mp4",
-          "poster": "/buildlog/8x8/media/pacghost-detail.jpg"
-        },
-        {
-          "date": "2026-09-21",
-          "src": "/buildlog/8x8/media/in-hand.jpg",
-          "caption": "44 icons cached, last synced 52 seconds ago"
-        },
-        {
-          "date": "2026-09-23",
-          "src": "/buildlog/8x8/media/desktop-case-final.jpg"
-        },
-        {
-          "date": "2026-09-23",
-          "src": "/buildlog/8x8/media/desktop-case-open.mp4",
-          "poster": "/buildlog/8x8/media/desktop-case-open.jpg"
-        },
-        {
-          "date": "2026-09-23",
-          "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
-          "kind": "render",
-          "caption": "The mobile version"
-        }
-      ],
-      "lastEntry": "2026-09-23",
-      "entries": [
-        {
-          "date": "2026-09-23",
-          "title": "Last desktop case: the hinge holds the screen up",
-          "tags": [
-            "enclosure",
-            "case"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/8x8/media/desktop-case-final.jpg"
-            },
-            {
-              "src": "/buildlog/8x8/media/desktop-case-open.mp4",
-              "poster": "/buildlog/8x8/media/desktop-case-open.jpg"
-            },
-            {
-              "src": "/buildlog/8x8/media/mobile-version-cad.jpg",
-              "kind": "render",
-              "caption": "The mobile version"
-            }
-          ],
-          "body": "Called the desktop case done. This is the last version of it.\n\nExtended the base of the hinge, so an open lid has something behind it to lean on instead of flopping back. It looks better with that mass there too. Then the detailing: a silver skull inlay on the lid and a silver strip running along the base.\n\n> **Next:** a mobile version with a battery, built on this one."
-        },
-        {
-          "date": "2026-09-21",
-          "title": "Clamshell together, and a README",
-          "tags": [
-            "enclosure",
-            "docs"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/8x8/media/hero.jpg"
-            },
-            {
-              "src": "/buildlog/8x8/media/editor-closeup.jpg"
-            },
-            {
-              "src": "/buildlog/8x8/media/pacghost-editing.mp4",
-              "poster": "/buildlog/8x8/media/pacghost-detail.jpg"
-            },
-            {
-              "src": "/buildlog/8x8/media/in-hand.jpg",
-              "caption": "44 icons cached, last synced 52 seconds ago"
-            }
-          ],
-          "body": "Got the clamshell together. A printed threaded rod runs through a two-part hinge with a knurled head on one end, and there are detents at the knuckle interface so tightening actually holds the angle. Plain chamfers top and bottom, because the curved edges never printed clean and I stopped pretending they would.\n\nBacked out the touch changes I made for the second board. The first board didn't want them.\n\nThen the README, origin story included: a pocket sketchbook where the page is 8×8 and the ink is light."
-        },
-        {
-          "date": "2026-09-20",
-          "title": "Projective touch calibration, and LED rotation per device",
-          "tags": [
-            "touch",
-            "settings"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/8x8/media/case-apart.jpg"
-            }
-          ],
-          "body": "Touch was the day. Moved to pressure-based reads, threw out the four-corner min and max map for a projective calibration, and made the handheld run calibration on first boot instead of shipping my bring-up constants to every board.\n\nLED rotation became a per-device setting in NVS too, because every matrix ends up mounted a different way in a different case, and a constant only ever describes the one on my desk."
-        },
-        {
-          "date": "2026-09-19",
-          "title": "Another round of case bodies",
-          "tags": [
-            "enclosure",
-            "printing"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/8x8/media/case-prints.jpg"
-            }
-          ],
-          "body": "Printed another round of case bodies and lined them up against the last one. No electronics in any of them. These were only to see how the shells come off the plate and how the lid sits shut.\n\nPrinting a clamshell is mostly a hinge problem. Everything else is a box."
-        },
-        {
-          "date": "2026-09-16",
-          "title": "A day of just using it",
-          "tags": [
-            "bench"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/8x8/media/matrix-yellow-cross.mp4",
-              "poster": "/buildlog/8x8/media/matrix-yellow-cross.jpg"
-            }
-          ],
-          "body": "No commits. A day of just using it.\n\nThirty-nine icons synced, stepping through them with the transitions running and the sync age up in the title bar. The matrix is still living in its own frame on printed knurled thumb screws.\n\nThe firmware is doing what it should. The enclosure is the open question."
-        },
-        {
-          "date": "2026-09-15",
-          "title": "Renamed to 8x8 labz, and color families",
-          "tags": [
-            "design",
-            "palette"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/8x8/media/editor-magenta-sprite.jpg"
-            },
-            {
-              "src": "/buildlog/8x8/media/first-build-desk.jpg",
-              "caption": "First build"
-            }
-          ],
-          "body": "Renamed 8x8 Studio to 8x8 labz, and redid both front ends neobrutalist: cream paper, black ink, thick borders, hard offset shadows, Slackey headings, lowercase everywhere, and a matching boot title card on the handheld.\n\nThe palette got split into families of six OKLCH shades. Picking a colour on a 320×240 resistive panel is now a family dropdown and twelve swatches, instead of hunting a 256-colour grid with a fingernail.\n\nHome is four big tiles with a live mirror of the LEDs."
-        },
-        {
-          "date": "2026-09-15",
-          "title": "Phases 5 and 6 — matrix player, touch editor, edit uploads",
-          "tags": [
-            "firmware",
-            "editor",
-            "leds"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/8x8/media/early-prototype.jpg",
-              "caption": "32 icons over two pages"
-            }
-          ],
-          "body": "Phases 5 and 6, one sitting. The matrix got a player with nine transitions and sixteen ambient patterns ported from vizpow.\n\nThen the screens went in around it: browse, detail, settings and touch calibration. The editor came last, with pencil, fill, picker, eraser, undo and animation frames.\n\nTwo bugs worth keeping:\n\n- the LVGL draw buffer has to be aligned, or the screen comes up blank and noisy with no error anywhere\n- screens must be freed on leave, because the sync task needs about fifty kilobytes free for its TLS handshake and a leftover screen is exactly what it doesn't have"
-        },
-        {
-          "date": "2026-09-14",
-          "title": "Icon format, web app, and first light on the CYD",
-          "tags": [
-            "format",
-            "web",
-            "bringup"
-          ],
-          "media": [],
-          "body": "Whole spine in a day, both ends of it.\n\nThe web side first: the icon format and its shared library, a C header export, and a Postgres-backed API under the catalog, editor and palette pages. Deployed onto DigitalOcean App Platform the same afternoon.\n\nThen the firmware. Scaffold, CYD bring-up, WiFi setup, and a first sync landing real icons in a LittleFS cache.\n\nThe panel fought back for an hour. Colours only come out right as BGR with inversion on, and the ILI9341 has no reset pin, so it keeps whatever inversion state it had across a warm reset and has to be told again at every boot."
         }
       ]
     },
@@ -2465,6 +2496,36 @@
   ],
   "recent": [
     {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-29",
+      "title": "LED colors that match the screen, and a clean palette",
+      "tags": [
+        "color",
+        "palette",
+        "firmware"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/8x8/media/fleet-v6.mp4",
+          "poster": "/buildlog/8x8/media/fleet-v6.jpg"
+        }
+      ],
+      "body": "The palettes looked right on the screen and wrong on the matrix. Stepping through a family's shades on the LCD often didn't change the LED at all.\n\nEvery color now goes through a calibration on its way to the LEDs: gamma, a gain per channel, and brightness. A new Settings → colors page shows the same test card on the screen and the matrix, with a slider for each. Tuning by eye, I ended at gamma 1.0 with no white balance at brightness 255.\n\nThe families were rebuilt for the matrix:\n\n- **Generated for the LEDs:** every shade is snapped to what the LEDs can show, then checked. None may be off, neighbors must differ by at least 3 drive levels, and no two colors may look the same.\n- **18 starter families:** 15 hues and 3 whites. Vermilion and indigo landed on red's and blue's levels when dim, and an LED can't show brown or grey.\n- **An archive:** colors that existing icons use kept their slots and moved into an archive family, hidden in both editors unless the open icon uses it. Every other slot got a new color. Production's palette is now 155 colors in 19 families.\n\nAll three handhelds run the new firmware: two USB-C boards and the first-batch micro-USB board, which still has its matrix on the TX pin.\n\n> **Note:** enclosure work has stopped. The printer blew up."
+    },
+    {
+      "build": "8x8",
+      "buildTitle": "8x8 labz",
+      "date": "2026-09-27",
+      "title": "USB-C boards: same panel, inversion off",
+      "tags": [
+        "hardware",
+        "display"
+      ],
+      "media": [],
+      "body": "The new ELEGOO 2.8\" USB-C boards rendered black as white. Their ILI9341 wants display inversion off, where the micro-USB boards want it on. Driver and BGR color order are the same, so the panel flags moved into one group per board type, with `elegoo`, `elegoo-tx` and `bringup-elegoo` builds beside the old ones.\n\n> **Trap:** guides call the USB-C variant an ST7789. On this board that driver only gave a white screen.\n\nDropped the runtime \"panel colors\" button from the session before. It never worked: it wrote MADCTL through a second, uninitialized TFT_eSPI instance. CN1 (GPIO 27) is wired and working on the USB-C boards."
+    },
+    {
       "build": "vizmac",
       "buildTitle": "vizMac",
       "date": "2026-09-27",
@@ -4238,5 +4299,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-09-28T00:47:22.547Z"
+  "generatedAt": "2026-09-29T17:26:01.393Z"
 }
