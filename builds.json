@@ -36,8 +36,8 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 20,
-        "photos": 14,
+        "entries": 28,
+        "photos": 17,
         "daysActive": 259,
         "firstEntry": "2026-01-24",
         "lastEntry": "2026-10-09"
@@ -106,6 +106,21 @@
           "src": "/buildlog/vizbot/media/face-2.jpg"
         },
         {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizbot/media/lcd169-dock.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizbot/media/lcd169-settings.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-09-25",
+          "src": "/buildlog/vizbot/media/lcd169-settings-look.jpg",
+          "kind": "screenshot"
+        },
+        {
           "date": "2026-10-09",
           "src": "/buildlog/vizbot/media/lcd169-light-sound.jpg",
           "kind": "screenshot"
@@ -127,6 +142,104 @@
             }
           ],
           "body": "The Waveshare 1.69 has a passive piezo buzzer on GPIO42, and the firmware had never touched it. Waveshare's FAQ says a floating buzzer pin keeps drawing current through the LDO and heats the board. The pin is now held low from the first line of setup, and the board feels cooler.\n\nThe CoreS3 sound engine plays on it now, all 37 sequences. A piezo has one voice, so:\n\n- **Lead only:** bass and drum channels are skipped, or they'd chop the melody.\n- **Chords:** the top note wins.\n- **Range:** anything under G5 (784 Hz) moves up whole octaves, because the piezo is faint down there.\n\nTapping the face boops. Menu swipes, toggles and buttons each get a sound. After 5 minutes alone it chirps with a matching face, every 4 to 12 minutes, never between 10pm and 8am. Settings › Light has Sound and Volume. Shipped as v3.7.5.\n\n> **Dead end:** I hoped the floating pin explained why the 1.69 can't join WiFi at full 19.5 dBm TX power. With the pin held low it still failed 0 of 6 times at 19.5 and connected 5 of 5 at 15, so it stays at 15."
+        },
+        {
+          "date": "2026-10-08",
+          "title": "Camera only for photos + one palette set across the fleet",
+          "tags": [
+            "stackchan",
+            "palettes",
+            "camera"
+          ],
+          "media": [],
+          "body": "The Stackchan camera driver only runs for a photo now. The DMA channel is released after every stop, so a restart can't leave two channels wired to the camera. Other I2C users wait while the camera sets itself up. TLS buffers moved to PSRAM, which frees about 44 KB of internal RAM per HTTPS connection.\n\nvizBot now renders the same 23 palettes, with the same ids, as the Noodle console, vizSpot and vizMac. The file is generated in the Noodle repo and copied in, so every effect call stayed the same. The old 15 palettes are gone, including 8 custom ones. Saved palette numbers still load but point at different palettes now. Shipped as 3.7.0."
+        },
+        {
+          "date": "2026-10-02",
+          "title": "Brain sprint 2: web search, Spotify, a new voice + WiFi rejoin",
+          "tags": [
+            "vizbrain",
+            "voice",
+            "wifi"
+          ],
+          "media": [],
+          "body": "Second round on the brain:\n\n- **Web search:** Claude's server-side search, two searches at most. About 4¢ an answer. Only the text before the first search and after the last gets spoken, and the \"let me check\" line plays the moment a search starts.\n- **Music:** what's playing, play/pause/next, volume, and playing a Spotify link it found with search. It goes through vizMac.\n- **Voice:** replies use Kokoro-82M, running locally on the Mac's CPU, instead of macOS `say`. `/v1/say` speaks exact text on the bot with no model call.\n\nOn the firmware side: auto-reconnect was off, and the boot attempt was the only retry, so a router blip at night left Stackchan offline until someone power-cycled it. A watchdog now rejoins after 30 s down, backing off to every 5 minutes. A forced drop came back in 70 s."
+        },
+        {
+          "date": "2026-10-01",
+          "title": "vizBot Brain 1.0: camera, arrivals, memory",
+          "tags": [
+            "stackchan",
+            "camera",
+            "vizbrain"
+          ],
+          "media": [],
+          "body": "Same day, second half: senses.\n\n- **Camera:** the head camera takes a photo and sends it to Claude, so \"what am I holding?\" works.\n- **Arrivals:** motion after a quiet spell counts as someone walking in, and it says hi.\n- **Lean-in:** the proximity sensor notices a face up close and it reacts.\n- **Memory and routines:** it remembers things you tell it and runs scheduled ones.\n\n> **Trap:** the first arrival test greeted an empty room. A screen turning off changed part of the view. It now ignores cells that always change, needs about a second of sustained motion, and checks a photo before saying hi.\n\nShipped as 3.6.0."
+        },
+        {
+          "date": "2026-10-01",
+          "title": "vizBot Brain 1.0: Stackchan talks",
+          "tags": [
+            "stackchan",
+            "voice",
+            "vizbrain"
+          ],
+          "media": [],
+          "body": "Stackchan talks now. Tap the front of its head, ask something, and it answers out loud with lip-sync. The thinking runs in vizbrain, a Python app on a Mac: Whisper turns speech into text, Claude writes the reply, and the Mac speaks it back to the bot.\n\nI planned on a middle-pad tap, but a finger on the middle also maxes the front or back pad and fired nod or shake. Front tap it is.\n\nThe rest was speed:\n\n- **Streaming:** the bot plays the reply while it downloads (101 ms to first sound), and vizbrain speaks sentence by sentence while Claude is still writing. Typed request to first sound went from 3-4 s to about 2.2 s.\n- **Fewer calls:** faces and gestures ride in the reply as tags, so most turns are one Claude call. Prompt caching took a turn from about 0.6¢ to 0.2¢."
+        },
+        {
+          "date": "2026-09-28",
+          "title": "Stackchan: pick how long it chills",
+          "tags": [
+            "stackchan"
+          ],
+          "media": [],
+          "body": "Chill length is a setting now: 10, 30, 60 or 120 minutes. It's in Settings › Head on the bot, a Chill for dropdown in the web panel, and `/bot/chill/minutes`. Saved across reboots. Shipped as 3.4.2."
+        },
+        {
+          "date": "2026-09-25",
+          "title": "Face-first touch UI on every touch board",
+          "tags": [
+            "touch-ui",
+            "lcd169",
+            "cores3"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/lcd169-dock.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/vizbot/media/lcd169-settings.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/vizbot/media/lcd169-settings-look.jpg",
+              "kind": "screenshot"
+            }
+          ],
+          "body": "The hidden long-press grid is gone. The face is the home screen now: tap to poke it, swipe sideways to change the scene, swipe up for a dock. Gestures are detected in software and tolerate missed reads while the I2C bus is busy.\n\n- **1.69:** dock with Mood, Scene, Weather, Clock, Light and More. The face shrinks into the top half as a live preview. Settings are six category pages with one control per 44 px row.\n- **CoreS3, Stackchan, Faces:** the same idea in landscape, with side rails and a master-detail settings page. The rail slot changes by build: Head on Stackchan, Games on Faces, Connect on a plain CoreS3.\n- **Web panel:** picking a personality works again, pages render as UTF-8, and the Connected dot turns red when the bot stops answering.\n\nTwo dev endpoints, `/debug/screen` and `/debug/touch`, screenshot and drive the UI over WiFi."
+        },
+        {
+          "date": "2026-09-24",
+          "title": "1.69 WiFi: it was the TX power",
+          "tags": [
+            "lcd169",
+            "wifi"
+          ],
+          "media": [],
+          "body": "The Waveshare 1.69 couldn't join WiFi or get an address at full 19.5 dBm transmit power. Receive was fine; the router just never heard it. A TX sweep on two boards connected every time at 15 dBm and failed every time at 19.5, so the 1.69 now runs at 15.\n\n> **Trap:** `WiFi.setTxPower()` silently does nothing if it runs before WiFi has started, and `getTxPower()` then reports 19.5 anyway. The per-board setting had never actually applied. It now calls `esp_wifi_set_max_tx_power()` directly, again after `WiFi.begin()`, and logs the real value."
+        },
+        {
+          "date": "2026-09-16",
+          "title": "Faces base: vizBot in a CoreS3 game base",
+          "tags": [
+            "faces",
+            "cores3",
+            "leds"
+          ],
+          "media": [],
+          "body": "New target for a CoreS3 sitting in an M5Stack Faces Bottom3: a gamepad panel and two rows of five SK6812 LEDs. It shares flash with the kFun game console, and a chooser in the factory partition picks between them.\n\nIt's deliberately not the Stackchan target. That one assumes servos, head touch and a power monitor without probing, so here it would report a healthy servo stack and then block the loop for about 4.6 s every five minutes hunting for hardware that isn't there. The new flag pulls in the LED effect engine and nothing else, and all ten LED modes run unchanged on the 10-LED strip.\n\n> **Trap:** the strips' data line is GPIO13, which is also the CoreS3's I2S bit clock. Mic, speaker and LEDs can't all run. Audio no longer starts at boot, because just starting the mic filled the strips with garbage."
         },
         {
           "date": "2026-08-30",
@@ -2566,6 +2679,58 @@
       "body": "The Waveshare 1.69 has a passive piezo buzzer on GPIO42, and the firmware had never touched it. Waveshare's FAQ says a floating buzzer pin keeps drawing current through the LDO and heats the board. The pin is now held low from the first line of setup, and the board feels cooler.\n\nThe CoreS3 sound engine plays on it now, all 37 sequences. A piezo has one voice, so:\n\n- **Lead only:** bass and drum channels are skipped, or they'd chop the melody.\n- **Chords:** the top note wins.\n- **Range:** anything under G5 (784 Hz) moves up whole octaves, because the piezo is faint down there.\n\nTapping the face boops. Menu swipes, toggles and buttons each get a sound. After 5 minutes alone it chirps with a matching face, every 4 to 12 minutes, never between 10pm and 8am. Settings › Light has Sound and Volume. Shipped as v3.7.5.\n\n> **Dead end:** I hoped the floating pin explained why the 1.69 can't join WiFi at full 19.5 dBm TX power. With the pin held low it still failed 0 of 6 times at 19.5 and connected 5 of 5 at 15, so it stays at 15."
     },
     {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-08",
+      "title": "Camera only for photos + one palette set across the fleet",
+      "tags": [
+        "stackchan",
+        "palettes",
+        "camera"
+      ],
+      "media": [],
+      "body": "The Stackchan camera driver only runs for a photo now. The DMA channel is released after every stop, so a restart can't leave two channels wired to the camera. Other I2C users wait while the camera sets itself up. TLS buffers moved to PSRAM, which frees about 44 KB of internal RAM per HTTPS connection.\n\nvizBot now renders the same 23 palettes, with the same ids, as the Noodle console, vizSpot and vizMac. The file is generated in the Noodle repo and copied in, so every effect call stayed the same. The old 15 palettes are gone, including 8 custom ones. Saved palette numbers still load but point at different palettes now. Shipped as 3.7.0."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-02",
+      "title": "Brain sprint 2: web search, Spotify, a new voice + WiFi rejoin",
+      "tags": [
+        "vizbrain",
+        "voice",
+        "wifi"
+      ],
+      "media": [],
+      "body": "Second round on the brain:\n\n- **Web search:** Claude's server-side search, two searches at most. About 4¢ an answer. Only the text before the first search and after the last gets spoken, and the \"let me check\" line plays the moment a search starts.\n- **Music:** what's playing, play/pause/next, volume, and playing a Spotify link it found with search. It goes through vizMac.\n- **Voice:** replies use Kokoro-82M, running locally on the Mac's CPU, instead of macOS `say`. `/v1/say` speaks exact text on the bot with no model call.\n\nOn the firmware side: auto-reconnect was off, and the boot attempt was the only retry, so a router blip at night left Stackchan offline until someone power-cycled it. A watchdog now rejoins after 30 s down, backing off to every 5 minutes. A forced drop came back in 70 s."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-01",
+      "title": "vizBot Brain 1.0: camera, arrivals, memory",
+      "tags": [
+        "stackchan",
+        "camera",
+        "vizbrain"
+      ],
+      "media": [],
+      "body": "Same day, second half: senses.\n\n- **Camera:** the head camera takes a photo and sends it to Claude, so \"what am I holding?\" works.\n- **Arrivals:** motion after a quiet spell counts as someone walking in, and it says hi.\n- **Lean-in:** the proximity sensor notices a face up close and it reacts.\n- **Memory and routines:** it remembers things you tell it and runs scheduled ones.\n\n> **Trap:** the first arrival test greeted an empty room. A screen turning off changed part of the view. It now ignores cells that always change, needs about a second of sustained motion, and checks a photo before saying hi.\n\nShipped as 3.6.0."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-01",
+      "title": "vizBot Brain 1.0: Stackchan talks",
+      "tags": [
+        "stackchan",
+        "voice",
+        "vizbrain"
+      ],
+      "media": [],
+      "body": "Stackchan talks now. Tap the front of its head, ask something, and it answers out loud with lip-sync. The thinking runs in vizbrain, a Python app on a Mac: Whisper turns speech into text, Claude writes the reply, and the Mac speaks it back to the bot.\n\nI planned on a middle-pad tap, but a finger on the middle also maxes the front or back pad and fired nod or shake. Front tap it is.\n\nThe rest was speed:\n\n- **Streaming:** the bot plays the reply while it downloads (101 ms to first sound), and vizbrain speaks sentence by sentence while Claude is still writing. Typed request to first sound went from 3-4 s to about 2.2 s.\n- **Fewer calls:** faces and gestures ride in the reply as tags, so most turns are one Claude call. Prompt caching took a turn from about 0.6¢ to 0.2¢."
+    },
+    {
       "build": "8x8",
       "buildTitle": "8x8 labz",
       "date": "2026-09-29",
@@ -2582,6 +2747,17 @@
         }
       ],
       "body": "The palettes looked right on the screen and wrong on the matrix. Stepping through a family's shades on the LCD often didn't change the LED at all.\n\nEvery color now goes through a calibration on its way to the LEDs: gamma, a gain per channel, and brightness. A new Settings → colors page shows the same test card on the screen and the matrix, with a slider for each. Tuning by eye, I ended at gamma 1.0 with no white balance at brightness 255.\n\nThe families were rebuilt for the matrix:\n\n- **Generated for the LEDs:** every shade is snapped to what the LEDs can show, then checked. None may be off, neighbors must differ by at least 3 drive levels, and no two colors may look the same.\n- **18 starter families:** 15 hues and 3 whites. Vermilion and indigo landed on red's and blue's levels when dim, and an LED can't show brown or grey.\n- **An archive:** colors that existing icons use kept their slots and moved into an archive family, hidden in both editors unless the open icon uses it. Every other slot got a new color. Production's palette is now 155 colors in 19 families.\n\nAll three handhelds run the new firmware: two USB-C boards and the first-batch micro-USB board, which still has its matrix on the TX pin.\n\n> **Note:** enclosure work has stopped. The printer blew up."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-09-28",
+      "title": "Stackchan: pick how long it chills",
+      "tags": [
+        "stackchan"
+      ],
+      "media": [],
+      "body": "Chill length is a setting now: 10, 30, 60 or 120 minutes. It's in Settings › Head on the bot, a Chill for dropdown in the web panel, and `/bot/chill/minutes`. Saved across reboots. Shipped as 3.4.2."
     },
     {
       "build": "8x8",
@@ -2713,6 +2889,32 @@
       "body": "The controller is going into its case, so it needed updates without USB.\n\n- **OTA:** `pio run -e ota -t upload` flashes it over Wi-Fi in about 30 seconds. An Updating screen shows on the display, and the LED panels become a progress bar.\n- **From the web UI:** a Controller card lists each controller's firmware and offers the build bundled with vizKeys when it's newer. The controller picks up the request on its next poll, downloads the image, checks its MD5, switches app slots and restarts.\n\nA failed update leaves the running firmware alone. The web path was tested with a bad checksum first, then a real update."
     },
     {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-09-25",
+      "title": "Face-first touch UI on every touch board",
+      "tags": [
+        "touch-ui",
+        "lcd169",
+        "cores3"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/lcd169-dock.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/vizbot/media/lcd169-settings.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/vizbot/media/lcd169-settings-look.jpg",
+          "kind": "screenshot"
+        }
+      ],
+      "body": "The hidden long-press grid is gone. The face is the home screen now: tap to poke it, swipe sideways to change the scene, swipe up for a dock. Gestures are detected in software and tolerate missed reads while the I2C bus is busy.\n\n- **1.69:** dock with Mood, Scene, Weather, Clock, Light and More. The face shrinks into the top half as a live preview. Settings are six category pages with one control per 44 px row.\n- **CoreS3, Stackchan, Faces:** the same idea in landscape, with side rails and a master-detail settings page. The rail slot changes by build: Head on Stackchan, Games on Faces, Connect on a plain CoreS3.\n- **Web panel:** picking a personality works again, pages render as UTF-8, and the Connected dot turns red when the bot stops answering.\n\nTwo dev endpoints, `/debug/screen` and `/debug/touch`, screenshot and drive the UI over WiFi."
+    },
+    {
       "build": "vizmac",
       "buildTitle": "vizMac",
       "date": "2026-09-25",
@@ -2763,6 +2965,18 @@
         }
       ],
       "body": "Wired the controller from the plan. It's a Waveshare ESP32-S3-Tiny with the same 2.4\" ST7789 as the Noodle Console, which has an EC11 encoder and a KO button on its board. Two 8x8 WS2812 panels chain on one data pin as a 16x8 preview. Only the S3-Tiny's edge through-holes get used, so the display sits on one edge in header order with no crossed wires.\n\nBring-up firmware checked each part on its own:\n\n- **Board:** 4 MB flash and 2 MB PSRAM found.\n- **LEDs:** solid colors, a dot walking 0 to 127, corner markers, rainbow. One panel had a dead pixel at #10, so I swapped it. All 128 work.\n- **Screen:** full 320x240 frame, colors in order.\n- **Knob and buttons:** one encoder count per click, push and KO both register.\n\nThe case is printing alongside. The white prints are test pieces for finalizing the fit.\n\n> **Trap:** this ST7789 panel is BGR. With the default RGB order, red showed as blue. The firmware now shows four labeled color bands for 3 seconds at boot to catch it."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-09-24",
+      "title": "1.69 WiFi: it was the TX power",
+      "tags": [
+        "lcd169",
+        "wifi"
+      ],
+      "media": [],
+      "body": "The Waveshare 1.69 couldn't join WiFi or get an address at full 19.5 dBm transmit power. Receive was fine; the router just never heard it. A TX sweep on two boards connected every time at 15 dBm and failed every time at 19.5, so the 1.69 now runs at 15.\n\n> **Trap:** `WiFi.setTxPower()` silently does nothing if it runs before WiFi has started, and `getTxPower()` then reports 19.5 anyway. The per-board setting had never actually applied. It now calls `esp_wifi_set_max_tx_power()` directly, again after `WiFi.begin()`, and logs the real value."
     },
     {
       "build": "vizmac",
@@ -2929,6 +3143,19 @@
         }
       ],
       "body": "Reworked the motion. The old version slid one section out and back like a tray, and sometimes nothing actually changed on screen. Now every line moves at once while part of the grid rebuilds and a colour block slides to a new cell.\n\nThat turned up a bug where remixing the whole canvas skipped moving the lines at all.\n\nThe Color knob is one smooth sweep now, built on the spacing between Mondrian's own red, blue and yellow, with his palette sitting in the middle of the range.\n\nFlashed it to the rig and every colour was wrong. Took me a minute to notice the global palette tint was still switched on, quietly re-mapping a pattern that brings its own colours."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-09-16",
+      "title": "Faces base: vizBot in a CoreS3 game base",
+      "tags": [
+        "faces",
+        "cores3",
+        "leds"
+      ],
+      "media": [],
+      "body": "New target for a CoreS3 sitting in an M5Stack Faces Bottom3: a gamepad panel and two rows of five SK6812 LEDs. It shares flash with the kFun game console, and a chooser in the factory partition picks between them.\n\nIt's deliberately not the Stackchan target. That one assumes servos, head touch and a power monitor without probing, so here it would report a healthy servo stack and then block the loop for about 4.6 s every five minutes hunting for hardware that isn't there. The new flag pulls in the LED effect engine and nothing else, and all ten LED modes run unchanged on the 10-LED strip.\n\n> **Trap:** the strips' data line is GPIO13, which is also the CoreS3's I2S bit clock. Mic, speaker and LEDs can't all run. Audio no longer starts at boot, because just starting the mic filled the strips with garbage."
     },
     {
       "build": "8x8",
@@ -4392,5 +4619,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-09T12:25:49.908Z"
+  "generatedAt": "2026-10-09T12:36:01.362Z"
 }
