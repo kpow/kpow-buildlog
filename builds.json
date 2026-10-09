@@ -37,7 +37,7 @@
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
         "entries": 29,
-        "photos": 18,
+        "photos": 19,
         "daysActive": 259,
         "firstEntry": "2026-01-24",
         "lastEntry": "2026-10-09"
@@ -122,6 +122,11 @@
         },
         {
           "date": "2026-10-09",
+          "src": "/buildlog/vizbot/media/lcd169-ring-shell.mp4",
+          "poster": "/buildlog/vizbot/media/lcd169-ring-shell.jpg"
+        },
+        {
+          "date": "2026-10-09",
           "src": "/buildlog/vizbot/media/lcd169-led-ring.jpg",
           "caption": "8 x WS2812B on GPIO17, fed from 5V instead of the board's 3V3 regulator"
         },
@@ -141,6 +146,10 @@
             "leds"
           ],
           "media": [
+            {
+              "src": "/buildlog/vizbot/media/lcd169-ring-shell.mp4",
+              "poster": "/buildlog/vizbot/media/lcd169-ring-shell.jpg"
+            },
             {
               "src": "/buildlog/vizbot/media/lcd169-led-ring.jpg",
               "caption": "8 x WS2812B on GPIO17, fed from 5V instead of the board's 3V3 regulator"
@@ -2692,6 +2701,10 @@
       ],
       "media": [
         {
+          "src": "/buildlog/vizbot/media/lcd169-ring-shell.mp4",
+          "poster": "/buildlog/vizbot/media/lcd169-ring-shell.jpg"
+        },
+        {
           "src": "/buildlog/vizbot/media/lcd169-led-ring.jpg",
           "caption": "8 x WS2812B on GPIO17, fed from 5V instead of the board's 3V3 regulator"
         }
@@ -4656,5 +4669,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-09T13:49:00.750Z"
+  "generatedAt": "2026-10-09T15:02:03.819Z"
 }
