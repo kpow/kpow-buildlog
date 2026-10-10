@@ -36,11 +36,11 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 29,
-        "photos": 19,
-        "daysActive": 259,
+        "entries": 31,
+        "photos": 21,
+        "daysActive": 260,
         "firstEntry": "2026-01-24",
-        "lastEntry": "2026-10-09"
+        "lastEntry": "2026-10-10"
       },
       "git": null,
       "picturesOverTime": [
@@ -134,10 +134,43 @@
           "date": "2026-10-09",
           "src": "/buildlog/vizbot/media/lcd169-light-sound.jpg",
           "kind": "screenshot"
+        },
+        {
+          "date": "2026-10-10",
+          "src": "/buildlog/vizbot/media/lcd169-matrix-5x5.mp4",
+          "poster": "/buildlog/vizbot/media/lcd169-matrix-5x5.jpg",
+          "caption": "The 5x5 panel"
+        },
+        {
+          "date": "2026-10-10",
+          "src": "/buildlog/vizbot/media/lcd169-matrix-4x4.mp4",
+          "poster": "/buildlog/vizbot/media/lcd169-matrix-4x4.jpg",
+          "caption": "The 4x4 panel it replaced"
         }
       ],
-      "lastEntry": "2026-10-09",
+      "lastEntry": "2026-10-10",
       "entries": [
+        {
+          "date": "2026-10-10",
+          "title": "1.69 LED matrix: a 5x5 copy of the screen inside the shell",
+          "tags": [
+            "lcd169",
+            "leds"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/lcd169-matrix-5x5.mp4",
+              "poster": "/buildlog/vizbot/media/lcd169-matrix-5x5.jpg",
+              "caption": "The 5x5 panel"
+            },
+            {
+              "src": "/buildlog/vizbot/media/lcd169-matrix-4x4.mp4",
+              "poster": "/buildlog/vizbot/media/lcd169-matrix-4x4.jpg",
+              "caption": "The 4x4 panel it replaced"
+            }
+          ],
+          "body": "The 8-LED ring in the 1.69 was swapped for a 4x4 WS2812B panel, then a 5x5 the same evening. Wiring is unchanged: GPIO17, powered from 5V.\n\nA grid can show the picture, which the ring couldn't. Screen mode now splits the drawn frame into 25 patches and gives each LED the average colour of its patch. Averaging, not one pixel per LED, is there to keep fine stripes from strobing. The ring's 7 motions aren't used on the panel.\n\nThe panel is wired zig-zag, and the other modes walk that chain. Going from 4x4 to 5x5 was two numbers in the config. 25 LEDs update in 0.57 ms. Shipped as v3.7.15."
+        },
         {
           "date": "2026-10-09",
           "title": "1.69 LED ring: the inside glows with the screen",
@@ -156,6 +189,17 @@
             }
           ],
           "body": "An 8-LED WS2812B ring on GPIO17 now lights the inside of the 1.69 bot. It runs on the same LED engine as the Stack-chan ring and the Faces strips, as a third backend.\n\nThe new default mode follows the screen. A 2D effect can't map onto 8 LEDs pixel for pixel, so the ring copies two things:\n\n- **Colour:** sampled from the frame actually drawn. The background effects build colour from a rotating hue, not the palette setting, so reading the palette would have been wrong.\n- **Motion:** each of the 16 effects maps to one of 7 ring motions. Galaxy spins, Scanline sweeps, Snakes become two chasing dots.\n\nWhen the background isn't an effect, the ring breathes in the face's mood colour. Tapping the face flashes the ring in the colour of the reaction it pulls, then fades back. Settings › Light has Ring brightness and Ring mode, and both survive a reboot. Shipped as v3.7.11.\n\n> **Note:** At full brightness the ring update takes 0.64 ms of a 33 ms frame, and WiFi still joined 5 of 5 boots at 15 dBm."
+        },
+        {
+          "date": "2026-10-09",
+          "title": "Hey vizBot: a wake word trained on the bot's own mic",
+          "tags": [
+            "stackchan",
+            "voice",
+            "wake-word"
+          ],
+          "media": [],
+          "body": "Saying \"Hey vizBot\" now starts a voice turn on the Stackchan, the same as tapping the front of its head. Detection runs on the Mac in vizbrain. The bot streams mic audio over UDP only while the room is louder than its noise floor, with 1 second of pre-roll.\n\nThe model is an openWakeWord classifier trained on 47 real \"Hey vizBot\"s recorded through the bot's mic, plus 7,129 synthetic ones. The first model false-fired about 1,000 times per 10 hours. Ramping the negative weight to 1500 brought that to 6.5, next to 4.7 for openWakeWord's own hey_jarvis on the same test.\n\nThe first live try scored 0.99, and the reply started about 1.5 seconds after I stopped talking. Firmware 3.7.13.\n\n> **Trap:** Whisper can't label wake-word recordings. On quiet clips it invents \"Thanks for watching!\", and prompted with the phrase it hears it in music. A page with a Record button and a script fixed it: one labelled clip per press."
         },
         {
           "date": "2026-10-09",
@@ -2693,6 +2737,29 @@
     {
       "build": "vizbot",
       "buildTitle": "vizBot",
+      "date": "2026-10-10",
+      "title": "1.69 LED matrix: a 5x5 copy of the screen inside the shell",
+      "tags": [
+        "lcd169",
+        "leds"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/lcd169-matrix-5x5.mp4",
+          "poster": "/buildlog/vizbot/media/lcd169-matrix-5x5.jpg",
+          "caption": "The 5x5 panel"
+        },
+        {
+          "src": "/buildlog/vizbot/media/lcd169-matrix-4x4.mp4",
+          "poster": "/buildlog/vizbot/media/lcd169-matrix-4x4.jpg",
+          "caption": "The 4x4 panel it replaced"
+        }
+      ],
+      "body": "The 8-LED ring in the 1.69 was swapped for a 4x4 WS2812B panel, then a 5x5 the same evening. Wiring is unchanged: GPIO17, powered from 5V.\n\nA grid can show the picture, which the ring couldn't. Screen mode now splits the drawn frame into 25 patches and gives each LED the average colour of its patch. Averaging, not one pixel per LED, is there to keep fine stripes from strobing. The ring's 7 motions aren't used on the panel.\n\nThe panel is wired zig-zag, and the other modes walk that chain. Going from 4x4 to 5x5 was two numbers in the config. 25 LEDs update in 0.57 ms. Shipped as v3.7.15."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
       "date": "2026-10-09",
       "title": "1.69 LED ring: the inside glows with the screen",
       "tags": [
@@ -2710,6 +2777,19 @@
         }
       ],
       "body": "An 8-LED WS2812B ring on GPIO17 now lights the inside of the 1.69 bot. It runs on the same LED engine as the Stack-chan ring and the Faces strips, as a third backend.\n\nThe new default mode follows the screen. A 2D effect can't map onto 8 LEDs pixel for pixel, so the ring copies two things:\n\n- **Colour:** sampled from the frame actually drawn. The background effects build colour from a rotating hue, not the palette setting, so reading the palette would have been wrong.\n- **Motion:** each of the 16 effects maps to one of 7 ring motions. Galaxy spins, Scanline sweeps, Snakes become two chasing dots.\n\nWhen the background isn't an effect, the ring breathes in the face's mood colour. Tapping the face flashes the ring in the colour of the reaction it pulls, then fades back. Settings › Light has Ring brightness and Ring mode, and both survive a reboot. Shipped as v3.7.11.\n\n> **Note:** At full brightness the ring update takes 0.64 ms of a 33 ms frame, and WiFi still joined 5 of 5 boots at 15 dBm."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-09",
+      "title": "Hey vizBot: a wake word trained on the bot's own mic",
+      "tags": [
+        "stackchan",
+        "voice",
+        "wake-word"
+      ],
+      "media": [],
+      "body": "Saying \"Hey vizBot\" now starts a voice turn on the Stackchan, the same as tapping the front of its head. Detection runs on the Mac in vizbrain. The bot streams mic audio over UDP only while the room is louder than its noise floor, with 1 second of pre-roll.\n\nThe model is an openWakeWord classifier trained on 47 real \"Hey vizBot\"s recorded through the bot's mic, plus 7,129 synthetic ones. The first model false-fired about 1,000 times per 10 hours. Ramping the negative weight to 1500 brought that to 6.5, next to 4.7 for openWakeWord's own hey_jarvis on the same test.\n\nThe first live try scored 0.99, and the reply started about 1.5 seconds after I stopped talking. Firmware 3.7.13.\n\n> **Trap:** Whisper can't label wake-word recordings. On quiet clips it invents \"Thanks for watching!\", and prompted with the phrase it hears it in music. A page with a Record button and a script fixed it: one labelled clip per press."
     },
     {
       "build": "vizbot",
@@ -4669,5 +4749,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-09T15:02:03.819Z"
+  "generatedAt": "2026-10-10T16:44:50.151Z"
 }
