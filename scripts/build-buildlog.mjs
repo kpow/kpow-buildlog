@@ -118,6 +118,8 @@ for (const slug of readdirSync(CONTENT)) {
     facts: data.facts || {},            // build-specific stat chips, e.g. { satellites: 7 }
     repo: data.repo || null,            // owner/name — for the git fetch step
     hero: data.hero ? `/buildlog/${slug}/${data.hero}` : null,
+    // optional clip that plays in the build page's hero band; hero stays the still (card, share image, poster)
+    heroVideo: data.heroVideo ? `/buildlog/${slug}/${data.heroVideo}` : null,
     links: Array.isArray(data.links) ? data.links : [],
     started: data.started || null,
     body,

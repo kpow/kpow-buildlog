@@ -26,7 +26,8 @@
         "deployed": "4"
       },
       "repo": "kpow/vizpow",
-      "hero": "/buildlog/vizbot/media/stackchan-hero.jpg",
+      "hero": "/buildlog/vizbot/media/bots-matrix-hero.jpg",
+      "heroVideo": "/buildlog/vizbot/media/bots-matrix-hero.mp4",
       "links": [
         {
           "label": "repo",
@@ -36,11 +37,11 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 31,
-        "photos": 21,
-        "daysActive": 260,
+        "entries": 33,
+        "photos": 24,
+        "daysActive": 262,
         "firstEntry": "2026-01-24",
-        "lastEntry": "2026-10-10"
+        "lastEntry": "2026-10-12"
       },
       "git": null,
       "picturesOverTime": [
@@ -146,10 +147,56 @@
           "src": "/buildlog/vizbot/media/lcd169-matrix-4x4.mp4",
           "poster": "/buildlog/vizbot/media/lcd169-matrix-4x4.jpg",
           "caption": "The 4x4 panel it replaced"
+        },
+        {
+          "date": "2026-10-11",
+          "src": "/buildlog/vizbot/media/pendant-parts.jpg"
+        },
+        {
+          "date": "2026-10-12",
+          "src": "/buildlog/vizbot/media/pendant-in-hand.mp4",
+          "poster": "/buildlog/vizbot/media/pendant-in-hand.jpg"
+        },
+        {
+          "date": "2026-10-12",
+          "src": "/buildlog/vizbot/media/pendant-case.jpg"
         }
       ],
-      "lastEntry": "2026-10-10",
+      "lastEntry": "2026-10-12",
       "entries": [
+        {
+          "date": "2026-10-12",
+          "title": "1.69 pendant: low power mode, and a PSRAM flag that hid the cloud",
+          "tags": [
+            "lcd169",
+            "pendant",
+            "power"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/pendant-in-hand.mp4",
+              "poster": "/buildlog/vizbot/media/pendant-in-hand.jpg"
+            },
+            {
+              "src": "/buildlog/vizbot/media/pendant-case.jpg"
+            }
+          ],
+          "body": "The pendant has no use for WiFi, so the 1.69 got a low power mode. Hold Low power in System and the bot restarts into it:\n\n- **Radio:** never started. No WiFi join, hotspot, web server, mesh or cloud.\n- **CPU:** 80 MHz instead of 240.\n- **Backlight:** 60% of the brightness setting.\n\nBoot went from 8.2 s to 1.3 s. Current draw isn't measured yet. The pendant runs without the 5x5 LED panel. Shipped as v3.7.19.\n\n> **Trap:** The boot log said \"PSRAM: not found\" while the canvas sat in PSRAM. The build used a no-PSRAM board definition, so the Arduino core compiled its PSRAM check to return false. That capped cloud replies at 16 KB. Registration is 42,702 bytes, so this 1.69 had never registered. One build flag fixed it in v3.7.20."
+        },
+        {
+          "date": "2026-10-11",
+          "title": "1.69 on battery: a power latch and a way to turn it off",
+          "tags": [
+            "lcd169",
+            "power"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/pendant-parts.jpg"
+            }
+          ],
+          "body": "A LiPo cell went into the 1.69 for a pendant version. On battery the board's PWR button only feeds it while the button is held.\n\nThe firmware now drives SYS_EN (GPIO41) high at the top of setup(), which keeps the board on after the button is released. Two ways to turn it off again:\n\n- **PWR button:** hold for 2 s.\n- **Touch UI:** the Power off hold row in System.\n\nBoth save settings, show \"Goodbye!\", then drop the latch. On USB the latch can't cut power, so the bot restarts instead. Shipped as v3.7.18."
+        },
         {
           "date": "2026-10-10",
           "title": "1.69 LED matrix: a 5x5 copy of the screen inside the shell",
@@ -598,6 +645,7 @@
       },
       "repo": "kpow/8x8",
       "hero": "/buildlog/8x8/media/hero.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "repo",
@@ -909,6 +957,7 @@
       },
       "repo": "kpow/vizMac",
       "hero": "/buildlog/vizmac/media/hero.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "repo",
@@ -1173,6 +1222,7 @@
       },
       "repo": "kpow/noodlez-v2",
       "hero": "/buildlog/noodle/media/noodle-2k-lit.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "repo",
@@ -1606,6 +1656,7 @@
       },
       "repo": "kpow/kfun",
       "hero": "/buildlog/kfun/media/megafun-hero.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "repo",
@@ -1922,6 +1973,7 @@
       },
       "repo": "kpow/vizSpot",
       "hero": "/buildlog/vizspot/media/hero.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "repo",
@@ -2090,6 +2142,7 @@
       },
       "repo": "kpow/ESP32-Plane-Radar",
       "hero": "/buildlog/radar/media/hero.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "repo",
@@ -2239,6 +2292,7 @@
       },
       "repo": "kpow/phantasyphish",
       "hero": "/buildlog/phantasyfish/media/hero.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "site",
@@ -2478,6 +2532,7 @@
       },
       "repo": "kpow/stackled",
       "hero": "/buildlog/stackled/media/hero.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "repo",
@@ -2607,6 +2662,7 @@
       },
       "repo": "kpow/noodle-exp",
       "hero": "/buildlog/cyberdeck/media/hero.jpg",
+      "heroVideo": null,
       "links": [
         {
           "label": "repo",
@@ -2734,6 +2790,43 @@
     }
   ],
   "recent": [
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-12",
+      "title": "1.69 pendant: low power mode, and a PSRAM flag that hid the cloud",
+      "tags": [
+        "lcd169",
+        "pendant",
+        "power"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/pendant-in-hand.mp4",
+          "poster": "/buildlog/vizbot/media/pendant-in-hand.jpg"
+        },
+        {
+          "src": "/buildlog/vizbot/media/pendant-case.jpg"
+        }
+      ],
+      "body": "The pendant has no use for WiFi, so the 1.69 got a low power mode. Hold Low power in System and the bot restarts into it:\n\n- **Radio:** never started. No WiFi join, hotspot, web server, mesh or cloud.\n- **CPU:** 80 MHz instead of 240.\n- **Backlight:** 60% of the brightness setting.\n\nBoot went from 8.2 s to 1.3 s. Current draw isn't measured yet. The pendant runs without the 5x5 LED panel. Shipped as v3.7.19.\n\n> **Trap:** The boot log said \"PSRAM: not found\" while the canvas sat in PSRAM. The build used a no-PSRAM board definition, so the Arduino core compiled its PSRAM check to return false. That capped cloud replies at 16 KB. Registration is 42,702 bytes, so this 1.69 had never registered. One build flag fixed it in v3.7.20."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-11",
+      "title": "1.69 on battery: a power latch and a way to turn it off",
+      "tags": [
+        "lcd169",
+        "power"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/pendant-parts.jpg"
+        }
+      ],
+      "body": "A LiPo cell went into the 1.69 for a pendant version. On battery the board's PWR button only feeds it while the button is held.\n\nThe firmware now drives SYS_EN (GPIO41) high at the top of setup(), which keeps the board on after the button is released. Two ways to turn it off again:\n\n- **PWR button:** hold for 2 s.\n- **Touch UI:** the Power off hold row in System.\n\nBoth save settings, show \"Goodbye!\", then drop the latch. On USB the latch can't cut power, so the bot restarts instead. Shipped as v3.7.18."
+    },
     {
       "build": "vizbot",
       "buildTitle": "vizBot",
@@ -4749,5 +4842,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-10T16:44:50.151Z"
+  "generatedAt": "2026-10-12T14:28:05.037Z"
 }

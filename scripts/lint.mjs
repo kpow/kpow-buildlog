@@ -87,7 +87,11 @@ for (const slug of targets) {
   else if (!existsSync(join(dir, hero))) err(`${slug}/build.md`, `hero ${hero} doesn't exist`);
   if (!b.body) warn(`${slug}/build.md`, "empty body — Project Info has no description");
 
-  const used = new Set(hero ? [hero] : []);
+  const heroVideo = field(b.fm, "heroVideo");
+  if (heroVideo && !existsSync(join(dir, heroVideo))) err(`${slug}/build.md`, `heroVideo ${heroVideo} doesn't exist`);
+  if (heroVideo && !hero) err(`${slug}/build.md`, "heroVideo: needs a hero: still as well — the index card and poster use it");
+
+  const used = new Set([hero, heroVideo].filter(Boolean));
   const logDir = join(dir, "log");
   const files = existsSync(logDir) ? readdirSync(logDir).filter((f) => f.endsWith(".md")).sort() : [];
 

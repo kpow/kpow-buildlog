@@ -11,7 +11,8 @@ repo: kpow/vizpow
 facts:
   expressions: 25
   deployed: 4
-hero: media/stackchan-hero.jpg
+hero: media/bots-matrix-hero.jpg
+heroVideo: media/bots-matrix-hero.mp4
 links:
   - { label: repo, url: https://github.com/kpow/vizpow }
 started: 2026-01-24

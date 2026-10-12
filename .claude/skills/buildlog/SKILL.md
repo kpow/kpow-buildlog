@@ -118,6 +118,7 @@ repo: kpow/ESP32-Plane-Radar
 facts:
   aircraft: 64             # 0-4 stat chips; must be true and checkable
 hero: media/hero.jpg
+heroVideo: media/hero.mp4  # optional: plays in the build page hero; hero: stays the still (card, poster)
 links:
   - { label: repo, url: https://github.com/kpow/ESP32-Plane-Radar }
 started: 2026-06-13
