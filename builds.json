@@ -37,8 +37,8 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 33,
-        "photos": 24,
+        "entries": 34,
+        "photos": 26,
         "daysActive": 262,
         "firstEntry": "2026-01-24",
         "lastEntry": "2026-10-12"
@@ -154,6 +154,17 @@
         },
         {
           "date": "2026-10-12",
+          "src": "/buildlog/vizbot/media/pendant-striped-case.mp4",
+          "poster": "/buildlog/vizbot/media/pendant-striped-case.jpg",
+          "caption": "3 bars, about 3 h 20 min into the low power run-down"
+        },
+        {
+          "date": "2026-10-12",
+          "src": "/buildlog/vizbot/media/pendant-skull-case.mp4",
+          "poster": "/buildlog/vizbot/media/pendant-skull-case.jpg"
+        },
+        {
+          "date": "2026-10-12",
           "src": "/buildlog/vizbot/media/pendant-in-hand.mp4",
           "poster": "/buildlog/vizbot/media/pendant-in-hand.jpg"
         },
@@ -164,6 +175,27 @@
       ],
       "lastEntry": "2026-10-12",
       "entries": [
+        {
+          "date": "2026-10-12",
+          "title": "1.69 pendant: a battery meter, a low-battery cutoff, two new cases",
+          "tags": [
+            "lcd169",
+            "pendant",
+            "power"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/pendant-striped-case.mp4",
+              "poster": "/buildlog/vizbot/media/pendant-striped-case.jpg",
+              "caption": "3 bars, about 3 h 20 min into the low power run-down"
+            },
+            {
+              "src": "/buildlog/vizbot/media/pendant-skull-case.mp4",
+              "poster": "/buildlog/vizbot/media/pendant-skull-case.jpg"
+            }
+          ],
+          "body": "The 1.69 board already feeds the battery to GPIO1 through a 200k/100k divider, so the pendant got a battery meter with no new parts. A multimeter on the cell read 4.1 V where the firmware read 4.146 V.\n\n- **Top pill:** a 0 to 4 bar battery, or a bolt while a computer's USB is attached.\n- **System page:** a Battery row with percent and volts.\n- **Cutoff:** under 3.30 V for 10 s on battery, it shows \"Battery empty\" and drops the power latch.\n\nThe first percent scale was a generic LiPo curve. The pendant logged a full run-down to its own flash to replace it: 3 h 11 min with WiFi on. One hour in, with two hours left, the generic curve would have said 9%.\n\n> **Trap:** Nothing on the board stops the cell draining flat. That run went down to 2.6 V and rebooted once there before it died. 3.30 V was 12 minutes from the end.\n\nTwo more pendants got cases: one in green stripes, one black with green LED ears.\n\nA second run-down in low power mode is still going. The cutoff has only fired on a faked reading so far. Running on two pendants as v3.7.26, not released yet."
+        },
         {
           "date": "2026-10-12",
           "title": "1.69 pendant: low power mode, and a PSRAM flag that hid the cloud",
@@ -2794,6 +2826,29 @@
       "build": "vizbot",
       "buildTitle": "vizBot",
       "date": "2026-10-12",
+      "title": "1.69 pendant: a battery meter, a low-battery cutoff, two new cases",
+      "tags": [
+        "lcd169",
+        "pendant",
+        "power"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/pendant-striped-case.mp4",
+          "poster": "/buildlog/vizbot/media/pendant-striped-case.jpg",
+          "caption": "3 bars, about 3 h 20 min into the low power run-down"
+        },
+        {
+          "src": "/buildlog/vizbot/media/pendant-skull-case.mp4",
+          "poster": "/buildlog/vizbot/media/pendant-skull-case.jpg"
+        }
+      ],
+      "body": "The 1.69 board already feeds the battery to GPIO1 through a 200k/100k divider, so the pendant got a battery meter with no new parts. A multimeter on the cell read 4.1 V where the firmware read 4.146 V.\n\n- **Top pill:** a 0 to 4 bar battery, or a bolt while a computer's USB is attached.\n- **System page:** a Battery row with percent and volts.\n- **Cutoff:** under 3.30 V for 10 s on battery, it shows \"Battery empty\" and drops the power latch.\n\nThe first percent scale was a generic LiPo curve. The pendant logged a full run-down to its own flash to replace it: 3 h 11 min with WiFi on. One hour in, with two hours left, the generic curve would have said 9%.\n\n> **Trap:** Nothing on the board stops the cell draining flat. That run went down to 2.6 V and rebooted once there before it died. 3.30 V was 12 minutes from the end.\n\nTwo more pendants got cases: one in green stripes, one black with green LED ears.\n\nA second run-down in low power mode is still going. The cutoff has only fired on a faked reading so far. Running on two pendants as v3.7.26, not released yet."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-12",
       "title": "1.69 pendant: low power mode, and a PSRAM flag that hid the cloud",
       "tags": [
         "lcd169",
@@ -4842,5 +4897,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-12T14:28:05.037Z"
+  "generatedAt": "2026-10-13T02:47:13.236Z"
 }
