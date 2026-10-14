@@ -37,11 +37,11 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 34,
+        "entries": 38,
         "photos": 26,
-        "daysActive": 262,
+        "daysActive": 264,
         "firstEntry": "2026-01-24",
-        "lastEntry": "2026-10-12"
+        "lastEntry": "2026-10-14"
       },
       "git": null,
       "picturesOverTime": [
@@ -173,8 +173,52 @@
           "src": "/buildlog/vizbot/media/pendant-case.jpg"
         }
       ],
-      "lastEntry": "2026-10-12",
+      "lastEntry": "2026-10-14",
       "entries": [
+        {
+          "date": "2026-10-14",
+          "title": "v3.7.31 out, and a factory image that boot-looped a new 1.69",
+          "tags": [
+            "release",
+            "lcd169",
+            "flash"
+          ],
+          "media": [],
+          "body": "v3.7.31 went out for all four boards: the 1.69 battery meter and touch fix, and the Stackchan pairing with vizbrain.\n\nThe 1.69 and 1.3 factory images carried a QIO flash header. A new 1.69 with a different flash chip boot-looped on one, because the ROM can't read that chip in QIO. The same file flashed in DIO mode booted fine.\n\nPlatformIO builds the bootloader with a DIO header even for QIO boards; the bootloader switches modes itself. The build script was stamping QIO over it while merging the factory image. It now keeps the header as built. The two files on the release were replaced the same day; only the 33-byte bootloader header changed."
+        },
+        {
+          "date": "2026-10-14",
+          "title": "First friend install, and what a second Mac caught",
+          "tags": [
+            "vizbrain",
+            "macos",
+            "release"
+          ],
+          "media": [],
+          "body": "vizbrain is shared by invitation: each person gets an install link from me, and all the instructions are public. Before sending one, I ran the whole thing on my other Mac as a friend would.\n\nIt installed and Claude answered, but the bot never switched over. The background copy got \"No route to host\" on every call to him, while the same call from Terminal worked.\n\n> **Trap:** macOS Local Network privacy blocks login agents, not Terminal. A bare Python agent gets filed under \"Python\", and on that Mac the switch was on and still didn't apply. vizbrain now installs a small vizbrain.app and points the agent at it, so macOS asks once for \"vizbrain\". The bot paired 40 s later.\n\nThe same test turned up two more:\n\n- **Restart:** `vizbrain restart` left it stopped. The \"already running?\" check mistook the old copy's closing connections for a running copy.\n- **Personal keys:** mine needs a workspace ID sent with every request. Setup now asks for it.\n\nAll three went out as 1.1.1. I wiped that Mac and installed from scratch following only the README, and the bot answered. Then a friend installed it herself, and it worked exactly as expected."
+        },
+        {
+          "date": "2026-10-13",
+          "title": "vizbrain 1.1.0: ready to hand to a friend",
+          "tags": [
+            "vizbrain",
+            "stackchan",
+            "security"
+          ],
+          "media": [],
+          "body": "vizbrain had only ever run on one Mac, from a git checkout, in this lab. Before giving it to a friend, five reviews went over it: install, assumptions about my house, security, what a first run looks like, and the docs.\n\nWhat they found:\n\n- **Anyone on the WiFi could spend my API key.** The server listened on every interface with no check, and any web page open on the Mac could post to it too.\n- **It called everyone Kevin**, assumed Richmond for weather and search, and said \"Lights on!\" in a house with no lights.\n- **The install failed at step one.** A stock Mac's Python is 3.9; vizbrain needs 3.11.\n- **\"Hey vizBot\" only exists on my disk.** The model is trained on my voice, so friends get head-tap only.\n\n1.1.0 fixes those. The typing page and log answer only on the Mac itself, and the bot's routes need a pairing token that the brain hands the bot (firmware 3.7.31). Spending stops at $2 a day or $20 a month, and he says so. His name for you comes from the Mac account, a setup step asks for your city, and tools for gear that isn't there aren't offered. A one-line installer brings its own Python, and `vizbrain doctor` checks everything and prints a report safe to paste to me.\n\nTested on the Stackchan: flashed 3.7.31, it paired, and the first sentence started 1.7 s after I stopped talking. Requests without the token were refused."
+        },
+        {
+          "date": "2026-10-13",
+          "title": "1.69: a touch chip that dozed off, and a reset pin that wasn't wired",
+          "tags": [
+            "lcd169",
+            "touch",
+            "fix"
+          ],
+          "media": [],
+          "body": "One 1.69 logged an I2C read error about 17 times a second. Another never did.\n\nThe touch chip is a CST816T on both. On the noisy board it comes out of reset with auto-sleep on: two seconds after the last touch it drops into standby and stops answering its address until a finger wakes it. The firmware polls touch about 12 times a second, so every idle poll failed. Touch still worked, because touching wakes it. Writing DisAutoSleep after reset keeps it awake.\n\n- **Reset pin:** the firmware pulsed GPIO21, which isn't wired to the chip. The touch reset is GPIO13. Init had only worked through a fallback that tried three pins in turn.\n- **Battery pin:** the call that set its attenuation did nothing, so it had always read at the default 11 dB. The curve and cutoff were measured that way, so nothing changed but the comment.\n\nShipped as v3.7.30."
+        },
         {
           "date": "2026-10-12",
           "title": "1.69 pendant: a battery meter, a low-battery cutoff, two new cases",
@@ -2825,6 +2869,58 @@
     {
       "build": "vizbot",
       "buildTitle": "vizBot",
+      "date": "2026-10-14",
+      "title": "v3.7.31 out, and a factory image that boot-looped a new 1.69",
+      "tags": [
+        "release",
+        "lcd169",
+        "flash"
+      ],
+      "media": [],
+      "body": "v3.7.31 went out for all four boards: the 1.69 battery meter and touch fix, and the Stackchan pairing with vizbrain.\n\nThe 1.69 and 1.3 factory images carried a QIO flash header. A new 1.69 with a different flash chip boot-looped on one, because the ROM can't read that chip in QIO. The same file flashed in DIO mode booted fine.\n\nPlatformIO builds the bootloader with a DIO header even for QIO boards; the bootloader switches modes itself. The build script was stamping QIO over it while merging the factory image. It now keeps the header as built. The two files on the release were replaced the same day; only the 33-byte bootloader header changed."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-14",
+      "title": "First friend install, and what a second Mac caught",
+      "tags": [
+        "vizbrain",
+        "macos",
+        "release"
+      ],
+      "media": [],
+      "body": "vizbrain is shared by invitation: each person gets an install link from me, and all the instructions are public. Before sending one, I ran the whole thing on my other Mac as a friend would.\n\nIt installed and Claude answered, but the bot never switched over. The background copy got \"No route to host\" on every call to him, while the same call from Terminal worked.\n\n> **Trap:** macOS Local Network privacy blocks login agents, not Terminal. A bare Python agent gets filed under \"Python\", and on that Mac the switch was on and still didn't apply. vizbrain now installs a small vizbrain.app and points the agent at it, so macOS asks once for \"vizbrain\". The bot paired 40 s later.\n\nThe same test turned up two more:\n\n- **Restart:** `vizbrain restart` left it stopped. The \"already running?\" check mistook the old copy's closing connections for a running copy.\n- **Personal keys:** mine needs a workspace ID sent with every request. Setup now asks for it.\n\nAll three went out as 1.1.1. I wiped that Mac and installed from scratch following only the README, and the bot answered. Then a friend installed it herself, and it worked exactly as expected."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-13",
+      "title": "vizbrain 1.1.0: ready to hand to a friend",
+      "tags": [
+        "vizbrain",
+        "stackchan",
+        "security"
+      ],
+      "media": [],
+      "body": "vizbrain had only ever run on one Mac, from a git checkout, in this lab. Before giving it to a friend, five reviews went over it: install, assumptions about my house, security, what a first run looks like, and the docs.\n\nWhat they found:\n\n- **Anyone on the WiFi could spend my API key.** The server listened on every interface with no check, and any web page open on the Mac could post to it too.\n- **It called everyone Kevin**, assumed Richmond for weather and search, and said \"Lights on!\" in a house with no lights.\n- **The install failed at step one.** A stock Mac's Python is 3.9; vizbrain needs 3.11.\n- **\"Hey vizBot\" only exists on my disk.** The model is trained on my voice, so friends get head-tap only.\n\n1.1.0 fixes those. The typing page and log answer only on the Mac itself, and the bot's routes need a pairing token that the brain hands the bot (firmware 3.7.31). Spending stops at $2 a day or $20 a month, and he says so. His name for you comes from the Mac account, a setup step asks for your city, and tools for gear that isn't there aren't offered. A one-line installer brings its own Python, and `vizbrain doctor` checks everything and prints a report safe to paste to me.\n\nTested on the Stackchan: flashed 3.7.31, it paired, and the first sentence started 1.7 s after I stopped talking. Requests without the token were refused."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-13",
+      "title": "1.69: a touch chip that dozed off, and a reset pin that wasn't wired",
+      "tags": [
+        "lcd169",
+        "touch",
+        "fix"
+      ],
+      "media": [],
+      "body": "One 1.69 logged an I2C read error about 17 times a second. Another never did.\n\nThe touch chip is a CST816T on both. On the noisy board it comes out of reset with auto-sleep on: two seconds after the last touch it drops into standby and stops answering its address until a finger wakes it. The firmware polls touch about 12 times a second, so every idle poll failed. Touch still worked, because touching wakes it. Writing DisAutoSleep after reset keeps it awake.\n\n- **Reset pin:** the firmware pulsed GPIO21, which isn't wired to the chip. The touch reset is GPIO13. Init had only worked through a fallback that tried three pins in turn.\n- **Battery pin:** the call that set its attenuation did nothing, so it had always read at the default 11 dB. The curve and cutoff were measured that way, so nothing changed but the comment.\n\nShipped as v3.7.30."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
       "date": "2026-10-12",
       "title": "1.69 pendant: a battery meter, a low-battery cutoff, two new cases",
       "tags": [
@@ -4897,5 +4993,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-13T02:47:13.236Z"
+  "generatedAt": "2026-10-14T18:46:28.560Z"
 }
