@@ -37,8 +37,8 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 38,
-        "photos": 26,
+        "entries": 42,
+        "photos": 27,
         "daysActive": 264,
         "firstEntry": "2026-01-24",
         "lastEntry": "2026-10-14"
@@ -171,10 +171,37 @@
         {
           "date": "2026-10-12",
           "src": "/buildlog/vizbot/media/pendant-case.jpg"
+        },
+        {
+          "date": "2026-10-14",
+          "src": "/buildlog/vizbot/media/cover-face-corner.jpg",
+          "kind": "screenshot"
         }
       ],
       "lastEntry": "2026-10-14",
       "entries": [
+        {
+          "date": "2026-10-14",
+          "title": "He answers back: no tap for the reply",
+          "tags": [
+            "vizbrain",
+            "voice",
+            "firmware"
+          ],
+          "media": [],
+          "body": "When a reply ends in a question, the bot now beeps and listens for the answer without a tap, up to 3 times in a row. The brain only knows the whole reply after it has answered the bot, so after speaking the bot asks `/v1/listen/<id>` whether to keep listening.\n\nThe first live test half worked. \"Yeah, go ahead and put on some...\" got cut off mid-thought. The next answer, \"Reggae.\", came back from Whisper as \"Ray Gaye\", and he went looking for Marvin Gaye.\n\n- **Pause:** answers now wait 1.5 s of silence instead of 0.8 s.\n- **Context:** a follow-up is transcribed with his own question in Whisper's prompt. On a synthetic test clip, \"Reggae.\" went from \"Rege.\" to \"reggae.\".\n- **Last sentence:** a question one sentence before the end counts too. \"How about some rocksteady? Or the Phish shows could hit the spot.\" had slipped through.\n\nAfter that, \"Put on some reggae.\" came through clean."
+        },
+        {
+          "date": "2026-10-14",
+          "title": "vizBot knows about me: connectors and kpow-mcp",
+          "tags": [
+            "vizbrain",
+            "mcp",
+            "connectors"
+          ],
+          "media": [],
+          "body": "vizBot's brain only knew me through 60 remembered facts and web search. Now each vizbrain install can plug in MCP servers listed in its own `connectors.json`, so my bot and a friend's can know different things. With none listed, nothing changes.\n\nThe first one is kpow-mcp, fed by this site's public JSON and a private profile file on my Mac. It covers projects and this build log, vizBot releases, the music I play, the books I've read and the shows I've been to.\n\n- **Out loud:** he says \"let me check\" while a look-up runs. Each question gets at most 4 look-ups and 15 seconds.\n- **Guard rails:** connector results are labelled as data. After one, he won't change his memory or routines in the same answer.\n- **Names:** kpow-mcp builds a name index from the live data for speech-to-text, plus a sound-alike lookup.\n\nA 10-question voice test came back 9 of 10. Whisper heard \"Soul Siblings\" as \"sole siblings\" twice. With the name index the next try heard it right, and he started answering in 1.5 s."
+        },
         {
           "date": "2026-10-14",
           "title": "v3.7.31 out, and a factory image that boot-looped a new 1.69",
@@ -185,6 +212,33 @@
           ],
           "media": [],
           "body": "v3.7.31 went out for all four boards: the 1.69 battery meter and touch fix, and the Stackchan pairing with vizbrain.\n\nThe 1.69 and 1.3 factory images carried a QIO flash header. A new 1.69 with a different flash chip boot-looped on one, because the ROM can't read that chip in QIO. The same file flashed in DIO mode booted fine.\n\nPlatformIO builds the bootloader with a DIO header even for QIO boards; the bootloader switches modes itself. The build script was stamping QIO over it while merging the factory image. It now keeps the header as built. The two files on the release were replaced the same day; only the 33-byte bootloader header changed."
+        },
+        {
+          "date": "2026-10-14",
+          "title": "Spotify through vizSpot, and covers on his screen",
+          "tags": [
+            "spotify",
+            "mcp",
+            "firmware"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/cover-face-corner.jpg",
+              "kind": "screenshot"
+            }
+          ],
+          "body": "spotify-mcp is a second connector, and it borrows vizSpot's Spotify sign-in. The vizSpot on the same WiFi hands out its token, so play, search, queue and now playing work with no setup. Playlists and likes need permissions vizSpot never asked for, so the Mac signs in once with the same Spotify app. Spotify's February 2026 rules cap a personal app at five people and want its owner on Premium, so a second app was never the plan. Starting a song used to take about 10 s of web searching for a link. Now he starts talking in under 2.\n\n> **Trap:** the new save-to-library endpoint, `PUT /me/library`, ignores a JSON body. It wants the URIs in the query string, and answers \"Missing required field: uris\" otherwise.\n\n- **Covers:** the brain fetches the cover, makes a 240×240 baseline JPEG with macOS `sips` and posts it to the bot. The bot decodes it once and shows it for 8 s, and never opens TLS for it.\n- **Every song:** it also flashes on each song change. That's read from vizSpot's own state, so watching costs no Spotify calls.\n- **His face:** stays on, small, in a black circle in the corner."
+        },
+        {
+          "date": "2026-10-14",
+          "title": "Pick his voice, and vizbrain 1.2 + v3.7.36",
+          "tags": [
+            "vizbrain",
+            "voice",
+            "release"
+          ],
+          "media": [],
+          "body": "The bot's page has a Speaking voice list in the Brain (voice) card. It holds all 28 English Kokoro voices plus five mixes, like Old British gentleman (George and Lewis, slowed down). Picking one makes him say a sample line in it. The page goes through the bot to reach the brain, so the pairing token never reaches the browser.\n\n> **Trap:** every British Kokoro voice spoke with American pronunciation, because the language was hardcoded to en-us. Mostly British voices now get en-gb.\n\nConnectors, answering back, covers and the voice picker shipped as vizbrain 1.2.0 and firmware v3.7.35. The cover flash on every song and the face in the corner followed the same night as 1.2.1 and v3.7.36. spotify-mcp is public on GitHub."
         },
         {
           "date": "2026-10-14",
@@ -2870,6 +2924,32 @@
       "build": "vizbot",
       "buildTitle": "vizBot",
       "date": "2026-10-14",
+      "title": "He answers back: no tap for the reply",
+      "tags": [
+        "vizbrain",
+        "voice",
+        "firmware"
+      ],
+      "media": [],
+      "body": "When a reply ends in a question, the bot now beeps and listens for the answer without a tap, up to 3 times in a row. The brain only knows the whole reply after it has answered the bot, so after speaking the bot asks `/v1/listen/<id>` whether to keep listening.\n\nThe first live test half worked. \"Yeah, go ahead and put on some...\" got cut off mid-thought. The next answer, \"Reggae.\", came back from Whisper as \"Ray Gaye\", and he went looking for Marvin Gaye.\n\n- **Pause:** answers now wait 1.5 s of silence instead of 0.8 s.\n- **Context:** a follow-up is transcribed with his own question in Whisper's prompt. On a synthetic test clip, \"Reggae.\" went from \"Rege.\" to \"reggae.\".\n- **Last sentence:** a question one sentence before the end counts too. \"How about some rocksteady? Or the Phish shows could hit the spot.\" had slipped through.\n\nAfter that, \"Put on some reggae.\" came through clean."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-14",
+      "title": "vizBot knows about me: connectors and kpow-mcp",
+      "tags": [
+        "vizbrain",
+        "mcp",
+        "connectors"
+      ],
+      "media": [],
+      "body": "vizBot's brain only knew me through 60 remembered facts and web search. Now each vizbrain install can plug in MCP servers listed in its own `connectors.json`, so my bot and a friend's can know different things. With none listed, nothing changes.\n\nThe first one is kpow-mcp, fed by this site's public JSON and a private profile file on my Mac. It covers projects and this build log, vizBot releases, the music I play, the books I've read and the shows I've been to.\n\n- **Out loud:** he says \"let me check\" while a look-up runs. Each question gets at most 4 look-ups and 15 seconds.\n- **Guard rails:** connector results are labelled as data. After one, he won't change his memory or routines in the same answer.\n- **Names:** kpow-mcp builds a name index from the live data for speech-to-text, plus a sound-alike lookup.\n\nA 10-question voice test came back 9 of 10. Whisper heard \"Soul Siblings\" as \"sole siblings\" twice. With the name index the next try heard it right, and he started answering in 1.5 s."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-14",
       "title": "v3.7.31 out, and a factory image that boot-looped a new 1.69",
       "tags": [
         "release",
@@ -2878,6 +2958,37 @@
       ],
       "media": [],
       "body": "v3.7.31 went out for all four boards: the 1.69 battery meter and touch fix, and the Stackchan pairing with vizbrain.\n\nThe 1.69 and 1.3 factory images carried a QIO flash header. A new 1.69 with a different flash chip boot-looped on one, because the ROM can't read that chip in QIO. The same file flashed in DIO mode booted fine.\n\nPlatformIO builds the bootloader with a DIO header even for QIO boards; the bootloader switches modes itself. The build script was stamping QIO over it while merging the factory image. It now keeps the header as built. The two files on the release were replaced the same day; only the 33-byte bootloader header changed."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-14",
+      "title": "Spotify through vizSpot, and covers on his screen",
+      "tags": [
+        "spotify",
+        "mcp",
+        "firmware"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/cover-face-corner.jpg",
+          "kind": "screenshot"
+        }
+      ],
+      "body": "spotify-mcp is a second connector, and it borrows vizSpot's Spotify sign-in. The vizSpot on the same WiFi hands out its token, so play, search, queue and now playing work with no setup. Playlists and likes need permissions vizSpot never asked for, so the Mac signs in once with the same Spotify app. Spotify's February 2026 rules cap a personal app at five people and want its owner on Premium, so a second app was never the plan. Starting a song used to take about 10 s of web searching for a link. Now he starts talking in under 2.\n\n> **Trap:** the new save-to-library endpoint, `PUT /me/library`, ignores a JSON body. It wants the URIs in the query string, and answers \"Missing required field: uris\" otherwise.\n\n- **Covers:** the brain fetches the cover, makes a 240×240 baseline JPEG with macOS `sips` and posts it to the bot. The bot decodes it once and shows it for 8 s, and never opens TLS for it.\n- **Every song:** it also flashes on each song change. That's read from vizSpot's own state, so watching costs no Spotify calls.\n- **His face:** stays on, small, in a black circle in the corner."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-14",
+      "title": "Pick his voice, and vizbrain 1.2 + v3.7.36",
+      "tags": [
+        "vizbrain",
+        "voice",
+        "release"
+      ],
+      "media": [],
+      "body": "The bot's page has a Speaking voice list in the Brain (voice) card. It holds all 28 English Kokoro voices plus five mixes, like Old British gentleman (George and Lewis, slowed down). Picking one makes him say a sample line in it. The page goes through the bot to reach the brain, so the pairing token never reaches the browser.\n\n> **Trap:** every British Kokoro voice spoke with American pronunciation, because the language was hardcoded to en-us. Mostly British voices now get en-gb.\n\nConnectors, answering back, covers and the voice picker shipped as vizbrain 1.2.0 and firmware v3.7.35. The cover flash on every song and the face in the corner followed the same night as 1.2.1 and v3.7.36. spotify-mcp is public on GitHub."
     },
     {
       "build": "vizbot",
@@ -4993,5 +5104,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-14T18:46:28.560Z"
+  "generatedAt": "2026-10-15T01:29:48.536Z"
 }
