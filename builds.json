@@ -37,8 +37,8 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 43,
-        "photos": 28,
+        "entries": 44,
+        "photos": 31,
         "daysActive": 265,
         "firstEntry": "2026-01-24",
         "lastEntry": "2026-10-15"
@@ -162,6 +162,20 @@
           "date": "2026-10-12",
           "src": "/buildlog/vizbot/media/pendant-skull-case.mp4",
           "poster": "/buildlog/vizbot/media/pendant-skull-case.jpg"
+        },
+        {
+          "date": "2026-10-12",
+          "src": "/buildlog/vizbot/media/led-stick-ruler.jpg",
+          "caption": "Roughly 30 mm of lit filament, driver chip right behind it"
+        },
+        {
+          "date": "2026-10-12",
+          "src": "/buildlog/vizbot/media/pendant-led-wiring.jpg"
+        },
+        {
+          "date": "2026-10-12",
+          "src": "/buildlog/vizbot/media/pendant-cell-rocker.jpg",
+          "caption": "902030 cell, 3.7 V 500 mAh, rocker in the case wall"
         },
         {
           "date": "2026-10-12",
@@ -316,6 +330,29 @@
             }
           ],
           "body": "The 1.69 board already feeds the battery to GPIO1 through a 200k/100k divider, so the pendant got a battery meter with no new parts. A multimeter on the cell read 4.1 V where the firmware read 4.146 V.\n\n- **Top pill:** a 0 to 4 bar battery, or a bolt while a computer's USB is attached.\n- **System page:** a Battery row with percent and volts.\n- **Cutoff:** under 3.30 V for 10 s on battery, it shows \"Battery empty\" and drops the power latch.\n\nThe first percent scale was a generic LiPo curve. The pendant logged a full run-down to its own flash to replace it: 3 h 11 min with WiFi on. One hour in, with two hours left, the generic curve would have said 9%.\n\n> **Trap:** Nothing on the board stops the cell draining flat. That run went down to 2.6 V and rebooted once there before it died. 3.30 V was 12 minutes from the end.\n\nTwo more pendants got cases: one in green stripes, one black with green LED ears.\n\nA second run-down in low power mode is still going. The cutoff has only fired on a faked reading so far. Running on two pendants as v3.7.26, not released yet."
+        },
+        {
+          "date": "2026-10-12",
+          "title": "Pendant turbo mode: LED sticks on a rocker switch",
+          "tags": [
+            "lcd169",
+            "pendant",
+            "leds"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/led-stick-ruler.jpg",
+              "caption": "Roughly 30 mm of lit filament, driver chip right behind it"
+            },
+            {
+              "src": "/buildlog/vizbot/media/pendant-led-wiring.jpg"
+            },
+            {
+              "src": "/buildlog/vizbot/media/pendant-cell-rocker.jpg",
+              "caption": "902030 cell, 3.7 V 500 mAh, rocker in the case wall"
+            }
+          ],
+          "body": "The black pendant's LED sticks need no pin and no code. Each one is a COB filament on a pad with its own driver chip, and all it does is run a chase.\n\nSo the wiring is as low tech as it gets. A pair of leads off 3.3 V and G on the 1.69 dev board, with a rocker switch cut into the middle of the 3.3 line. Flip the rocker and the sticks come up: turbo mode.\n\nThey are wicked bright."
         },
         {
           "date": "2026-10-12",
@@ -3098,6 +3135,31 @@
       "build": "vizbot",
       "buildTitle": "vizBot",
       "date": "2026-10-12",
+      "title": "Pendant turbo mode: LED sticks on a rocker switch",
+      "tags": [
+        "lcd169",
+        "pendant",
+        "leds"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/led-stick-ruler.jpg",
+          "caption": "Roughly 30 mm of lit filament, driver chip right behind it"
+        },
+        {
+          "src": "/buildlog/vizbot/media/pendant-led-wiring.jpg"
+        },
+        {
+          "src": "/buildlog/vizbot/media/pendant-cell-rocker.jpg",
+          "caption": "902030 cell, 3.7 V 500 mAh, rocker in the case wall"
+        }
+      ],
+      "body": "The black pendant's LED sticks need no pin and no code. Each one is a COB filament on a pad with its own driver chip, and all it does is run a chase.\n\nSo the wiring is as low tech as it gets. A pair of leads off 3.3 V and G on the 1.69 dev board, with a rocker switch cut into the middle of the 3.3 line. Flip the rocker and the sticks come up: turbo mode.\n\nThey are wicked bright."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-12",
       "title": "1.69 pendant: low power mode, and a PSRAM flag that hid the cloud",
       "tags": [
         "lcd169",
@@ -5146,5 +5208,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-16T01:20:22.514Z"
+  "generatedAt": "2026-10-16T02:34:12.086Z"
 }
