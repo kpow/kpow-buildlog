@@ -4,10 +4,13 @@
 //
 //   node scripts/video.mjs info <file...>             # when each was shot, size, length, GPS?
 //   node scripts/video.mjs ingest <in> <out.mp4>      # transcode + strip metadata + poster
+//   node scripts/video.mjs ingest <in> <out.mp4> --audio   # same, but keep the sound
 //
 // ingest:
 //   - reads anything ffmpeg reads (.MOV, .mp4, .m4v …) and writes H.264 .mp4,
-//     at most 1280px wide, no audio, faststart so it streams on the site
+//     at most 1280px wide, faststart so it streams on the site. Audio is dropped
+//     unless --audio is passed, which re-encodes the first audio track to stereo AAC
+//     (for a clip whose point is the sound; the site plays videos muted until unmuted)
 //   - bakes the phone's rotation into the pixels (ffmpeg autorotate)
 //   - drops ALL source metadata (-map_metadata -1): iPhone clips carry GPS
 //     (com.apple.quicktime.location.ISO6709 / ©xyz) and the creation date.
@@ -55,6 +58,7 @@ function summary(file) {
     height: v.height || 0,
     seconds: Math.round(Number(p.format?.duration || 0) * 10) / 10,
     gps: Boolean(find(/location|iso6709|gps/i)),
+    hasAudio: (p.streams || []).some((s) => s.codec_type === "audio"),
   };
 }
 
@@ -68,17 +72,23 @@ function assertClean(file) {
   for (const needle of LEAK_BYTES) if (bytes.includes(needle)) throw new Error(`location atom survived in ${file}`);
 }
 
-function ingest(input, output) {
+function ingest(input, output, { audio = false } = {}) {
   if (!/\.mp4$/i.test(output)) throw new Error("output must end in .mp4");
   const poster = output.replace(/\.mp4$/i, ".jpg");
   const keepPoster = existsSync(poster);
   const before = summary(input);
+  if (audio && !before.hasAudio) throw new Error(`--audio but ${input} has no audio track`);
+
+  // An iPhone clip can carry a second, multi-channel spatial track; take the first.
+  const sound = audio
+    ? ["-map", "0:v:0", "-map", "0:a:0", "-c:a", "aac", "-b:a", "128k", "-ac", "2"]
+    : ["-an"];
 
   run("ffmpeg", [
     "-v", "error", "-i", input,
     "-vf", SCALE,
     "-c:v", "libx264", "-profile:v", "high", "-pix_fmt", "yuv420p", "-crf", "27", "-preset", "veryfast",
-    "-movflags", "+faststart", "-an", "-map_metadata", "-1", "-y", output,
+    "-movflags", "+faststart", ...sound, "-map_metadata", "-1", "-y", output,
   ]);
   if (!keepPoster) run("ffmpeg", [
     "-v", "error", "-ss", String(before.seconds * 0.4), "-i", input,
@@ -103,19 +113,22 @@ function ingest(input, output) {
     width: after.width,
     height: after.height,
     seconds: after.seconds,
+    audio: after.hasAudio,
     hadGps: before.gps,
     kb: Math.round(statSync(output).size / 1024),
   };
 }
 
-const [cmd, ...args] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const audio = argv.includes("--audio");
+const [cmd, ...args] = argv.filter((a) => a !== "--audio");
 try {
   if (cmd === "info" && args.length) {
     for (const f of args) console.log(JSON.stringify(summary(f)));
   } else if (cmd === "ingest" && args.length === 2) {
-    console.log(JSON.stringify(ingest(args[0], args[1])));
+    console.log(JSON.stringify(ingest(args[0], args[1], { audio })));
   } else {
-    console.error("usage: video.mjs info <file...> | video.mjs ingest <in> <out.mp4>");
+    console.error("usage: video.mjs info <file...> | video.mjs ingest <in> <out.mp4> [--audio]");
     process.exit(2);
   }
 } catch (err) {
