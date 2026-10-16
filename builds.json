@@ -1,6 +1,239 @@
 {
   "builds": [
     {
+      "slug": "kpow-dash",
+      "title": "kpow-dash",
+      "status": "active",
+      "kind": "software",
+      "summary": "One local dashboard for everything kpow, with Claude on hand to change it.",
+      "stack": [
+        "TypeScript",
+        "Hono",
+        "SQLite",
+        "React",
+        "Vite",
+        "Claude Agent SDK",
+        "Google APIs",
+        "MQTT"
+      ],
+      "tags": [
+        "dashboard",
+        "local-first",
+        "claude"
+      ],
+      "rung": null,
+      "facts": {
+        "tiles": "9",
+        "collectors": "10",
+        "selfEdits": "14"
+      },
+      "repo": "kpow/kpow-dash",
+      "hero": "/buildlog/kpow-dash/media/hero.jpg",
+      "heroVideo": null,
+      "links": [],
+      "started": "2026-10-15",
+      "body": "One screen for everything I have going at once, running on this Mac and nowhere else.\nIt knows my calendars and mail, the sites I host and what DigitalOcean charges for\nthem, the ESP32 and WLED devices on the LAN, the Bambu P2S and the models queued for\nit, this build log, what I am listening to, what Claude Code costs me, and the apps I\nwrote and then forgot about.\n\n## Scripts keep it running, Claude doesn't\n\nTen collectors run on their own timers and write snapshots into one SQLite file in\nApplication Support. Every tile reads from that file and nothing else, so the page\nopens instantly, still shows the last good data when the wifi drops, and costs nothing\nto leave up all day. Claude runs only when I type a question or ask for a change.\n\n| Tile | Reads |\n|---|---|\n| Today | Google Calendar, two accounts |\n| Inbox | Gmail, two accounts |\n| Hosted | Site pings and DigitalOcean |\n| 3D + printing | ~/projects/3d and the P2S |\n| Hardware | mDNS, WLED and viz endpoints |\n| Build log | This repo's status script |\n| Listening | kpow.xyz's Spotify mirror |\n| Claude usage | ~/.claude transcripts |\n| Launchpad | A registry plus git dates |\n\n## The launchpad is half the point\n\nThe thing I actually needed was a place for the apps that fall out of my head. Every\napp in the registry shows when it was last touched, wears a tilted \"dusty!\" sticker\nafter 30 days, and opens one of three ways: a hosted URL, a local command with a\nrunning or stopped dot, or a Claude Code skill in the right folder.\n\n## It changes itself\n\nThe panel has three modes. **Ask** answers from the dashboard's own snapshots plus the\nkpow MCP. **Change: preview** edits a `dash/<slug>` branch in its own git worktree and\nserves it on :4042, so main doesn't move until I keep it. **Change: apply now** goes\nstraight onto main, with `git revert` behind the undo button.\n\nClaude gets file edits inside that worktree and exactly one command, `npx tsc\n--noEmit`. No network, no git, no secrets, nothing from `~/.claude`. The typecheck\ngates preview, keep and apply, and a failure undoes the change and says why.\n\n## Design and secrets\n\nThe look is direction D of four mockups: 2px black borders with hard shadows, lowercase\nchunky display type off kpow.xyz, tilted stickers, and the DigitalOcean bill drawn as a\nprice tag.\n\nEvery token lives in the macOS Keychain, never in the repo. The DigitalOcean one is\nread-only, which is why the dash can tell me a retired app is still billing but cannot\ngo destroy it.",
+      "stats": {
+        "entries": 8,
+        "photos": 9,
+        "daysActive": 2,
+        "firstEntry": "2026-10-15",
+        "lastEntry": "2026-10-16"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-10-15",
+          "src": "/buildlog/kpow-dash/media/claude-panel.jpg",
+          "kind": "screenshot",
+          "caption": "A change applied to main, with its diff, 101.8k tokens and an undo."
+        },
+        {
+          "date": "2026-10-15",
+          "src": "/buildlog/kpow-dash/media/today-todo.jpg",
+          "kind": "screenshot",
+          "caption": "Two calendars in one strip, with the free gap before the next thing."
+        },
+        {
+          "date": "2026-10-15",
+          "src": "/buildlog/kpow-dash/media/on-rotation.jpg",
+          "kind": "screenshot",
+          "caption": "Pretty Lights, 8 plays of 72 this week."
+        },
+        {
+          "date": "2026-10-15",
+          "src": "/buildlog/kpow-dash/media/hardware-tile.jpg",
+          "kind": "screenshot",
+          "caption": "18 of 19. vizSpot dropped off wifi at 12:21a and the tile kept it."
+        },
+        {
+          "date": "2026-10-15",
+          "src": "/buildlog/kpow-dash/media/buildlog-usage.jpg",
+          "kind": "screenshot",
+          "caption": "2.1M tokens today, 14.8M over seven days: about $377 at list prices."
+        },
+        {
+          "date": "2026-10-15",
+          "src": "/buildlog/kpow-dash/media/launchpad-dusty.jpg",
+          "kind": "screenshot",
+          "caption": "Sorted by neglect. vizcloud has sat untouched for 177 days."
+        },
+        {
+          "date": "2026-10-15",
+          "src": "/buildlog/kpow-dash/media/hosted-tile.jpg",
+          "kind": "screenshot",
+          "caption": "mapple was retired months ago and is still on the bill."
+        },
+        {
+          "date": "2026-10-16",
+          "src": "/buildlog/kpow-dash/media/inbox-triage.jpg",
+          "kind": "screenshot",
+          "caption": "24 unread: 9 personal, 15 work, each list with its own toolbar."
+        },
+        {
+          "date": "2026-10-16",
+          "src": "/buildlog/kpow-dash/media/print-bench.jpg",
+          "kind": "screenshot",
+          "caption": "19 projects: 17 ready to print, one never sliced."
+        }
+      ],
+      "lastEntry": "2026-10-16",
+      "entries": [
+        {
+          "date": "2026-10-16",
+          "title": "Mail opens inside the dash, and gets answered there",
+          "tags": [
+            "gmail",
+            "security"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kpow-dash/media/inbox-triage.jpg",
+              "kind": "screenshot",
+              "caption": "24 unread: 9 personal, 15 work, each list with its own toolbar."
+            }
+          ],
+          "body": "Clicking a row used to throw me at Gmail. Now the conversation opens in place. j and k\nwalk every thread both accounts are showing, r replies, e marks read and moves on, #\ntrashes and moves on, esc backs out. The queue freezes when it opens, so trashing\nsomething never reshuffles the list under my fingers mid-triage.\n\nReplies are plain text to the sender only, threaded properly with In-Reply-To and\nReferences, with the original quoted underneath. Sending drops UNREAD, because\nanswering something means I dealt with it. No reply-all, no attachments, no pretending\nto be Gmail.\n\nThe reading side is the careful part. The server walks the MIME tree, strips scripts,\niframes, objects, inline handlers and `javascript:` urls, and parks every remote image\non a blocked attribute with a count. The client renders that in an iframe with no\n`allow-same-origin` and a CSP of `default-src 'none'`, which is the actual boundary;\nthe scrub is the second layer.\n\nThree things the real inbox corrected about the plan:\n\n- Half of it has no text/plain part at all, so the sandboxed HTML render was required,\n  not a nicety for later.\n- Blocking images is not caution. The first newsletter tested carried 22, and the first\n  of those was an open-tracking beacon addressed to the account that received it.\n- `cid:` images are inline attachments, usually an Outlook signature logo, and the\n  iframe cannot resolve them, so those tags get dropped rather than left as broken\n  boxes.\n\nAround it, the lists grew a checkbox per row and a toolbar per account with select-all,\nmark read and trash in bulk, and a divider between sender and subject that drags to\nresize both lists.\n\n> **Note:** sending has not been tried against a real recipient yet, and the Gmail API\n> has no unsend, so the first one is worth doing deliberately."
+        },
+        {
+          "date": "2026-10-16",
+          "title": "The panel flips, and the to-do box learns the week",
+          "tags": [
+            "claude",
+            "ui"
+          ],
+          "media": [],
+          "body": "Three changes, all typed into the dash and applied by the dash:\n\n- The ask panel is upside down now. Message box and mode switch sit under the header,\n  the thread runs downward beneath them, newest exchange first. The box drags taller\n  from its bottom-right corner.\n- A row of five day buttons over the to-do input: today, tmrw, then the next three\n  weekdays with their dates. Tapping one dates the to-do and overrides a day typed at\n  the end of the text.\n- The all / dusty / recent chips came off the launchpad header. It always shows dusty\n  first anyway, so they were decoration taking up the row.\n\nWhen a change lands on main the status line says deploying, and a green banner sits\nunder the chat box until I dismiss it. Watching it edit its own panel while the panel\nis open is still a strange thing to sit through."
+        },
+        {
+          "date": "2026-10-16",
+          "title": "The printing tile gets two forms and a real readout",
+          "tags": [
+            "printing",
+            "bambu"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kpow-dash/media/print-bench.jpg",
+              "kind": "screenshot",
+              "caption": "19 projects: 17 ready to print, one never sliced."
+            }
+          ],
+          "body": "One layout was doing two jobs badly, so the tile now has a printing form and an idle\nform. While a job runs, a black instrument cluster takes the whole card: percent, time\nleft, done-at, elapsed, layer count, nozzle and bed against their targets, part and aux\nfans, the speed profile as a four-step meter, wifi, all four AMS slots with colour and\nremaining, HMS codes, and the plate preview with a layer line drawn across it. Projects\ndrop to a footer rail. When nothing is printing the machine collapses to one strip and\nthe projects take the card: four bench cards ordered by what needs doing, then a dense\nrack of everything else.\n\nThe six-per-page carousel is gone. It hid 13 of 19 projects and lost my place on every\nre-render.\n\nFour things the live printer corrected about the design:\n\n- The P2S has no chamber probe, so that gauge is dropped instead of reading \"—\"\n  forever.\n- Cloud prints send no `gcode_start_time`, so elapsed and total are derived from\n  percent and time left, and labelled as estimates.\n- `mc_print_stage` is a coarse 1/2 flag, not the stage. `stg_cur` is.\n- There is no layer height in the report, so the plate tag shows the layer count rather\n  than a z in mm.\n\n> **Note:** a cloud print's `subtask_name` is the slicer preset, not a filename, so it\n> matches no project folder and shows up without a hero image. LAN and SD prints keep\n> their real names."
+        },
+        {
+          "date": "2026-10-15",
+          "title": "The panel answers, then the panel starts editing the app",
+          "tags": [
+            "claude",
+            "agent-sdk"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kpow-dash/media/claude-panel.jpg",
+              "kind": "screenshot",
+              "caption": "A change applied to main, with its diff, 101.8k tokens and an undo."
+            }
+          ],
+          "body": "Ask mode first: Opus 5.5 through the Agent SDK tool runner, streamed to the panel over\nSSE, with read-only tools covering every tile's snapshot plus the kpow MCP over stdio.\nTokens are spent on one route, `POST /api/chat`, and the panel prints the day's total\nso I can see what a question cost.\n\nChange mode came the same evening. Preview edits a `dash/<slug>` branch inside its own\ngit worktree and serves it on :4042; keep fast-forwards main, undo deletes the branch.\nApply now goes straight onto main and dev hot-reloads it, with `git revert` behind the\nundo. Claude gets file edits in that worktree and one command, `npx tsc --noEmit`. The\ntypecheck gates preview, keep and apply, and a failure undoes the change and says why.\n\nSeven commits that night were written by the dash about itself. The first added a trash\nbutton to each email row. By the last one I was asking for layout changes the way I\nwould ask a person: more height on the today box, ten emails per account, six project\ncards per row."
+        },
+        {
+          "date": "2026-10-15",
+          "title": "Two Google accounts, and a to-do box that understands fri",
+          "tags": [
+            "oauth",
+            "todo"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kpow-dash/media/today-todo.jpg",
+              "kind": "screenshot",
+              "caption": "Two calendars in one strip, with the free gap before the next thing."
+            }
+          ],
+          "body": "Desktop OAuth with PKCE for personal and work, with the refresh tokens handed to the\nKeychain over stdin rather than written anywhere. Today reads every calendar that is\nticked in Google Calendar's own sidebar, so what lands on the dash is what I already\ndecided I wanted to see. Inbox shows the unread count per account with the newest\nsenders and subjects.\n\nTo-dos live in SQLite next to the snapshots. A trailing word sets the due date, so\ntyping \"saturday: check vizBrain mac speaker\" files itself without a date picker.\n\nThe action routes started refusing requests from other web origins the same day. A page\nopen in another tab has no business posting to a server on localhost."
+        },
+        {
+          "date": "2026-10-15",
+          "title": "Listening moves to Spotify, then off it again",
+          "tags": [
+            "spotify",
+            "api"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kpow-dash/media/on-rotation.jpg",
+              "kind": "screenshot",
+              "caption": "Pretty Lights, 8 plays of 72 this week."
+            }
+          ],
+          "body": "The listening tile started on Last.fm and moved to the Spotify Web API, borrowing\nspotify-mcp's sign-in. Every play goes into a plays table, so \"this week\" outlives\nSpotify's 50-play window.\n\nThen the throttling showed its teeth. One Spotify app is shared by this dash, the\nvizSpot and kpow.xyz, so a 429 any of them earns belongs to all three. The cooldown had\nto survive a server restart, and recently-played dropped to every 30 minutes.\n\nThe fix was to stop asking. kpow.xyz is now the only thing polling Spotify for history,\nand everything else reads its `/api/music/plays` mirror. Once that endpoint was\ndeployed the direct fallback came out of the dash, and vizbrain went from polling every\nminute to every ten.\n\n> **Lesson:** a rate limit is shared by every app behind one set of credentials, so one\n> of them has to own the polling and the rest have to read its copy."
+        },
+        {
+          "date": "2026-10-15",
+          "title": "Five more tiles, five more timers",
+          "tags": [
+            "collectors",
+            "printing"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kpow-dash/media/hardware-tile.jpg",
+              "kind": "screenshot",
+              "caption": "18 of 19. vizSpot dropped off wifi at 12:21a and the tile kept it."
+            },
+            {
+              "src": "/buildlog/kpow-dash/media/buildlog-usage.jpg",
+              "kind": "screenshot",
+              "caption": "2.1M tokens today, 14.8M over seven days: about $377 at list prices."
+            }
+          ],
+          "body": "Every tile is one collector file on its own interval, writing a snapshot the UI reads\nlater. Nothing here spends a token.\n\n- **Build log:** this repo's `status.mjs` and `builds.json` every 10 minutes, with each\n  build's unlogged commits and a \"log it\" button that copies the slash command.\n- **Claude usage:** the transcripts in `~/.claude` every 5 minutes, reading only files\n  touched in the last 8 days and reusing the rest. Cost is API-equivalent at list\n  prices.\n- **3D + printing:** `~/projects/3d` every 10 minutes for FreeCAD, STEP and 3mf counts\n  and the newest Bambu Studio plate preview, plus one read-only MQTT link to the P2S.\n- **Hardware:** `dns-sd` every 2 minutes, remembering what it has seen so a device that\n  drops off reads as offline instead of quietly vanishing.\n- **Listening:** recent scrobbles every 2 minutes, the all-time artist list every 6\n  hours.\n\n> **Trap:** Bambu Studio will happily print something that was never saved as a .3mf\n> into `~/projects/3d`, so the tile has to check the printer's own job history before\n> it nags me about slicing."
+        },
+        {
+          "date": "2026-10-15",
+          "title": "Four mockups, direction D, and a dashboard that boots",
+          "tags": [
+            "design",
+            "dashboard"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kpow-dash/media/launchpad-dusty.jpg",
+              "kind": "screenshot",
+              "caption": "Sorted by neglect. vizcloud has sat untouched for 177 days."
+            },
+            {
+              "src": "/buildlog/kpow-dash/media/hosted-tile.jpg",
+              "kind": "screenshot",
+              "caption": "mapple was retired months ago and is still on the bill."
+            }
+          ],
+          "body": "Phase 0 was design only. Four full mockups with fake data, every tile, the launchpad\nand the chat panel, nothing built yet. Direction D won: A's layout with a pinch of C,\nwhich means 2px black borders with 4px hard shadows, tilted stickers, one hand-drawn\nsquiggle and the DigitalOcean bill as a price tag.\n\nThen the shell. Hono on 127.0.0.1:4040, SQLite in Application Support, collectors on\ntimers. Two tiles went live and the rest sat as placeholders in their final positions:\n\n- **Launchpad:** last git commit or newest file per app, a dusty sticker after 30 days\n  untouched, and a live running check for the local servers.\n- **Hosted:** HTTP checks with 24 points of history per site, plus DigitalOcean's apps\n  and balance once a read-only token was in the Keychain.\n\nBefore any of it, a Python spike against the Bambu P2S confirmed it reports state,\nfile, percent, time left, temps and AMS trays over LAN MQTT with Developer Mode off.\nThat answered the one question that could have killed the printing tile later."
+        }
+      ]
+    },
+    {
       "slug": "vizbot",
       "title": "vizBot",
       "status": "shipped",
@@ -2981,6 +3214,154 @@
   ],
   "recent": [
     {
+      "build": "kpow-dash",
+      "buildTitle": "kpow-dash",
+      "date": "2026-10-16",
+      "title": "Mail opens inside the dash, and gets answered there",
+      "tags": [
+        "gmail",
+        "security"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kpow-dash/media/inbox-triage.jpg",
+          "kind": "screenshot",
+          "caption": "24 unread: 9 personal, 15 work, each list with its own toolbar."
+        }
+      ],
+      "body": "Clicking a row used to throw me at Gmail. Now the conversation opens in place. j and k\nwalk every thread both accounts are showing, r replies, e marks read and moves on, #\ntrashes and moves on, esc backs out. The queue freezes when it opens, so trashing\nsomething never reshuffles the list under my fingers mid-triage.\n\nReplies are plain text to the sender only, threaded properly with In-Reply-To and\nReferences, with the original quoted underneath. Sending drops UNREAD, because\nanswering something means I dealt with it. No reply-all, no attachments, no pretending\nto be Gmail.\n\nThe reading side is the careful part. The server walks the MIME tree, strips scripts,\niframes, objects, inline handlers and `javascript:` urls, and parks every remote image\non a blocked attribute with a count. The client renders that in an iframe with no\n`allow-same-origin` and a CSP of `default-src 'none'`, which is the actual boundary;\nthe scrub is the second layer.\n\nThree things the real inbox corrected about the plan:\n\n- Half of it has no text/plain part at all, so the sandboxed HTML render was required,\n  not a nicety for later.\n- Blocking images is not caution. The first newsletter tested carried 22, and the first\n  of those was an open-tracking beacon addressed to the account that received it.\n- `cid:` images are inline attachments, usually an Outlook signature logo, and the\n  iframe cannot resolve them, so those tags get dropped rather than left as broken\n  boxes.\n\nAround it, the lists grew a checkbox per row and a toolbar per account with select-all,\nmark read and trash in bulk, and a divider between sender and subject that drags to\nresize both lists.\n\n> **Note:** sending has not been tried against a real recipient yet, and the Gmail API\n> has no unsend, so the first one is worth doing deliberately."
+    },
+    {
+      "build": "kpow-dash",
+      "buildTitle": "kpow-dash",
+      "date": "2026-10-16",
+      "title": "The panel flips, and the to-do box learns the week",
+      "tags": [
+        "claude",
+        "ui"
+      ],
+      "media": [],
+      "body": "Three changes, all typed into the dash and applied by the dash:\n\n- The ask panel is upside down now. Message box and mode switch sit under the header,\n  the thread runs downward beneath them, newest exchange first. The box drags taller\n  from its bottom-right corner.\n- A row of five day buttons over the to-do input: today, tmrw, then the next three\n  weekdays with their dates. Tapping one dates the to-do and overrides a day typed at\n  the end of the text.\n- The all / dusty / recent chips came off the launchpad header. It always shows dusty\n  first anyway, so they were decoration taking up the row.\n\nWhen a change lands on main the status line says deploying, and a green banner sits\nunder the chat box until I dismiss it. Watching it edit its own panel while the panel\nis open is still a strange thing to sit through."
+    },
+    {
+      "build": "kpow-dash",
+      "buildTitle": "kpow-dash",
+      "date": "2026-10-16",
+      "title": "The printing tile gets two forms and a real readout",
+      "tags": [
+        "printing",
+        "bambu"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kpow-dash/media/print-bench.jpg",
+          "kind": "screenshot",
+          "caption": "19 projects: 17 ready to print, one never sliced."
+        }
+      ],
+      "body": "One layout was doing two jobs badly, so the tile now has a printing form and an idle\nform. While a job runs, a black instrument cluster takes the whole card: percent, time\nleft, done-at, elapsed, layer count, nozzle and bed against their targets, part and aux\nfans, the speed profile as a four-step meter, wifi, all four AMS slots with colour and\nremaining, HMS codes, and the plate preview with a layer line drawn across it. Projects\ndrop to a footer rail. When nothing is printing the machine collapses to one strip and\nthe projects take the card: four bench cards ordered by what needs doing, then a dense\nrack of everything else.\n\nThe six-per-page carousel is gone. It hid 13 of 19 projects and lost my place on every\nre-render.\n\nFour things the live printer corrected about the design:\n\n- The P2S has no chamber probe, so that gauge is dropped instead of reading \"—\"\n  forever.\n- Cloud prints send no `gcode_start_time`, so elapsed and total are derived from\n  percent and time left, and labelled as estimates.\n- `mc_print_stage` is a coarse 1/2 flag, not the stage. `stg_cur` is.\n- There is no layer height in the report, so the plate tag shows the layer count rather\n  than a z in mm.\n\n> **Note:** a cloud print's `subtask_name` is the slicer preset, not a filename, so it\n> matches no project folder and shows up without a hero image. LAN and SD prints keep\n> their real names."
+    },
+    {
+      "build": "kpow-dash",
+      "buildTitle": "kpow-dash",
+      "date": "2026-10-15",
+      "title": "The panel answers, then the panel starts editing the app",
+      "tags": [
+        "claude",
+        "agent-sdk"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kpow-dash/media/claude-panel.jpg",
+          "kind": "screenshot",
+          "caption": "A change applied to main, with its diff, 101.8k tokens and an undo."
+        }
+      ],
+      "body": "Ask mode first: Opus 5.5 through the Agent SDK tool runner, streamed to the panel over\nSSE, with read-only tools covering every tile's snapshot plus the kpow MCP over stdio.\nTokens are spent on one route, `POST /api/chat`, and the panel prints the day's total\nso I can see what a question cost.\n\nChange mode came the same evening. Preview edits a `dash/<slug>` branch inside its own\ngit worktree and serves it on :4042; keep fast-forwards main, undo deletes the branch.\nApply now goes straight onto main and dev hot-reloads it, with `git revert` behind the\nundo. Claude gets file edits in that worktree and one command, `npx tsc --noEmit`. The\ntypecheck gates preview, keep and apply, and a failure undoes the change and says why.\n\nSeven commits that night were written by the dash about itself. The first added a trash\nbutton to each email row. By the last one I was asking for layout changes the way I\nwould ask a person: more height on the today box, ten emails per account, six project\ncards per row."
+    },
+    {
+      "build": "kpow-dash",
+      "buildTitle": "kpow-dash",
+      "date": "2026-10-15",
+      "title": "Two Google accounts, and a to-do box that understands fri",
+      "tags": [
+        "oauth",
+        "todo"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kpow-dash/media/today-todo.jpg",
+          "kind": "screenshot",
+          "caption": "Two calendars in one strip, with the free gap before the next thing."
+        }
+      ],
+      "body": "Desktop OAuth with PKCE for personal and work, with the refresh tokens handed to the\nKeychain over stdin rather than written anywhere. Today reads every calendar that is\nticked in Google Calendar's own sidebar, so what lands on the dash is what I already\ndecided I wanted to see. Inbox shows the unread count per account with the newest\nsenders and subjects.\n\nTo-dos live in SQLite next to the snapshots. A trailing word sets the due date, so\ntyping \"saturday: check vizBrain mac speaker\" files itself without a date picker.\n\nThe action routes started refusing requests from other web origins the same day. A page\nopen in another tab has no business posting to a server on localhost."
+    },
+    {
+      "build": "kpow-dash",
+      "buildTitle": "kpow-dash",
+      "date": "2026-10-15",
+      "title": "Listening moves to Spotify, then off it again",
+      "tags": [
+        "spotify",
+        "api"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kpow-dash/media/on-rotation.jpg",
+          "kind": "screenshot",
+          "caption": "Pretty Lights, 8 plays of 72 this week."
+        }
+      ],
+      "body": "The listening tile started on Last.fm and moved to the Spotify Web API, borrowing\nspotify-mcp's sign-in. Every play goes into a plays table, so \"this week\" outlives\nSpotify's 50-play window.\n\nThen the throttling showed its teeth. One Spotify app is shared by this dash, the\nvizSpot and kpow.xyz, so a 429 any of them earns belongs to all three. The cooldown had\nto survive a server restart, and recently-played dropped to every 30 minutes.\n\nThe fix was to stop asking. kpow.xyz is now the only thing polling Spotify for history,\nand everything else reads its `/api/music/plays` mirror. Once that endpoint was\ndeployed the direct fallback came out of the dash, and vizbrain went from polling every\nminute to every ten.\n\n> **Lesson:** a rate limit is shared by every app behind one set of credentials, so one\n> of them has to own the polling and the rest have to read its copy."
+    },
+    {
+      "build": "kpow-dash",
+      "buildTitle": "kpow-dash",
+      "date": "2026-10-15",
+      "title": "Five more tiles, five more timers",
+      "tags": [
+        "collectors",
+        "printing"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kpow-dash/media/hardware-tile.jpg",
+          "kind": "screenshot",
+          "caption": "18 of 19. vizSpot dropped off wifi at 12:21a and the tile kept it."
+        },
+        {
+          "src": "/buildlog/kpow-dash/media/buildlog-usage.jpg",
+          "kind": "screenshot",
+          "caption": "2.1M tokens today, 14.8M over seven days: about $377 at list prices."
+        }
+      ],
+      "body": "Every tile is one collector file on its own interval, writing a snapshot the UI reads\nlater. Nothing here spends a token.\n\n- **Build log:** this repo's `status.mjs` and `builds.json` every 10 minutes, with each\n  build's unlogged commits and a \"log it\" button that copies the slash command.\n- **Claude usage:** the transcripts in `~/.claude` every 5 minutes, reading only files\n  touched in the last 8 days and reusing the rest. Cost is API-equivalent at list\n  prices.\n- **3D + printing:** `~/projects/3d` every 10 minutes for FreeCAD, STEP and 3mf counts\n  and the newest Bambu Studio plate preview, plus one read-only MQTT link to the P2S.\n- **Hardware:** `dns-sd` every 2 minutes, remembering what it has seen so a device that\n  drops off reads as offline instead of quietly vanishing.\n- **Listening:** recent scrobbles every 2 minutes, the all-time artist list every 6\n  hours.\n\n> **Trap:** Bambu Studio will happily print something that was never saved as a .3mf\n> into `~/projects/3d`, so the tile has to check the printer's own job history before\n> it nags me about slicing."
+    },
+    {
+      "build": "kpow-dash",
+      "buildTitle": "kpow-dash",
+      "date": "2026-10-15",
+      "title": "Four mockups, direction D, and a dashboard that boots",
+      "tags": [
+        "design",
+        "dashboard"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kpow-dash/media/launchpad-dusty.jpg",
+          "kind": "screenshot",
+          "caption": "Sorted by neglect. vizcloud has sat untouched for 177 days."
+        },
+        {
+          "src": "/buildlog/kpow-dash/media/hosted-tile.jpg",
+          "kind": "screenshot",
+          "caption": "mapple was retired months ago and is still on the bill."
+        }
+      ],
+      "body": "Phase 0 was design only. Four full mockups with fake data, every tile, the launchpad\nand the chat panel, nothing built yet. Direction D won: A's layout with a pinch of C,\nwhich means 2px black borders with 4px hard shadows, tilted stickers, one hand-drawn\nsquiggle and the DigitalOcean bill as a price tag.\n\nThen the shell. Hono on 127.0.0.1:4040, SQLite in Application Support, collectors on\ntimers. Two tiles went live and the rest sat as placeholders in their final positions:\n\n- **Launchpad:** last git commit or newest file per app, a dusty sticker after 30 days\n  untouched, and a live running check for the local servers.\n- **Hosted:** HTTP checks with 24 points of history per site, plus DigitalOcean's apps\n  and balance once a read-only token was in the Keychain.\n\nBefore any of it, a Python spike against the Bambu P2S confirmed it reports state,\nfile, percent, time left, temps and AMS trays over LAN MQTT with Developer Mode off.\nThat answered the one question that could have killed the printing tile later."
+    },
+    {
       "build": "vizbot",
       "buildTitle": "vizBot",
       "date": "2026-10-15",
@@ -5208,5 +5589,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-16T02:34:12.086Z"
+  "generatedAt": "2026-10-16T14:59:49.588Z"
 }
