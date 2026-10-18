@@ -40,7 +40,8 @@ starts at login and reconnects by itself after an unplug or sleep.
 ## The desk controller
 
 A Waveshare ESP32-S3-Tiny with a 2.4" ST7789 screen, a rotary encoder with push, a
-KO button and two chained 8×8 WS2812 panels as a 16×8 display. It finds vizMac on
+KO button and two chained 8×8 WS2812 panels as a 16×8 display. The second one built
+adds four key switches, one per mode. It finds vizMac on
 Wi-Fi over Bonjour and pairs with a 6-character code.
 
 It has four modes behind a mode picker:
