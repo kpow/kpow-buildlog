@@ -885,6 +885,178 @@
       ]
     },
     {
+      "slug": "cyberdeck",
+      "title": "The Cyberdeck (noode-exp)",
+      "status": "active",
+      "kind": "hardware",
+      "summary": "A portable Raspberry Pi workstation with a custom ESP32 electronics bench.",
+      "stack": [
+        "Raspberry Pi 5",
+        "ESP32-S3",
+        "ST7789",
+        "WS2812",
+        "HLK-LD2412",
+        "PlatformIO"
+      ],
+      "tags": [
+        "cyberdeck",
+        "pi",
+        "bench"
+      ],
+      "rung": "design",
+      "facts": {
+        "modes": "11"
+      },
+      "repo": "kpow/noodle-exp",
+      "hero": "/buildlog/cyberdeck/media/hero.jpg",
+      "heroVideo": null,
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/noodle-exp"
+        }
+      ],
+      "started": "2026-06-28",
+      "body": "A portable computer I built to be my bench, not just to sit on it.\n\nThe deck half is an assembly job, no code of mine in it:\n\n- **Raspberry Pi 5**, 8 GB, with a 7\" touchscreen\n- **Mii Bluetooth keyboard** in a printed tray\n- **M5Stack Stick / Joy-C** as the mouse\n\nThe repo name, `noodle-exp`, belongs to the other half. **noode-exp** is a\nstandalone ESP32-S3 gadget that lives on the deck as its electronics workbench: a\nLonely Binary ESP32-S3 N16R8 driving a 2\" ST7789, an EC11 encoder and a KY-023\njoystick, a 4×4 WS2812 matrix, a pair of LED filament \"noodles\" (hence the name),\nand an HLK-LD2412 mmWave presence radar.\n\nIt runs 11 modes off about 2500 lines of monolithic C++, dual-core with a PSRAM\nframebuffer:\n\n| Kind | Modes |\n|---|---|\n| **3D** | Steer Cube, Cube Swarm, Warp Tunnel, Box Physics |\n| **Pattern** | Chladni, Kaleido |\n| **Light** | Filaments, LED Matrix, Color Pick |\n| **Sensor** | Room Radar, Presence Log |\n\nNo WiFi, no Bluetooth, no companion app. It is a genuinely standalone appliance,\nwhich is rarer than it should be.\n\nThe v1 case geometry came out broken. v2 got a redesigned keyboard tray, and that\none is the hero.",
+      "stats": {
+        "entries": 8,
+        "photos": 4,
+        "daysActive": 119,
+        "firstEntry": "2026-06-28",
+        "lastEntry": "2026-10-24"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-06-29",
+          "src": "/buildlog/cyberdeck/media/v1.jpg",
+          "caption": "v1: the Pi tablet and the noode-exp bench"
+        },
+        {
+          "date": "2026-06-30",
+          "src": "/buildlog/cyberdeck/media/detail.jpg"
+        },
+        {
+          "date": "2026-07-01",
+          "src": "/buildlog/cyberdeck/media/gadget.jpg",
+          "caption": "Chladni, one of 42 standing-wave figures"
+        },
+        {
+          "date": "2026-07-04",
+          "src": "/buildlog/cyberdeck/media/hero.jpg"
+        }
+      ],
+      "lastEntry": "2026-10-24",
+      "entries": [
+        {
+          "date": "2026-10-24",
+          "title": "Second smoke on the old board, the spare takes over",
+          "tags": [
+            "hardware-lesson",
+            "power",
+            "bring-up"
+          ],
+          "media": [],
+          "body": "I kept using the half-dead original while the replacement was on its way. It ran off the UART port, with a 5V supply on the breadboard for the LEDs. Then I seated the TPS protoboard one pin off in its header. The TPS input and output went straight back down a GPIO, and that finished the original board.\n\nThe spare had already arrived, so it became the main board. Good thing the old one was the one taking the risks.\n\nBring-up on the new board took a couple of days, and everything on the bench works. The 5V bus runs off a BTF-Lighting 5V 3A supply instead of the DP100 I'd planned on.\n\nThe TPS boards aren't back in yet. Quick metering says they're probably fine, but they still need a proper test.\n\n> **Next:** put a 2N7000 gate between the GPIO and the TPS board, so a misplaced header can't reach the MCU again."
+        },
+        {
+          "date": "2026-10-19",
+          "title": "Smoke from a backwards TPS61169, and a board that wasn't dead",
+          "tags": [
+            "hardware-lesson",
+            "power"
+          ],
+          "media": [],
+          "body": "I wired an Adafruit TPS61169 boost board in with VIN and GND swapped while adding it to drive the noodles. There was a puff of smoke and everything went dark. It sat on a protoboard with two more TPS boards, all set to 5V.\n\nThe board looked completely dead, with no serial port at all. Most of it wasn't:\n\n- **CH340 driver:** the macOS driver extension was disabled, so the UART port enumerated with no `/dev/cu.*` node. Enabling it brought the port back.\n- **5V path:** dead. Fault current came from native USB's VBUS, through the board's 5V rail and out the 5V pin into the reversed TPS. Native USB went with it.\n- **Onboard WS2812:** its GPIO stopped driving it.\n- **Orange matrix:** a brownout, not damage. 16 WS2812Bs pull ~960mA, fed through the board off a 500mA USB port.\n\nThe SoC, 16MB flash and 8MB PSRAM all checked out. A `uart-serial` build sent `Serial` to UART0, and the firmware ran at 38 fps over the CH340. Ordered a replacement anyway.\n\n> **Lesson:** the dev board's 5V pin is a convenience tap, not a power rail. Every load fault on it ran through the MCU."
+        },
+        {
+          "date": "2026-07-05",
+          "title": "mmWave presence work feeds a planned vizBot add-on",
+          "tags": [
+            "mmwave",
+            "radar",
+            "vizbot",
+            "roadmap"
+          ],
+          "media": [],
+          "body": "Room Radar and Presence Log exist to prove out the HLK-LD2412 mmWave sensor. Both modes just show what the sensor sees: presence in the room, and a rolling log of when it changed.\n\n> **Next:** spin the presence detection out into a vizBot add-on, so the robot knows when someone is nearby. noode-exp is the bench where that gets proven first."
+        },
+        {
+          "date": "2026-07-04",
+          "title": "v2 case with the redesigned keyboard tray",
+          "tags": [
+            "case",
+            "v2",
+            "hero"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/cyberdeck/media/hero.jpg"
+            }
+          ],
+          "body": "Redrew the broken v1 geometry into a v2 case with a proper keyboard tray, and it sits and folds the way it was supposed to. The Mii keyboard drops into the tray, the 7\" screen mounts above it, the bench box docks alongside.\n\nThis is the configuration I actually carry."
+        },
+        {
+          "date": "2026-07-01",
+          "title": "noode-exp bench running — 11 modes and a Chladni pattern",
+          "tags": [
+            "esp32",
+            "firmware",
+            "chladni"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/cyberdeck/media/gadget.jpg",
+              "caption": "Chladni, one of 42 standing-wave figures"
+            }
+          ],
+          "body": "The bench is alive. All 11 modes cycle off the encoder, Steer Cube through Room Radar, with the LEDs running on core 0 and the ST7789 pushed to 80 MHz SPI so nothing tears while a mode is animating.\n\nThe matrix effects are ported from NoodleLab.\n\nNo WiFi, no Bluetooth, no app. It boots into its own modes and that's the whole contract."
+        },
+        {
+          "date": "2026-06-30",
+          "title": "Case color scheme — black with neon-yellow, skull on the bench box",
+          "tags": [
+            "case",
+            "design",
+            "branding"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/cyberdeck/media/detail.jpg"
+            }
+          ],
+          "body": "Set the colour scheme across both enclosures: black with neon-yellow accents, and a skull on the electronics box to match the branding on everything else I build.\n\nStood the folded case next to the bench box, and for the first time the two read as one rig instead of two projects."
+        },
+        {
+          "date": "2026-06-29",
+          "title": "v1 rig assembled — Pi tablet plus the ESP32 bench",
+          "tags": [
+            "pi",
+            "case",
+            "v1"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/cyberdeck/media/v1.jpg",
+              "caption": "v1: the Pi tablet and the noode-exp bench"
+            }
+          ],
+          "body": "Got the v1 rig standing: the Pi tablet beside the noode-exp bench, a case each.\n\nThe case geometry is wrong. Parts don't seat cleanly and it won't fold flat, which was the entire point of the hinge. Logging it here rather than fixing it in place, because the tray needs redrawing from scratch."
+        },
+        {
+          "date": "2026-06-28",
+          "title": "First Pi 5 build — 7\" touch, Bluetooth keyboard, Joy-C mouse",
+          "tags": [
+            "pi",
+            "hardware",
+            "start"
+          ],
+          "media": [],
+          "body": "Started assembling the deck around an 8 GB Raspberry Pi 5, with a 7\" touchscreen as the only display. Text comes from a Mii Bluetooth keyboard, pointing from an M5Stack Stick running a Joy-C, which is a stand-in mouse and a strange little one.\n\nThat's the whole input story. No external host, no Pi software yet: this half of the rig is hardware assembly."
+        }
+      ]
+    },
+    {
       "slug": "vizmac",
       "title": "vizMac",
       "status": "active",
@@ -3218,157 +3390,6 @@
           "body": "Scaffold to finished game firmware in one session: engine, level progression, scoring.\n\nThe whole field is bits. Each row is a `uint8_t`, and landing a piece is three operations:\n\n- AND the candidate row with the row below, and what survives is the overlap\n- popcount that, and you have the new width\n- count trailing zeros, and you have the left edge\n\nNo pixel arrays anywhere, just bit twiddling on a non-blocking `millis()` state machine. High score goes to NVS so it survives a power cycle.\n\nWrote the build guide out in full while the wiring was fresh, down to drawing the resistor bodies with correct 5-band colour codes so the BOM reads straight off the page. Renamed the whole thing STACKLED somewhere in there."
         }
       ]
-    },
-    {
-      "slug": "cyberdeck",
-      "title": "The Cyberdeck (noode-exp)",
-      "status": "active",
-      "kind": "hardware",
-      "summary": "A portable Raspberry Pi workstation with a custom ESP32 electronics bench.",
-      "stack": [
-        "Raspberry Pi 5",
-        "ESP32-S3",
-        "ST7789",
-        "WS2812",
-        "HLK-LD2412",
-        "PlatformIO"
-      ],
-      "tags": [
-        "cyberdeck",
-        "pi",
-        "bench"
-      ],
-      "rung": "design",
-      "facts": {
-        "modes": "11"
-      },
-      "repo": "kpow/noodle-exp",
-      "hero": "/buildlog/cyberdeck/media/hero.jpg",
-      "heroVideo": null,
-      "links": [
-        {
-          "label": "repo",
-          "url": "https://github.com/kpow/noodle-exp"
-        }
-      ],
-      "started": "2026-06-28",
-      "body": "A portable computer I built to be my bench, not just to sit on it.\n\nThe deck half is an assembly job, no code of mine in it:\n\n- **Raspberry Pi 5**, 8 GB, with a 7\" touchscreen\n- **Mii Bluetooth keyboard** in a printed tray\n- **M5Stack Stick / Joy-C** as the mouse\n\nThe repo name, `noodle-exp`, belongs to the other half. **noode-exp** is a\nstandalone ESP32-S3 gadget that lives on the deck as its electronics workbench: a\nLonely Binary ESP32-S3 N16R8 driving a 2\" ST7789, an EC11 encoder and a KY-023\njoystick, a 4×4 WS2812 matrix, a pair of LED filament \"noodles\" (hence the name),\nand an HLK-LD2412 mmWave presence radar.\n\nIt runs 11 modes off about 2500 lines of monolithic C++, dual-core with a PSRAM\nframebuffer:\n\n| Kind | Modes |\n|---|---|\n| **3D** | Steer Cube, Cube Swarm, Warp Tunnel, Box Physics |\n| **Pattern** | Chladni, Kaleido |\n| **Light** | Filaments, LED Matrix, Color Pick |\n| **Sensor** | Room Radar, Presence Log |\n\nNo WiFi, no Bluetooth, no companion app. It is a genuinely standalone appliance,\nwhich is rarer than it should be.\n\nThe v1 case geometry came out broken. v2 got a redesigned keyboard tray, and that\none is the hero.",
-      "stats": {
-        "entries": 6,
-        "photos": 4,
-        "daysActive": 8,
-        "firstEntry": "2026-06-28",
-        "lastEntry": "2026-07-05"
-      },
-      "git": null,
-      "picturesOverTime": [
-        {
-          "date": "2026-06-29",
-          "src": "/buildlog/cyberdeck/media/v1.jpg",
-          "caption": "v1: the Pi tablet and the noode-exp bench"
-        },
-        {
-          "date": "2026-06-30",
-          "src": "/buildlog/cyberdeck/media/detail.jpg"
-        },
-        {
-          "date": "2026-07-01",
-          "src": "/buildlog/cyberdeck/media/gadget.jpg",
-          "caption": "Chladni, one of 42 standing-wave figures"
-        },
-        {
-          "date": "2026-07-04",
-          "src": "/buildlog/cyberdeck/media/hero.jpg"
-        }
-      ],
-      "lastEntry": "2026-07-05",
-      "entries": [
-        {
-          "date": "2026-07-05",
-          "title": "mmWave presence work feeds a planned vizBot add-on",
-          "tags": [
-            "mmwave",
-            "radar",
-            "vizbot",
-            "roadmap"
-          ],
-          "media": [],
-          "body": "Room Radar and Presence Log exist to prove out the HLK-LD2412 mmWave sensor. Both modes just show what the sensor sees: presence in the room, and a rolling log of when it changed.\n\n> **Next:** spin the presence detection out into a vizBot add-on, so the robot knows when someone is nearby. noode-exp is the bench where that gets proven first."
-        },
-        {
-          "date": "2026-07-04",
-          "title": "v2 case with the redesigned keyboard tray",
-          "tags": [
-            "case",
-            "v2",
-            "hero"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/cyberdeck/media/hero.jpg"
-            }
-          ],
-          "body": "Redrew the broken v1 geometry into a v2 case with a proper keyboard tray, and it sits and folds the way it was supposed to. The Mii keyboard drops into the tray, the 7\" screen mounts above it, the bench box docks alongside.\n\nThis is the configuration I actually carry."
-        },
-        {
-          "date": "2026-07-01",
-          "title": "noode-exp bench running — 11 modes and a Chladni pattern",
-          "tags": [
-            "esp32",
-            "firmware",
-            "chladni"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/cyberdeck/media/gadget.jpg",
-              "caption": "Chladni, one of 42 standing-wave figures"
-            }
-          ],
-          "body": "The bench is alive. All 11 modes cycle off the encoder, Steer Cube through Room Radar, with the LEDs running on core 0 and the ST7789 pushed to 80 MHz SPI so nothing tears while a mode is animating.\n\nThe matrix effects are ported from NoodleLab.\n\nNo WiFi, no Bluetooth, no app. It boots into its own modes and that's the whole contract."
-        },
-        {
-          "date": "2026-06-30",
-          "title": "Case color scheme — black with neon-yellow, skull on the bench box",
-          "tags": [
-            "case",
-            "design",
-            "branding"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/cyberdeck/media/detail.jpg"
-            }
-          ],
-          "body": "Set the colour scheme across both enclosures: black with neon-yellow accents, and a skull on the electronics box to match the branding on everything else I build.\n\nStood the folded case next to the bench box, and for the first time the two read as one rig instead of two projects."
-        },
-        {
-          "date": "2026-06-29",
-          "title": "v1 rig assembled — Pi tablet plus the ESP32 bench",
-          "tags": [
-            "pi",
-            "case",
-            "v1"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/cyberdeck/media/v1.jpg",
-              "caption": "v1: the Pi tablet and the noode-exp bench"
-            }
-          ],
-          "body": "Got the v1 rig standing: the Pi tablet beside the noode-exp bench, a case each.\n\nThe case geometry is wrong. Parts don't seat cleanly and it won't fold flat, which was the entire point of the hinge. Logging it here rather than fixing it in place, because the tray needs redrawing from scratch."
-        },
-        {
-          "date": "2026-06-28",
-          "title": "First Pi 5 build — 7\" touch, Bluetooth keyboard, Joy-C mouse",
-          "tags": [
-            "pi",
-            "hardware",
-            "start"
-          ],
-          "media": [],
-          "body": "Started assembling the deck around an 8 GB Raspberry Pi 5, with a 7\" touchscreen as the only display. Text comes from a Mii Bluetooth keyboard, pointing from an M5Stack Stick running a Joy-C, which is a stand-in mouse and a strange little one.\n\nThat's the whole input story. No external host, no Pi software yet: this half of the rig is hardware assembly."
-        }
-      ]
     }
   ],
   "recent": [
@@ -3404,6 +3425,31 @@
         }
       ],
       "body": "The character art in void, a voice companion for Claude Code, got me wanting better eyes. vizBot had 13 separate eye drawings, and faces swapped halfway through a blend.\n\nThe rework happened in an eye lab page: today's renderer next to the new model at real device pixels, with sliders that save. A design agent and an art director agent ran four review rounds against a six-point scorecard, and I tuned seven faces myself.\n\n- **One eye shape:** top and bottom lids, slant, sag and a closed arc. The lids carry the emotion and the pupils stay black cut-outs.\n- **Springs:** faces blend instead of snapping, and a blink closes in 80 ms and opens in 140 ms.\n- **Morphs:** hearts and stars grow out of the pupil, and the spiral, X and glitch close with the lids.\n\nAll 600 face-to-face changes pass in the lab. On the bots a face draws in 4.0 ms on the 1.69 and 6.3 ms on the Stackchan. It's flashed to old-dino and skunky as v3.7.39, with the PR open.\n\n> **Next:** release 3.7.39, then port it to vizMini."
+    },
+    {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-10-24",
+      "title": "Second smoke on the old board, the spare takes over",
+      "tags": [
+        "hardware-lesson",
+        "power",
+        "bring-up"
+      ],
+      "media": [],
+      "body": "I kept using the half-dead original while the replacement was on its way. It ran off the UART port, with a 5V supply on the breadboard for the LEDs. Then I seated the TPS protoboard one pin off in its header. The TPS input and output went straight back down a GPIO, and that finished the original board.\n\nThe spare had already arrived, so it became the main board. Good thing the old one was the one taking the risks.\n\nBring-up on the new board took a couple of days, and everything on the bench works. The 5V bus runs off a BTF-Lighting 5V 3A supply instead of the DP100 I'd planned on.\n\nThe TPS boards aren't back in yet. Quick metering says they're probably fine, but they still need a proper test.\n\n> **Next:** put a 2N7000 gate between the GPIO and the TPS board, so a misplaced header can't reach the MCU again."
+    },
+    {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-10-19",
+      "title": "Smoke from a backwards TPS61169, and a board that wasn't dead",
+      "tags": [
+        "hardware-lesson",
+        "power"
+      ],
+      "media": [],
+      "body": "I wired an Adafruit TPS61169 boost board in with VIN and GND swapped while adding it to drive the noodles. There was a puff of smoke and everything went dark. It sat on a protoboard with two more TPS boards, all set to 5V.\n\nThe board looked completely dead, with no serial port at all. Most of it wasn't:\n\n- **CH340 driver:** the macOS driver extension was disabled, so the UART port enumerated with no `/dev/cu.*` node. Enabling it brought the port back.\n- **5V path:** dead. Fault current came from native USB's VBUS, through the board's 5V rail and out the 5V pin into the reversed TPS. Native USB went with it.\n- **Onboard WS2812:** its GPIO stopped driving it.\n- **Orange matrix:** a brownout, not damage. 16 WS2812Bs pull ~960mA, fed through the board off a 500mA USB port.\n\nThe SoC, 16MB flash and 8MB PSRAM all checked out. A `uart-serial` build sent `Serial` to UART0, and the firmware ran at 38 fps over the CH340. Ordered a replacement anyway.\n\n> **Lesson:** the dev board's 5V pin is a convenience tap, not a power rail. Every load fault on it ran through the MCU."
     },
     {
       "build": "vizmac",
@@ -5034,6 +5080,23 @@
       "body": "Room Radar and Presence Log exist to prove out the HLK-LD2412 mmWave sensor. Both modes just show what the sensor sees: presence in the room, and a rolling log of when it changed.\n\n> **Next:** spin the presence detection out into a vizBot add-on, so the robot knows when someone is nearby. noode-exp is the bench where that gets proven first."
     },
     {
+      "build": "cyberdeck",
+      "buildTitle": "The Cyberdeck (noode-exp)",
+      "date": "2026-07-04",
+      "title": "v2 case with the redesigned keyboard tray",
+      "tags": [
+        "case",
+        "v2",
+        "hero"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/cyberdeck/media/hero.jpg"
+        }
+      ],
+      "body": "Redrew the broken v1 geometry into a v2 case with a proper keyboard tray, and it sits and folds the way it was supposed to. The Mii keyboard drops into the tray, the 7\" screen mounts above it, the bench box docks alongside.\n\nThis is the configuration I actually carry."
+    },
+    {
       "build": "stackled",
       "buildTitle": "StackLED",
       "date": "2026-07-04",
@@ -5058,23 +5121,6 @@
       ],
       "media": [],
       "body": "Scaffold to finished game firmware in one session: engine, level progression, scoring.\n\nThe whole field is bits. Each row is a `uint8_t`, and landing a piece is three operations:\n\n- AND the candidate row with the row below, and what survives is the overlap\n- popcount that, and you have the new width\n- count trailing zeros, and you have the left edge\n\nNo pixel arrays anywhere, just bit twiddling on a non-blocking `millis()` state machine. High score goes to NVS so it survives a power cycle.\n\nWrote the build guide out in full while the wiring was fresh, down to drawing the resistor bodies with correct 5-band colour codes so the BOM reads straight off the page. Renamed the whole thing STACKLED somewhere in there."
-    },
-    {
-      "build": "cyberdeck",
-      "buildTitle": "The Cyberdeck (noode-exp)",
-      "date": "2026-07-04",
-      "title": "v2 case with the redesigned keyboard tray",
-      "tags": [
-        "case",
-        "v2",
-        "hero"
-      ],
-      "media": [
-        {
-          "src": "/buildlog/cyberdeck/media/hero.jpg"
-        }
-      ],
-      "body": "Redrew the broken v1 geometry into a v2 case with a proper keyboard tray, and it sits and folds the way it was supposed to. The Mii keyboard drops into the tray, the 7\" screen mounts above it, the bench box docks alongside.\n\nThis is the configuration I actually carry."
     },
     {
       "build": "cyberdeck",
@@ -5882,5 +5928,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-25T14:48:04.898Z"
+  "generatedAt": "2026-10-25T14:57:18.789Z"
 }
