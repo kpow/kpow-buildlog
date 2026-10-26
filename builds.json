@@ -37,11 +37,11 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 47,
-        "photos": 35,
-        "daysActive": 275,
+        "entries": 48,
+        "photos": 39,
+        "daysActive": 276,
         "firstEntry": "2026-01-24",
-        "lastEntry": "2026-10-25"
+        "lastEntry": "2026-10-26"
       },
       "git": null,
       "picturesOverTime": [
@@ -220,10 +220,64 @@
           "src": "/buildlog/vizbot/media/eyes-old-dino.jpg",
           "kind": "screenshot",
           "caption": "On old-dino over the ambient background, 4 ms a frame"
+        },
+        {
+          "date": "2026-10-26",
+          "src": "/buildlog/vizbot/media/party-corner.jpg",
+          "kind": "screenshot",
+          "caption": "The blob in its corner with its floor shadow, on old-dino"
+        },
+        {
+          "date": "2026-10-26",
+          "src": "/buildlog/vizbot/media/party-dash.jpg",
+          "kind": "screenshot",
+          "caption": "Mid-dash after a poke, spikes reaching ahead"
+        },
+        {
+          "date": "2026-10-26",
+          "src": "/buildlog/vizbot/media/party-shake.jpg",
+          "kind": "screenshot",
+          "caption": "A shake: porcupine spikes and dizzy eyes"
+        },
+        {
+          "date": "2026-10-26",
+          "src": "/buildlog/vizbot/media/party-settings.jpg",
+          "kind": "screenshot"
         }
       ],
-      "lastEntry": "2026-10-25",
+      "lastEntry": "2026-10-26",
       "entries": [
+        {
+          "date": "2026-10-26",
+          "title": "Party mode: the face becomes a ferrofluid blob, v3.8.0",
+          "tags": [
+            "party-mode",
+            "firmware",
+            "release"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/party-corner.jpg",
+              "kind": "screenshot",
+              "caption": "The blob in its corner with its floor shadow, on old-dino"
+            },
+            {
+              "src": "/buildlog/vizbot/media/party-dash.jpg",
+              "kind": "screenshot",
+              "caption": "Mid-dash after a poke, spikes reaching ahead"
+            },
+            {
+              "src": "/buildlog/vizbot/media/party-shake.jpg",
+              "kind": "screenshot",
+              "caption": "A shake: porcupine spikes and dizzy eyes"
+            },
+            {
+              "src": "/buildlog/vizbot/media/party-settings.jpg",
+              "kind": "screenshot"
+            }
+          ],
+          "body": "Party mode hands the whole screen to the ambient effect and shrinks the face into a black blob in a corner, eyes still inside. The look comes from void again: a gooey body with a wobbly edge and a shadow under it.\n\nIt started as a browser prototype running the eye lab's real eye model at device pixels. A motion design agent specced the springs, spikes and shadow, and a layout agent the sizes and placement. I tried a tiny mouth and the album-art mouth against none and kept none. I dropped the corner setting too, because picking a corner is his job.\n\n- **Body:** a 120-point outline made of breath, three slow edge waves, squash, stretch and a bulge toward his gaze. A rim, a sheen tinted by the show and a floor shadow sit around it.\n- **Corners:** a poke sends him dashing to another corner. Every 25 to 60 s he strolls to a new one on his own.\n- **Reactions:** a tap elsewhere pulls a fan of spikes toward the finger. A shake turns him into a porcupine.\n- **Music:** on the CoreS3 and Stackchan the spikes pump on mic beats. The 1.69 has no mic, so it sends itself a pulse.\n\nTurning it on, the stroke around the eyes becomes the drop under a blink and hops into its corner. It lives under Look in the touch settings and on the web page.\n\n> **Lesson:** the first build cost 6.3 ms a frame on the 1.69. The polygon fill tested all 120 edges on every row, and the rim halved every pixel under the blob before the body covered it. Bucketing crossings by row and filling rim and body in one pass got it to 3.0 ms.\n\nOut as v3.8.0."
+        },
         {
           "date": "2026-10-25",
           "title": "New eyes: one shape with lids replaces 13 eye modes",
@@ -3396,6 +3450,39 @@
     {
       "build": "vizbot",
       "buildTitle": "vizBot",
+      "date": "2026-10-26",
+      "title": "Party mode: the face becomes a ferrofluid blob, v3.8.0",
+      "tags": [
+        "party-mode",
+        "firmware",
+        "release"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/party-corner.jpg",
+          "kind": "screenshot",
+          "caption": "The blob in its corner with its floor shadow, on old-dino"
+        },
+        {
+          "src": "/buildlog/vizbot/media/party-dash.jpg",
+          "kind": "screenshot",
+          "caption": "Mid-dash after a poke, spikes reaching ahead"
+        },
+        {
+          "src": "/buildlog/vizbot/media/party-shake.jpg",
+          "kind": "screenshot",
+          "caption": "A shake: porcupine spikes and dizzy eyes"
+        },
+        {
+          "src": "/buildlog/vizbot/media/party-settings.jpg",
+          "kind": "screenshot"
+        }
+      ],
+      "body": "Party mode hands the whole screen to the ambient effect and shrinks the face into a black blob in a corner, eyes still inside. The look comes from void again: a gooey body with a wobbly edge and a shadow under it.\n\nIt started as a browser prototype running the eye lab's real eye model at device pixels. A motion design agent specced the springs, spikes and shadow, and a layout agent the sizes and placement. I tried a tiny mouth and the album-art mouth against none and kept none. I dropped the corner setting too, because picking a corner is his job.\n\n- **Body:** a 120-point outline made of breath, three slow edge waves, squash, stretch and a bulge toward his gaze. A rim, a sheen tinted by the show and a floor shadow sit around it.\n- **Corners:** a poke sends him dashing to another corner. Every 25 to 60 s he strolls to a new one on his own.\n- **Reactions:** a tap elsewhere pulls a fan of spikes toward the finger. A shake turns him into a porcupine.\n- **Music:** on the CoreS3 and Stackchan the spikes pump on mic beats. The 1.69 has no mic, so it sends itself a pulse.\n\nTurning it on, the stroke around the eyes becomes the drop under a blink and hops into its corner. It lives under Look in the touch settings and on the web page.\n\n> **Lesson:** the first build cost 6.3 ms a frame on the 1.69. The polygon fill tested all 120 edges on every row, and the rim halved every pixel under the blob before the body covered it. Bucketing crossings by row and filling rim and body in one pass got it to 3.0 ms.\n\nOut as v3.8.0."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
       "date": "2026-10-25",
       "title": "New eyes: one shape with lids replaces 13 eye modes",
       "tags": [
@@ -5928,5 +6015,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-25T14:57:18.789Z"
+  "generatedAt": "2026-10-26T04:57:06.083Z"
 }
