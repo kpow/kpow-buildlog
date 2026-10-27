@@ -37,8 +37,8 @@
       "started": "2026-01-24",
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
       "stats": {
-        "entries": 50,
-        "photos": 50,
+        "entries": 51,
+        "photos": 53,
         "daysActive": 277,
         "firstEntry": "2026-01-24",
         "lastEntry": "2026-10-27"
@@ -281,6 +281,24 @@
         },
         {
           "date": "2026-10-27",
+          "src": "/buildlog/vizbot/media/code-reading.jpg",
+          "kind": "screenshot",
+          "caption": "Reading: two mirrored tentacles trace lines of the code minimap"
+        },
+        {
+          "date": "2026-10-27",
+          "src": "/buildlog/vizbot/media/code-quip-mouth.jpg",
+          "kind": "screenshot",
+          "caption": "A quip: the mouth surfaces in the ink, a crown of spikes rides the voice"
+        },
+        {
+          "date": "2026-10-27",
+          "src": "/buildlog/vizbot/media/code-found-it.jpg",
+          "kind": "screenshot",
+          "caption": "Found it: the line lights up between the tentacle tips and a Grand Crown bursts"
+        },
+        {
+          "date": "2026-10-27",
           "src": "/buildlog/vizbot/media/voice-listen.jpg",
           "kind": "screenshot",
           "caption": "Listening: an ear tentacle reaches toward the middle of the screen"
@@ -312,6 +330,33 @@
       ],
       "lastEntry": "2026-10-27",
       "entries": [
+        {
+          "date": "2026-10-27",
+          "title": "Code mode: he looks up his own code, v3.10.0",
+          "tags": [
+            "code-mode",
+            "voice",
+            "release"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/code-reading.jpg",
+              "kind": "screenshot",
+              "caption": "Reading: two mirrored tentacles trace lines of the code minimap"
+            },
+            {
+              "src": "/buildlog/vizbot/media/code-quip-mouth.jpg",
+              "kind": "screenshot",
+              "caption": "A quip: the mouth surfaces in the ink, a crown of spikes rides the voice"
+            },
+            {
+              "src": "/buildlog/vizbot/media/code-found-it.jpg",
+              "kind": "screenshot",
+              "caption": "Found it: the line lights up between the tentacle tips and a Grand Crown bursts"
+            }
+          ],
+          "body": "I wanted to sit with skunky and ask him how he works. Now he looks it up. A new connector, vizself, hands vizBot Brain his own code. It reads the vizpow repo from git at the newest firmware tag, so it describes what's flashed on him, not whatever branch I have checked out. Search mixes keywords with a small local embedding model and a self-map of every file, each with the spoken questions it answers.\n\n- **Code mode:** while he digs, his face rounds into a big ink drop over a dim scrolling code minimap. Two mirrored tentacles read along the lines, his eyes scan them, and patterns stack on his head. Two of them are new: a \"compile\" progress bar and an \"aha\" finger.\n- **Quips:** every 8 seconds or so he stops reading and says something corny into the same reply clip. That also keeps the bot's 45 second read timeout from ending a long dig.\n- **Found it:** the line lights up, both tentacles grab its ends, a Grand Crown bursts with two droplets, and he turns back into his face to answer.\n\n> **Trap:** in the first voice test he answered from his own prompt instead of looking anything up, because \"use tools only to change things\" won. He also narrated between look-ups. The prompt now makes questions about himself the exception, and anything said between look-ups is held back.\n\nIt costs 14 ms a frame on the CoreS3, twice the estimate, because the canvas lives in PSRAM. The frame rate didn't move. A 10-question test came back 10 for 10. Out as firmware v3.10.0 and vizbrain 1.4.0, on skunky."
+        },
         {
           "date": "2026-10-27",
           "title": "Party mode gets its voice back: speech bubbles and a blob that listens, v3.9.1",
@@ -3594,6 +3639,35 @@
       "build": "vizbot",
       "buildTitle": "vizBot",
       "date": "2026-10-27",
+      "title": "Code mode: he looks up his own code, v3.10.0",
+      "tags": [
+        "code-mode",
+        "voice",
+        "release"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/code-reading.jpg",
+          "kind": "screenshot",
+          "caption": "Reading: two mirrored tentacles trace lines of the code minimap"
+        },
+        {
+          "src": "/buildlog/vizbot/media/code-quip-mouth.jpg",
+          "kind": "screenshot",
+          "caption": "A quip: the mouth surfaces in the ink, a crown of spikes rides the voice"
+        },
+        {
+          "src": "/buildlog/vizbot/media/code-found-it.jpg",
+          "kind": "screenshot",
+          "caption": "Found it: the line lights up between the tentacle tips and a Grand Crown bursts"
+        }
+      ],
+      "body": "I wanted to sit with skunky and ask him how he works. Now he looks it up. A new connector, vizself, hands vizBot Brain his own code. It reads the vizpow repo from git at the newest firmware tag, so it describes what's flashed on him, not whatever branch I have checked out. Search mixes keywords with a small local embedding model and a self-map of every file, each with the spoken questions it answers.\n\n- **Code mode:** while he digs, his face rounds into a big ink drop over a dim scrolling code minimap. Two mirrored tentacles read along the lines, his eyes scan them, and patterns stack on his head. Two of them are new: a \"compile\" progress bar and an \"aha\" finger.\n- **Quips:** every 8 seconds or so he stops reading and says something corny into the same reply clip. That also keeps the bot's 45 second read timeout from ending a long dig.\n- **Found it:** the line lights up, both tentacles grab its ends, a Grand Crown bursts with two droplets, and he turns back into his face to answer.\n\n> **Trap:** in the first voice test he answered from his own prompt instead of looking anything up, because \"use tools only to change things\" won. He also narrated between look-ups. The prompt now makes questions about himself the exception, and anything said between look-ups is held back.\n\nIt costs 14 ms a frame on the CoreS3, twice the estimate, because the canvas lives in PSRAM. The frame rate didn't move. A 10-question test came back 10 for 10. Out as firmware v3.10.0 and vizbrain 1.4.0, on skunky."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-10-27",
       "title": "Party mode gets its voice back: speech bubbles and a blob that listens, v3.9.1",
       "tags": [
         "party-mode",
@@ -6240,5 +6314,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-27T16:42:56.250Z"
+  "generatedAt": "2026-10-27T23:05:47.423Z"
 }
