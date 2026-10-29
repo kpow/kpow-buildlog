@@ -3,14 +3,14 @@ slug: vizmac
 title: vizMac
 status: active
 kind: hybrid
-summary: Per-key RGB for a ROCCAT Vulcan Pro TKL on macOS, plus an ESP32-S3 desk controller with Now Playing, a focus clock and WLED control.
+summary: Per-key RGB for a ROCCAT Vulcan Pro TKL on macOS, plus an ESP32-S3 desk controller with Now Playing, a focus clock, WLED control and a Mac remote.
 stack: [macOS, Python, Swift, USB HID, ESP32-S3, TFT_eSPI, WS2812, WLED, PlatformIO]
 tags: [led, keyboard, firmware]
 repo: kpow/vizMac
 facts:
   effects: 25
   palettes: 23
-  modes: 4
+  modes: 5
 hero: media/hero.jpg
 links:
   - { label: repo, url: https://github.com/kpow/vizMac }
@@ -44,14 +44,15 @@ KO button and two chained 8×8 WS2812 panels as a 16×8 display. The second one 
 adds four key switches, one per mode. It finds vizMac on
 Wi-Fi over Bonjour and pairs with a 6-character code.
 
-It has four modes behind a mode picker:
+It has five modes behind a mode picker:
 
 - **Keys:** pick and tune the keyboard effects. The 16×8 shows the keyboard.
 - **Now Playing:** Spotify or Music with album art. Turn to skip. The 16×8 is a palette EQ.
 - **Clock:** an analog face and a focus timer that flashes the keyboard when it ends.
-- **WLED:** the lights on the network, picked and ordered in the web UI, controlled directly.
+- **WLED:** the lights on the network, picked and ordered in the web UI, controlled directly, with a live peek of each light.
+- **Mac:** volume, play/pause and the F-row keys of the Mac running vizMac. Keys 3 and 4 together open it.
 
-It doesn't receive pixels. vizMac sends a small sync packet each frame (clock,
+It doesn't receive pixels from vizMac. vizMac sends a small sync packet each frame (clock,
 audio, keypresses) and the controller renders the effects itself at 40 fps.
 
 Wi-Fi is set up from a phone by QR code. Firmware updates come over Wi-Fi from the
