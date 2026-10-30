@@ -1,6 +1,419 @@
 {
   "builds": [
     {
+      "slug": "kfun",
+      "title": "kFun",
+      "status": "active",
+      "kind": "hardware",
+      "summary": "Three handheld game consoles built from one codebase.",
+      "stack": [
+        "ESP32-S3",
+        "C++",
+        "LovyanGFX",
+        "PlatformIO"
+      ],
+      "tags": [
+        "handheld",
+        "games",
+        "firmware"
+      ],
+      "rung": "design",
+      "facts": {
+        "consoles": "3",
+        "games": "6"
+      },
+      "repo": "kpow/kfun",
+      "hero": "/buildlog/kfun/media/megafun-hero.jpg",
+      "heroVideo": null,
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/kfun"
+        }
+      ],
+      "started": "2026-05-28",
+      "body": "A family of handheld consoles built from one monorepo.\n\n| Spec | tinyfun | bigfun | megafun |\n|---|---|---|---|\n| Board | LOLIN S3 Mini Pro | ESP32-S3 SuperMini | ESP32-S3 SuperMini |\n| Screen | 128×128 GC9107 | 2.0\" 320×240 ST7789 | 2.0\" 320×240 ST7789 |\n| Input | 3 buttons | d-pad + two triggers | XY joystick + click |\n| Layout | portrait | landscape | landscape |\n\ntinyfun and bigfun run the same six slots, each game adapting to the hardware it\nlands on: lean and legible on three buttons, grown into sprites and particle\njuice on six. Sometimes the slot holds a different game entirely. Invaders\nbecomes Galaga on the wide board, Breakout becomes Arkanoid.\n\nTetris · Breakout · Snake · Invaders/Galaga · SkyGrid · Backgammon\n\nmegafun runs its own set on a joystick-native framework, and shares exactly the\npiece that has to stay in lockstep: the backgammon rules engine and the ESP-NOW\nlink, so all three can play each other.\n\n## How it holds together\n\n`common/` never names a GPIO or a screen size. Pins live only in each board's\n`Config.h`, and shared code branches on two capability flags those boards\ndeclare, `KF_LANDSCAPE` and `KF_DPAD`. megafun is the reason there are two: it's\nlandscape but joystick, which one flag couldn't express. Adding a board means\ndeclaring its capabilities, not adding a device identity.\n\nThe engine is a non-blocking contract (`init` / `update(dt)` / `render`) at a\nfixed 60 Hz, with every game placement-new'd into a single 12 KB arena that fails\nto compile if it won't fit. Two rules earned the hard way: the framebuffer is\npinned to SRAM because PSRAM faults on per-pixel writes, and the quit chord is\nun-swallowable, so a misbehaving game can never trap you inside it.\n\nFavourites among the six: **SkyGrid**, an original software 3D renderer with no\nz-buffer that pushes 128 triangles at 60 fps, and **Backgammon**, fully\nrules-checked and unit-tested, playing 2-ply expectimax on bigfun with a doubling\ncube, Crawford rule and NVS match save.",
+      "stats": {
+        "entries": 19,
+        "photos": 19,
+        "daysActive": 156,
+        "firstEntry": "2026-05-28",
+        "lastEntry": "2026-10-30"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-05-28",
+          "src": "/buildlog/kfun/media/mini-tetris-parts.jpg"
+        },
+        {
+          "date": "2026-08-01",
+          "src": "/buildlog/kfun/media/pair.jpg",
+          "caption": "bigfun next to the smaller tinyfun"
+        },
+        {
+          "date": "2026-08-01",
+          "src": "/buildlog/kfun/media/invaders.jpg"
+        },
+        {
+          "date": "2026-08-01",
+          "src": "/buildlog/kfun/media/bigfun-pinout.jpg"
+        },
+        {
+          "date": "2026-08-01",
+          "src": "/buildlog/kfun/media/bigfun-button-check.jpg"
+        },
+        {
+          "date": "2026-08-04",
+          "src": "/buildlog/kfun/media/hero.jpg",
+          "caption": "the finished bigfun"
+        },
+        {
+          "date": "2026-08-04",
+          "src": "/buildlog/kfun/media/splash.jpg"
+        },
+        {
+          "date": "2026-08-04",
+          "src": "/buildlog/kfun/media/console-family.jpg"
+        },
+        {
+          "date": "2026-08-10",
+          "src": "/buildlog/kfun/media/megafun-breadboard.jpg"
+        },
+        {
+          "date": "2026-08-10",
+          "src": "/buildlog/kfun/media/megafun-marbles.mp4",
+          "poster": "/buildlog/kfun/media/megafun-marbles.jpg"
+        },
+        {
+          "date": "2026-08-10",
+          "src": "/buildlog/kfun/media/megafun-boot.mp4",
+          "poster": "/buildlog/kfun/media/megafun-boot.jpg"
+        },
+        {
+          "date": "2026-08-10",
+          "src": "/buildlog/kfun/media/megafun-led-studio.mp4",
+          "poster": "/buildlog/kfun/media/megafun-led-studio.jpg"
+        },
+        {
+          "date": "2026-08-14",
+          "src": "/buildlog/kfun/media/tinyfun-shells.jpg"
+        },
+        {
+          "date": "2026-08-19",
+          "src": "/buildlog/kfun/media/tinyfun-purple.jpg"
+        },
+        {
+          "date": "2026-10-29",
+          "src": "/buildlog/kfun/media/tinyfun-v2-parts.jpg",
+          "caption": "HW-373 TP4056, rocker and 500 mAh LiPo"
+        },
+        {
+          "date": "2026-10-29",
+          "src": "/buildlog/kfun/media/tinyfun-v2-wiring.jpg"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/kfun/media/tinyfun-v2-three.jpg",
+          "caption": "Baseline in the middle, trim on either side"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/kfun/media/tinyfun-v2-boot.mp4",
+          "poster": "/buildlog/kfun/media/tinyfun-v2-boot.jpg"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/kfun/media/tinyfun-v2-trim-cad.jpg",
+          "kind": "screenshot",
+          "caption": "The trim design in SolidCraft"
+        }
+      ],
+      "lastEntry": "2026-10-30",
+      "entries": [
+        {
+          "date": "2026-10-30",
+          "title": "Three v2 cases, all booting",
+          "tags": [
+            "case",
+            "tinyfun"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/tinyfun-v2-three.jpg",
+              "caption": "Baseline in the middle, trim on either side"
+            },
+            {
+              "src": "/buildlog/kfun/media/tinyfun-v2-boot.mp4",
+              "poster": "/buildlog/kfun/media/tinyfun-v2-boot.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/tinyfun-v2-trim-cad.jpg",
+              "kind": "screenshot",
+              "caption": "The trim design in SolidCraft"
+            }
+          ],
+          "body": "Built two more boards into trim cases and flashed both with the current firmware. Both boot to the new Slackey wordmark. A fresh board needs BOOT+RESET for its first USB flash. That first flash also lays down the two-slot partition table, so every update after the case closes can go over the air."
+        },
+        {
+          "date": "2026-10-29",
+          "title": "Trim case, and the cube on tinyFun",
+          "tags": [
+            "case",
+            "tinyfun",
+            "backgammon"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/tinyfun-v2-parts.jpg",
+              "caption": "HW-373 TP4056, rocker and 500 mAh LiPo"
+            },
+            {
+              "src": "/buildlog/kfun/media/tinyfun-v2-wiring.jpg"
+            }
+          ],
+          "body": "The first v2 print passed on the 28th: everything fit, the buttons worked and the back plate didn't squeeze. A drop of foam tape under the battery made it snug. Then I tried to make it smaller, for real or just to the eye, without moving any internal pocket.\n\nThe trim version bevels the sides and thumb end at 45° and slims the hoop. The shell went from 12,602 to 10,125 mm³. It feels great in the hand. Fixes followed the same day:\n\n- **Battery leads:** the cradle's lead hole became an open slot, so a pre-wired battery drops in.\n- **Cradle:** 1 mm shorter. Tightening the screw had bound the buttons again.\n- **Charge port:** 1 mm toward the back (trim-v4, not printed yet).\n\nOn the software side, the doubling cube reached tinyFun: hold OK+R to double, then a TAKE / DROP sheet. It's committed as WIP and not yet checked on device."
+        },
+        {
+          "date": "2026-10-28",
+          "title": "Over-the-air updates, because the case hides USB",
+          "tags": [
+            "tinyfun",
+            "ota",
+            "backgammon"
+          ],
+          "media": [],
+          "body": "The v2 case leaves no easy way to the board's USB port, so updates have to go over the air. tinyFun had one 3 MB app slot and no room for a second. It moved to two 1.875 MB slots, leaving about 550 KB for the rest of the sprint. NVS stays put, so saved games survive.\n\nThe launcher got an Update card. It starts the board's own hotspot with a fresh 8-digit password on screen and serves an upload page: pick the .bin, press Upload. I chose a hotspot over home Wi-Fi so no credentials live on the device. A new image runs on probation and should roll back if it resets in the first 5 seconds. A browser upload worked on device. A deliberately bad image hasn't been tried yet.\n\nBackgammon on tinyFun plays matches now: the flow follows match length instead of screen shape, Options picks 1/3/5/7 and remembers it, and a quit match offers CONTINUE or NEW.\n\n> **Trap:** the partition switch needs one last USB flash, before the case closes."
+        },
+        {
+          "date": "2026-10-27",
+          "title": "Sprint day one: new type, chords, a hardened link",
+          "tags": [
+            "tinyfun",
+            "fonts",
+            "input"
+          ],
+          "media": [],
+          "body": "Started the v2 sprint with four goals: modern type, backgammon match play, tinyFun on the ESP-NOW link, and a new 2-player game. Three phases landed on day one.\n\n- **Type:** Slackey for titles and the boot wordmark, Kenney Pixel 8 for small text, kenvector for numbers. The old small sizes were blurry at 0.85\" and R read as A. Checked on glass on a profile-B board.\n- **Chords:** three buttons can't double or drop a cube, so two-button chords, holds and a SHIFT layer now sit on one shared ButtonCore. Every timed gesture shows a filling ring. A chord-lab screen settled the window at 120 ms, about 98% on device.\n- **Link:** receive moved onto the loop task, peers filtered by MAC, a CRC-32 state hash, protocol v2 with a version-mismatch screen. 200 lossy matches run headless in the tests."
+        },
+        {
+          "date": "2026-10-26",
+          "title": "tinyFun v2 case: one printed shell, captured buttons",
+          "tags": [
+            "case",
+            "tinyfun"
+          ],
+          "media": [],
+          "body": "The old case was a face module latched onto a tub, with buttons printed as flexure tongues in the face. Those tongues snapped off. v2 is a new enclosure in SolidCraft, generated from one script, with every key dimension a named parameter.\n\n- **Buttons:** three separate square plungers, printed flange-down and trapped from inside by the board.\n- **Layout:** portrait, screen at the top, an open thumb rest under the buttons.\n- **Stack:** layers that bear on each other: back plate, battery cradle, board tray, board, face.\n- **Closure:** a back plate on a dovetail and one M3 screw in the base of a vizBot-style hoop.\n\nThree print tests on the 25th moved the HW-373 charger around until it sat right. Snap tabs pressed on its LEDs, so it ended up hooked under two corner lips with the port hole holding its USB-C. Tightening the screw pressed the buttons until the cradle stopped short of the divider."
+        },
+        {
+          "date": "2026-09-16",
+          "title": "m5bigfun on CoreS3, and a chooser",
+          "tags": [
+            "m5bigfun",
+            "cores3",
+            "leds"
+          ],
+          "media": [],
+          "body": "Ported the console to m5bigfun: a CoreS3 sitting in a Faces Bottom3 with a Gamepad3, and two rows of five SK6812 to play with.\n\nThe LEDs got a job rather than a glow. Effects are ranked by tier, every game has a voice on the strips, and Backgammon uses them to show whose turn it is.\n\nSince the device also holds the vizBot firmware, there's a top-level chooser in the factory partition now: one board, two firmwares, pick at boot."
+        },
+        {
+          "date": "2026-09-05",
+          "title": "Third-batch board enrolled",
+          "tags": [
+            "hardware",
+            "tinyfun"
+          ],
+          "media": [],
+          "body": "Enrolled a third-batch tinyfun board as panel profile B.\n\nEvery batch of panels drifts a little in colour and gamma. Cutting a new profile beats re-fighting the same tuning on each board."
+        },
+        {
+          "date": "2026-08-19",
+          "title": "Shake to restart, and a printable case",
+          "tags": [
+            "imu",
+            "engine",
+            "case"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/tinyfun-purple.jpg"
+            }
+          ],
+          "body": "A QMI8658C shake HAL: physically shaking the console restarts the current game. bigfun has no IMU, so it gets a no-op stub and the games don't care which one they're on.\n\nThe engine resumes from NVS too, so a game picks up where you left it. And the enclosure is packaged as a sliceable 3MF project now, one print from a shell."
+        },
+        {
+          "date": "2026-08-14",
+          "title": "megafun folds in, three boards",
+          "tags": [
+            "monorepo",
+            "tinyfun",
+            "capabilities"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/tinyfun-shells.jpg"
+            }
+          ],
+          "body": "Folded megafun into the monorepo. All three boards share one core now, and the differences live in capability flags each board declares rather than in forks of the code.\n\nPer-board panel profiles landed with it, plus an on-board tuner, and the original tinyfun board is enrolled as profile M1. The launcher auto-rotates its attract cards after idle. Rewrote the README for three boards with a pre-commit guardrail, because a README about three boards will rot in a week otherwise."
+        },
+        {
+          "date": "2026-08-10",
+          "title": "megafun: a tilted screen and a joystick",
+          "tags": [
+            "megafun",
+            "joystick",
+            "marbles"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/megafun-breadboard.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/megafun-marbles.mp4",
+              "poster": "/buildlog/kfun/media/megafun-marbles.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/megafun-boot.mp4",
+              "poster": "/buildlog/kfun/media/megafun-boot.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/megafun-led-studio.mp4",
+              "poster": "/buildlog/kfun/media/megafun-led-studio.jpg"
+            }
+          ],
+          "body": "megafun was a way to keep expanding on what I was doing. I'd seen a tilted plane used as the support for a screen, and I had a small joystick lying around, so the two went together.\n\nI wanted a marbles game, and you can't do marbles without a joystick. It led to exploring a lot of other things on the same base:\n\n- **Marbles:** the tilt maze that started it\n- **Chladni:** a resonant-plate pattern generator\n- **LED Studio:** a menu for driving the LED cap on top"
+        },
+        {
+          "date": "2026-08-10",
+          "title": "Backgammon VS PLAYER over ESP-NOW",
+          "tags": [
+            "backgammon",
+            "esp-now",
+            "multiplayer"
+          ],
+          "media": [],
+          "body": "Backgammon plays over an ESP-NOW link now. Built phase by phase: turn transport first, then game-over sync, then the doubling cube, mirroring the megafun implementation so the two stay at parity.\n\nThen a per-device mirror and a resilience layer, so one dropped packet doesn't leave two boards disagreeing about where the checkers are."
+        },
+        {
+          "date": "2026-08-08",
+          "title": "Galaga trains and SkyGrid forks",
+          "tags": [
+            "bigfun",
+            "galaga",
+            "skygrid"
+          ],
+          "media": [],
+          "body": "Deepened the wide-board games. Galaga got enemy trains and a difficulty ladder; SkyGrid got track forks and ship motion that reads like a ship rather than a sprite sliding.\n\nBoth got UI effects that use the space the wide board actually has, instead of a small-screen layout stretched."
+        },
+        {
+          "date": "2026-08-04",
+          "title": "Galaga on bigfun, README rebranded kFun",
+          "tags": [
+            "bigfun",
+            "galaga",
+            "milestone"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/hero.jpg",
+              "caption": "the finished bigfun"
+            },
+            {
+              "src": "/buildlog/kfun/media/splash.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/console-family.jpg"
+            }
+          ],
+          "body": "Galaga takes the Invaders slot on bigfun, with auto-fire. Same slot, same launcher, different game depending on which console you picked up.\n\nRebranded the README as kFun, tinyfun and bigfun under one name."
+        },
+        {
+          "date": "2026-08-03",
+          "title": "PSRAM enabled, Backgammon Hard AI goes 2-ply expectimax",
+          "tags": [
+            "bigfun",
+            "backgammon",
+            "hardware"
+          ],
+          "media": [],
+          "body": "Turned on bigfun's 2 MB PSRAM.\n\nThen reworked the Backgammon Hard AI into 2-ply expectimax, so it weighs the dice a roll deep instead of grabbing the nearest legal move. It beats me now, which I'm choosing to call a success."
+        },
+        {
+          "date": "2026-08-02",
+          "title": "Particle effects across both boards, and real Backgammon match play",
+          "tags": [
+            "juice",
+            "games",
+            "backgammon"
+          ],
+          "media": [],
+          "body": "Juice day. Particles and shake across both consoles:\n\n| Game | Effect |\n|---|---|\n| Invaders | kill and death pops |\n| Tetris | line-clear debris |\n| Backgammon | checker slide and capture pops |\n| Snake | glide |\n| Breakout | brick-break and life-loss shakes |\n\nReal match play landed in bigfun Backgammon: 5-point match, doubling cube, difficulty setting, saved to NVS. The intro got the Slackey wordmark with a glow and particles behind it."
+        },
+        {
+          "date": "2026-08-01",
+          "title": "Merged into the kFun monorepo, shared console on the SuperMini",
+          "tags": [
+            "monorepo",
+            "bigfun",
+            "milestone"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/pair.jpg",
+              "caption": "bigfun next to the smaller tinyfun"
+            },
+            {
+              "src": "/buildlog/kfun/media/invaders.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/bigfun-pinout.jpg"
+            },
+            {
+              "src": "/buildlog/kfun/media/bigfun-button-check.jpg"
+            }
+          ],
+          "body": "Restructured into the kFun monorepo, a shared `common/` with `tinyfun/` and `bigfun/` as thin board ports on top, and got the full app booting on the SuperMini.\n\nThen art and effects for the wide board, which is where the two consoles start being different games:\n\n- backgammon in landscape, with traditional triangle points\n- Tetris centred, with side panels either side of the well\n- Breakout rebuilt as Arkanoid\n- a sprite pipeline off the Kenney CC0 art\n- attract cards on the launcher, nebula backgrounds with post-FX, a themed game-over screen"
+        },
+        {
+          "date": "2026-07-29",
+          "title": "Backgammon replaces Asteroids, Canyon renamed to SkyGrid",
+          "tags": [
+            "backgammon",
+            "skygrid",
+            "games"
+          ],
+          "media": [],
+          "body": "Swapped Asteroids out for Backgammon, renamed Canyon to SkyGrid, and added a help screen that lists the buttons.\n\nBackgammon took the rest of the day: redrew the board, made a checker's second move findable instead of hidden, added bear-off auto and bigger dice. Cut the Slackey case logo SVGs while I was at it, for a shell that doesn't exist yet."
+        },
+        {
+          "date": "2026-07-28",
+          "title": "First TinyFun boot on the S3 Mini Pro",
+          "tags": [
+            "tinyfun",
+            "games",
+            "milestone"
+          ],
+          "media": [],
+          "body": "First working console: a five-game handheld on the LOLIN S3 Mini Pro, 128×128, three buttons.\n\nBoot screen and a custom typeface up, and SkyGrid's ancestor running on the panel as CANYON, a 3D anti-gravity racer. Gave Asteroids a 3-shot spread and thinned out the opening wave, because a full field of rocks on a 128 px screen is not a first level, it's a wall."
+        },
+        {
+          "date": "2026-05-28",
+          "title": "Mini Tetris: parts and a first case",
+          "tags": [
+            "prototype",
+            "case"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/mini-tetris-parts.jpg"
+            }
+          ],
+          "body": "Everything for a small handheld, laid out on the mat: a printed case, a LiPo, a USB-C charge board, a slide switch and the screen board. At the time I was calling it Mini Tetris.\n\nMini Tetris grew up to be tinyfun."
+        }
+      ]
+    },
+    {
       "slug": "vizmac",
       "title": "vizMac",
       "status": "active",
@@ -2715,319 +3128,6 @@
       ]
     },
     {
-      "slug": "kfun",
-      "title": "kFun",
-      "status": "active",
-      "kind": "hardware",
-      "summary": "Three handheld game consoles built from one codebase.",
-      "stack": [
-        "ESP32-S3",
-        "C++",
-        "LovyanGFX",
-        "PlatformIO"
-      ],
-      "tags": [
-        "handheld",
-        "games",
-        "firmware"
-      ],
-      "rung": "design",
-      "facts": {
-        "consoles": "3",
-        "games": "6"
-      },
-      "repo": "kpow/kfun",
-      "hero": "/buildlog/kfun/media/megafun-hero.jpg",
-      "heroVideo": null,
-      "links": [
-        {
-          "label": "repo",
-          "url": "https://github.com/kpow/kfun"
-        }
-      ],
-      "started": "2026-05-28",
-      "body": "A family of handheld consoles built from one monorepo.\n\n| Spec | tinyfun | bigfun | megafun |\n|---|---|---|---|\n| Board | LOLIN S3 Mini Pro | ESP32-S3 SuperMini | ESP32-S3 SuperMini |\n| Screen | 128×128 GC9107 | 2.0\" 320×240 ST7789 | 2.0\" 320×240 ST7789 |\n| Input | 3 buttons | d-pad + two triggers | XY joystick + click |\n| Layout | portrait | landscape | landscape |\n\ntinyfun and bigfun run the same six slots, each game adapting to the hardware it\nlands on: lean and legible on three buttons, grown into sprites and particle\njuice on six. Sometimes the slot holds a different game entirely. Invaders\nbecomes Galaga on the wide board, Breakout becomes Arkanoid.\n\nTetris · Breakout · Snake · Invaders/Galaga · SkyGrid · Backgammon\n\nmegafun runs its own set on a joystick-native framework, and shares exactly the\npiece that has to stay in lockstep: the backgammon rules engine and the ESP-NOW\nlink, so all three can play each other.\n\n## How it holds together\n\n`common/` never names a GPIO or a screen size. Pins live only in each board's\n`Config.h`, and shared code branches on two capability flags those boards\ndeclare, `KF_LANDSCAPE` and `KF_DPAD`. megafun is the reason there are two: it's\nlandscape but joystick, which one flag couldn't express. Adding a board means\ndeclaring its capabilities, not adding a device identity.\n\nThe engine is a non-blocking contract (`init` / `update(dt)` / `render`) at a\nfixed 60 Hz, with every game placement-new'd into a single 12 KB arena that fails\nto compile if it won't fit. Two rules earned the hard way: the framebuffer is\npinned to SRAM because PSRAM faults on per-pixel writes, and the quit chord is\nun-swallowable, so a misbehaving game can never trap you inside it.\n\nFavourites among the six: **SkyGrid**, an original software 3D renderer with no\nz-buffer that pushes 128 triangles at 60 fps, and **Backgammon**, fully\nrules-checked and unit-tested, playing 2-ply expectimax on bigfun with a doubling\ncube, Crawford rule and NVS match save.",
-      "stats": {
-        "entries": 14,
-        "photos": 14,
-        "daysActive": 112,
-        "firstEntry": "2026-05-28",
-        "lastEntry": "2026-09-16"
-      },
-      "git": null,
-      "picturesOverTime": [
-        {
-          "date": "2026-05-28",
-          "src": "/buildlog/kfun/media/mini-tetris-parts.jpg"
-        },
-        {
-          "date": "2026-08-01",
-          "src": "/buildlog/kfun/media/pair.jpg",
-          "caption": "bigfun next to the smaller tinyfun"
-        },
-        {
-          "date": "2026-08-01",
-          "src": "/buildlog/kfun/media/invaders.jpg"
-        },
-        {
-          "date": "2026-08-01",
-          "src": "/buildlog/kfun/media/bigfun-pinout.jpg"
-        },
-        {
-          "date": "2026-08-01",
-          "src": "/buildlog/kfun/media/bigfun-button-check.jpg"
-        },
-        {
-          "date": "2026-08-04",
-          "src": "/buildlog/kfun/media/hero.jpg",
-          "caption": "the finished bigfun"
-        },
-        {
-          "date": "2026-08-04",
-          "src": "/buildlog/kfun/media/splash.jpg"
-        },
-        {
-          "date": "2026-08-04",
-          "src": "/buildlog/kfun/media/console-family.jpg"
-        },
-        {
-          "date": "2026-08-10",
-          "src": "/buildlog/kfun/media/megafun-breadboard.jpg"
-        },
-        {
-          "date": "2026-08-10",
-          "src": "/buildlog/kfun/media/megafun-marbles.mp4",
-          "poster": "/buildlog/kfun/media/megafun-marbles.jpg"
-        },
-        {
-          "date": "2026-08-10",
-          "src": "/buildlog/kfun/media/megafun-boot.mp4",
-          "poster": "/buildlog/kfun/media/megafun-boot.jpg"
-        },
-        {
-          "date": "2026-08-10",
-          "src": "/buildlog/kfun/media/megafun-led-studio.mp4",
-          "poster": "/buildlog/kfun/media/megafun-led-studio.jpg"
-        },
-        {
-          "date": "2026-08-14",
-          "src": "/buildlog/kfun/media/tinyfun-shells.jpg"
-        },
-        {
-          "date": "2026-08-19",
-          "src": "/buildlog/kfun/media/tinyfun-purple.jpg"
-        }
-      ],
-      "lastEntry": "2026-09-16",
-      "entries": [
-        {
-          "date": "2026-09-16",
-          "title": "m5bigfun on CoreS3, and a chooser",
-          "tags": [
-            "m5bigfun",
-            "cores3",
-            "leds"
-          ],
-          "media": [],
-          "body": "Ported the console to m5bigfun: a CoreS3 sitting in a Faces Bottom3 with a Gamepad3, and two rows of five SK6812 to play with.\n\nThe LEDs got a job rather than a glow. Effects are ranked by tier, every game has a voice on the strips, and Backgammon uses them to show whose turn it is.\n\nSince the device also holds the vizBot firmware, there's a top-level chooser in the factory partition now: one board, two firmwares, pick at boot."
-        },
-        {
-          "date": "2026-09-05",
-          "title": "Third-batch board enrolled",
-          "tags": [
-            "hardware",
-            "tinyfun"
-          ],
-          "media": [],
-          "body": "Enrolled a third-batch tinyfun board as panel profile B.\n\nEvery batch of panels drifts a little in colour and gamma. Cutting a new profile beats re-fighting the same tuning on each board."
-        },
-        {
-          "date": "2026-08-19",
-          "title": "Shake to restart, and a printable case",
-          "tags": [
-            "imu",
-            "engine",
-            "case"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/kfun/media/tinyfun-purple.jpg"
-            }
-          ],
-          "body": "A QMI8658C shake HAL: physically shaking the console restarts the current game. bigfun has no IMU, so it gets a no-op stub and the games don't care which one they're on.\n\nThe engine resumes from NVS too, so a game picks up where you left it. And the enclosure is packaged as a sliceable 3MF project now, one print from a shell."
-        },
-        {
-          "date": "2026-08-14",
-          "title": "megafun folds in, three boards",
-          "tags": [
-            "monorepo",
-            "tinyfun",
-            "capabilities"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/kfun/media/tinyfun-shells.jpg"
-            }
-          ],
-          "body": "Folded megafun into the monorepo. All three boards share one core now, and the differences live in capability flags each board declares rather than in forks of the code.\n\nPer-board panel profiles landed with it, plus an on-board tuner, and the original tinyfun board is enrolled as profile M1. The launcher auto-rotates its attract cards after idle. Rewrote the README for three boards with a pre-commit guardrail, because a README about three boards will rot in a week otherwise."
-        },
-        {
-          "date": "2026-08-10",
-          "title": "megafun: a tilted screen and a joystick",
-          "tags": [
-            "megafun",
-            "joystick",
-            "marbles"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/kfun/media/megafun-breadboard.jpg"
-            },
-            {
-              "src": "/buildlog/kfun/media/megafun-marbles.mp4",
-              "poster": "/buildlog/kfun/media/megafun-marbles.jpg"
-            },
-            {
-              "src": "/buildlog/kfun/media/megafun-boot.mp4",
-              "poster": "/buildlog/kfun/media/megafun-boot.jpg"
-            },
-            {
-              "src": "/buildlog/kfun/media/megafun-led-studio.mp4",
-              "poster": "/buildlog/kfun/media/megafun-led-studio.jpg"
-            }
-          ],
-          "body": "megafun was a way to keep expanding on what I was doing. I'd seen a tilted plane used as the support for a screen, and I had a small joystick lying around, so the two went together.\n\nI wanted a marbles game, and you can't do marbles without a joystick. It led to exploring a lot of other things on the same base:\n\n- **Marbles:** the tilt maze that started it\n- **Chladni:** a resonant-plate pattern generator\n- **LED Studio:** a menu for driving the LED cap on top"
-        },
-        {
-          "date": "2026-08-10",
-          "title": "Backgammon VS PLAYER over ESP-NOW",
-          "tags": [
-            "backgammon",
-            "esp-now",
-            "multiplayer"
-          ],
-          "media": [],
-          "body": "Backgammon plays over an ESP-NOW link now. Built phase by phase: turn transport first, then game-over sync, then the doubling cube, mirroring the megafun implementation so the two stay at parity.\n\nThen a per-device mirror and a resilience layer, so one dropped packet doesn't leave two boards disagreeing about where the checkers are."
-        },
-        {
-          "date": "2026-08-08",
-          "title": "Galaga trains and SkyGrid forks",
-          "tags": [
-            "bigfun",
-            "galaga",
-            "skygrid"
-          ],
-          "media": [],
-          "body": "Deepened the wide-board games. Galaga got enemy trains and a difficulty ladder; SkyGrid got track forks and ship motion that reads like a ship rather than a sprite sliding.\n\nBoth got UI effects that use the space the wide board actually has, instead of a small-screen layout stretched."
-        },
-        {
-          "date": "2026-08-04",
-          "title": "Galaga on bigfun, README rebranded kFun",
-          "tags": [
-            "bigfun",
-            "galaga",
-            "milestone"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/kfun/media/hero.jpg",
-              "caption": "the finished bigfun"
-            },
-            {
-              "src": "/buildlog/kfun/media/splash.jpg"
-            },
-            {
-              "src": "/buildlog/kfun/media/console-family.jpg"
-            }
-          ],
-          "body": "Galaga takes the Invaders slot on bigfun, with auto-fire. Same slot, same launcher, different game depending on which console you picked up.\n\nRebranded the README as kFun, tinyfun and bigfun under one name."
-        },
-        {
-          "date": "2026-08-03",
-          "title": "PSRAM enabled, Backgammon Hard AI goes 2-ply expectimax",
-          "tags": [
-            "bigfun",
-            "backgammon",
-            "hardware"
-          ],
-          "media": [],
-          "body": "Turned on bigfun's 2 MB PSRAM.\n\nThen reworked the Backgammon Hard AI into 2-ply expectimax, so it weighs the dice a roll deep instead of grabbing the nearest legal move. It beats me now, which I'm choosing to call a success."
-        },
-        {
-          "date": "2026-08-02",
-          "title": "Particle effects across both boards, and real Backgammon match play",
-          "tags": [
-            "juice",
-            "games",
-            "backgammon"
-          ],
-          "media": [],
-          "body": "Juice day. Particles and shake across both consoles:\n\n| Game | Effect |\n|---|---|\n| Invaders | kill and death pops |\n| Tetris | line-clear debris |\n| Backgammon | checker slide and capture pops |\n| Snake | glide |\n| Breakout | brick-break and life-loss shakes |\n\nReal match play landed in bigfun Backgammon: 5-point match, doubling cube, difficulty setting, saved to NVS. The intro got the Slackey wordmark with a glow and particles behind it."
-        },
-        {
-          "date": "2026-08-01",
-          "title": "Merged into the kFun monorepo, shared console on the SuperMini",
-          "tags": [
-            "monorepo",
-            "bigfun",
-            "milestone"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/kfun/media/pair.jpg",
-              "caption": "bigfun next to the smaller tinyfun"
-            },
-            {
-              "src": "/buildlog/kfun/media/invaders.jpg"
-            },
-            {
-              "src": "/buildlog/kfun/media/bigfun-pinout.jpg"
-            },
-            {
-              "src": "/buildlog/kfun/media/bigfun-button-check.jpg"
-            }
-          ],
-          "body": "Restructured into the kFun monorepo, a shared `common/` with `tinyfun/` and `bigfun/` as thin board ports on top, and got the full app booting on the SuperMini.\n\nThen art and effects for the wide board, which is where the two consoles start being different games:\n\n- backgammon in landscape, with traditional triangle points\n- Tetris centred, with side panels either side of the well\n- Breakout rebuilt as Arkanoid\n- a sprite pipeline off the Kenney CC0 art\n- attract cards on the launcher, nebula backgrounds with post-FX, a themed game-over screen"
-        },
-        {
-          "date": "2026-07-29",
-          "title": "Backgammon replaces Asteroids, Canyon renamed to SkyGrid",
-          "tags": [
-            "backgammon",
-            "skygrid",
-            "games"
-          ],
-          "media": [],
-          "body": "Swapped Asteroids out for Backgammon, renamed Canyon to SkyGrid, and added a help screen that lists the buttons.\n\nBackgammon took the rest of the day: redrew the board, made a checker's second move findable instead of hidden, added bear-off auto and bigger dice. Cut the Slackey case logo SVGs while I was at it, for a shell that doesn't exist yet."
-        },
-        {
-          "date": "2026-07-28",
-          "title": "First TinyFun boot on the S3 Mini Pro",
-          "tags": [
-            "tinyfun",
-            "games",
-            "milestone"
-          ],
-          "media": [],
-          "body": "First working console: a five-game handheld on the LOLIN S3 Mini Pro, 128×128, three buttons.\n\nBoot screen and a custom typeface up, and SkyGrid's ancestor running on the panel as CANYON, a 3D anti-gravity racer. Gave Asteroids a 3-shot spread and thinned out the opening wave, because a full field of rocks on a 128 px screen is not a first level, it's a wall."
-        },
-        {
-          "date": "2026-05-28",
-          "title": "Mini Tetris: parts and a first case",
-          "tags": [
-            "prototype",
-            "case"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/kfun/media/mini-tetris-parts.jpg"
-            }
-          ],
-          "body": "Everything for a small handheld, laid out on the mat: a printed case, a LiPo, a USB-C charge board, a slide switch and the screen board. At the time I was calling it Mini Tetris.\n\nMini Tetris grew up to be tinyfun."
-        }
-      ]
-    },
-    {
       "slug": "vizspot",
       "title": "vizSpot",
       "status": "shipped",
@@ -3722,6 +3822,66 @@
   ],
   "recent": [
     {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-10-30",
+      "title": "Three v2 cases, all booting",
+      "tags": [
+        "case",
+        "tinyfun"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/tinyfun-v2-three.jpg",
+          "caption": "Baseline in the middle, trim on either side"
+        },
+        {
+          "src": "/buildlog/kfun/media/tinyfun-v2-boot.mp4",
+          "poster": "/buildlog/kfun/media/tinyfun-v2-boot.jpg"
+        },
+        {
+          "src": "/buildlog/kfun/media/tinyfun-v2-trim-cad.jpg",
+          "kind": "screenshot",
+          "caption": "The trim design in SolidCraft"
+        }
+      ],
+      "body": "Built two more boards into trim cases and flashed both with the current firmware. Both boot to the new Slackey wordmark. A fresh board needs BOOT+RESET for its first USB flash. That first flash also lays down the two-slot partition table, so every update after the case closes can go over the air."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-10-29",
+      "title": "Trim case, and the cube on tinyFun",
+      "tags": [
+        "case",
+        "tinyfun",
+        "backgammon"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/tinyfun-v2-parts.jpg",
+          "caption": "HW-373 TP4056, rocker and 500 mAh LiPo"
+        },
+        {
+          "src": "/buildlog/kfun/media/tinyfun-v2-wiring.jpg"
+        }
+      ],
+      "body": "The first v2 print passed on the 28th: everything fit, the buttons worked and the back plate didn't squeeze. A drop of foam tape under the battery made it snug. Then I tried to make it smaller, for real or just to the eye, without moving any internal pocket.\n\nThe trim version bevels the sides and thumb end at 45° and slims the hoop. The shell went from 12,602 to 10,125 mm³. It feels great in the hand. Fixes followed the same day:\n\n- **Battery leads:** the cradle's lead hole became an open slot, so a pre-wired battery drops in.\n- **Cradle:** 1 mm shorter. Tightening the screw had bound the buttons again.\n- **Charge port:** 1 mm toward the back (trim-v4, not printed yet).\n\nOn the software side, the doubling cube reached tinyFun: hold OK+R to double, then a TAKE / DROP sheet. It's committed as WIP and not yet checked on device."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-10-28",
+      "title": "Over-the-air updates, because the case hides USB",
+      "tags": [
+        "tinyfun",
+        "ota",
+        "backgammon"
+      ],
+      "media": [],
+      "body": "The v2 case leaves no easy way to the board's USB port, so updates have to go over the air. tinyFun had one 3 MB app slot and no room for a second. It moved to two 1.875 MB slots, leaving about 550 KB for the rest of the sprint. NVS stays put, so saved games survive.\n\nThe launcher got an Update card. It starts the board's own hotspot with a fresh 8-digit password on screen and serves an upload page: pick the .bin, press Upload. I chose a hotspot over home Wi-Fi so no credentials live on the device. A new image runs on probation and should roll back if it resets in the first 5 seconds. A browser upload worked on device. A deliberately bad image hasn't been tried yet.\n\nBackgammon on tinyFun plays matches now: the flow follows match length instead of screen shape, Options picks 1/3/5/7 and remembers it, and a quit match offers CONTINUE or NEW.\n\n> **Trap:** the partition switch needs one last USB flash, before the case closes."
+    },
+    {
       "build": "vizmac",
       "buildTitle": "vizMac",
       "date": "2026-10-28",
@@ -3779,6 +3939,19 @@
         }
       ],
       "body": "I use vizMac from another machine now, so the controller became a remote for the Mac it runs on. Pressing keys 3 and 4 together opens a fifth mode, Mac. It's also a card in the mode picker.\n\n- **Volume:** the knob, through AppleScript. The Mac reports its output device by name over Core Audio.\n- **Play/pause, next, previous, brightness:** posted as the same system-defined key events the F-row sends, so they reach any app, browsers included. That needs Accessibility permission.\n- **The F-row:** hold KO and a row of six keys appears, F1 F2 F7 F8 F9 F10, opening on Mute.\n\n> **Trap:** the first try ran AppleScript in-process with NSAppleScript on a worker thread. vizMac.app died at launch with a SIGTRAP. It runs osascript in a subprocess now.\n\nKeys 3 and 4 wait 80 ms for each other before a lone press counts, so the chord never also switches modes."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-10-27",
+      "title": "Sprint day one: new type, chords, a hardened link",
+      "tags": [
+        "tinyfun",
+        "fonts",
+        "input"
+      ],
+      "media": [],
+      "body": "Started the v2 sprint with four goals: modern type, backgammon match play, tinyFun on the ESP-NOW link, and a new 2-player game. Three phases landed on day one.\n\n- **Type:** Slackey for titles and the boot wordmark, Kenney Pixel 8 for small text, kenvector for numbers. The old small sizes were blurry at 0.85\" and R read as A. Checked on glass on a profile-B board.\n- **Chords:** three buttons can't double or drop a cube, so two-button chords, holds and a SHIFT layer now sit on one shared ButtonCore. Every timed gesture shows a filling ring. A chord-lab screen settled the window at 120 ms, about 98% on device.\n- **Link:** receive moved onto the loop task, peers filtered by MAC, a CRC-32 state hash, protocol v2 with a version-mismatch screen. 200 lossy matches run headless in the tests."
     },
     {
       "build": "vizbot",
@@ -3847,6 +4020,18 @@
         }
       ],
       "body": "Once party mode shrank the face into the floating blob, I realized it had cut him off from his speech bubble. Party mode hid every bubble, so talking to skunky through vizBot Brain showed nothing on screen. No \"Listening...\", no reply, no sign the brain was working.\n\n- **Bubbles:** only bubbles from a vizBot Brain turn come back. Idle sayings stay hidden so the show keeps the screen. The bubble takes the band away from his corner and its tail follows the blob, as the round-one layout spec had already worked out.\n- **Staying put:** in the first test he roamed to the other top corner in the middle of a sentence. Now roams wait until the turn is over, and a poke makes him flinch without the dash to another corner.\n- **The blob shows the brain:** listening grows an ear tentacle toward the middle of the screen. Thinking runs a slow three-lobe swirl round the rim with a small spike fan circling. Speaking swells the body with the reply's loudness, from the same envelope that drives the mouth.\n\nOut as v3.9.1, on old-dino and skunky."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-10-26",
+      "title": "tinyFun v2 case: one printed shell, captured buttons",
+      "tags": [
+        "case",
+        "tinyfun"
+      ],
+      "media": [],
+      "body": "The old case was a face module latched onto a tub, with buttons printed as flexure tongues in the face. Those tongues snapped off. v2 is a new enclosure in SolidCraft, generated from one script, with every key dimension a named parameter.\n\n- **Buttons:** three separate square plungers, printed flange-down and trapped from inside by the board.\n- **Layout:** portrait, screen at the top, an open thumb rest under the buttons.\n- **Stack:** layers that bear on each other: back plate, battery cradle, board tray, board, face.\n- **Closure:** a back plate on a dovetail and one M3 screw in the base of a vizBot-style hoop.\n\nThree print tests on the 25th moved the HW-373 charger around until it sat right. Snap tabs pressed on its LEDs, so it ended up hooked under two corner lips with the port hole holding its USB-C. Tightening the screw pressed the buttons until the cradle stopped short of the divider."
     },
     {
       "build": "vizbot",
@@ -4998,6 +5183,19 @@
       "body": "Reworked the motion. The old version slid one section out and back like a tray, and sometimes nothing actually changed on screen. Now every line moves at once while part of the grid rebuilds and a colour block slides to a new cell.\n\nThat turned up a bug where remixing the whole canvas skipped moving the lines at all.\n\nThe Color knob is one smooth sweep now, built on the spacing between Mondrian's own red, blue and yellow, with his palette sitting in the middle of the range.\n\nFlashed it to the rig and every colour was wrong. Took me a minute to notice the global palette tint was still switched on, quietly re-mapping a pattern that brings its own colours."
     },
     {
+      "build": "kfun",
+      "buildTitle": "kFun",
+      "date": "2026-09-16",
+      "title": "m5bigfun on CoreS3, and a chooser",
+      "tags": [
+        "m5bigfun",
+        "cores3",
+        "leds"
+      ],
+      "media": [],
+      "body": "Ported the console to m5bigfun: a CoreS3 sitting in a Faces Bottom3 with a Gamepad3, and two rows of five SK6812 to play with.\n\nThe LEDs got a job rather than a glow. Effects are ranked by tier, every game has a voice on the strips, and Backgammon uses them to show whose turn it is.\n\nSince the device also holds the vizBot firmware, there's a top-level chooser in the factory partition now: one board, two firmwares, pick at boot."
+    },
+    {
       "build": "vizbot",
       "buildTitle": "vizBot",
       "date": "2026-09-16",
@@ -5043,19 +5241,6 @@
         }
       ],
       "body": "Wrote my first pattern from scratch for the Patternflow bank: a Mondrian grid that keeps rearranging itself.\n\nIt builds a layout by splitting the canvas in two, then splitting the pieces, which is roughly how the paintings are put together. Whatever it lands on is a valid composition rather than a scatter of rectangles.\n\nWorked it out in JavaScript first, in a small browser harness, then hand-ported it to C++ for the hub75. The two versions match pixel for pixel, which is the only reason I trust the port."
-    },
-    {
-      "build": "kfun",
-      "buildTitle": "kFun",
-      "date": "2026-09-16",
-      "title": "m5bigfun on CoreS3, and a chooser",
-      "tags": [
-        "m5bigfun",
-        "cores3",
-        "leds"
-      ],
-      "media": [],
-      "body": "Ported the console to m5bigfun: a CoreS3 sitting in a Faces Bottom3 with a Gamepad3, and two rows of five SK6812 to play with.\n\nThe LEDs got a job rather than a glow. Effects are ranked by tier, every game has a voice on the strips, and Backgammon uses them to show whose turn it is.\n\nSince the device also holds the vizBot firmware, there's a top-level chooser in the factory partition now: one board, two firmwares, pick at boot."
     },
     {
       "build": "8x8",
@@ -6472,5 +6657,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-29T01:11:05.375Z"
+  "generatedAt": "2026-10-30T12:29:38.211Z"
 }
