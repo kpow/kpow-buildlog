@@ -414,6 +414,221 @@
       ]
     },
     {
+      "slug": "radar",
+      "title": "ESP32 Plane Radar",
+      "status": "shipped",
+      "kind": "hardware",
+      "summary": "A desktop ADS-B aircraft scope on a round LCD.",
+      "stack": [
+        "ESP32-C3",
+        "LovyanGFX",
+        "ADS-B",
+        "PlatformIO"
+      ],
+      "tags": [
+        "display",
+        "adsb",
+        "firmware"
+      ],
+      "rung": "solder",
+      "facts": {
+        "aircraft": "64",
+        "screen": "1.28in round"
+      },
+      "repo": "kpow/ESP32-Plane-Radar",
+      "hero": "/buildlog/radar/media/hero.jpg",
+      "heroVideo": null,
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/ESP32-Plane-Radar"
+        }
+      ],
+      "started": "2026-06-13",
+      "body": "A desktop ADS-B scope on a round LCD. It paints live traffic around my home onto\na green sonar grid: a rotating sweep with a comet trail, heading triangles with\nspeed vectors out front, callsign and type and altitude tags, and anything out of\nrange parked as a bearing dot on the rim. Data comes from the public adsb.fi\nopendata API over HTTPS, no local receiver, polled every 3 seconds for up to 64\naircraft.\n\nThe hardware is a GC9A01 1.28\" round LCD (240×240, LovyanGFX) on an ESP32-C3\nSuper Mini, in a printed slatted case with a BOOT button and an optional touch\npad for range. An ESP32-S3 target exists too, for the better radio.\n\n## How it's built\n\nTLS eats RAM, so the whole thing is written around the heap:\n\n- render into an 8-bit off-screen sprite, chosen specifically to survive the\n  pressure of a live HTTPS poll\n- stream-parse the JSON through a field filter, so the body is never held whole\n- check the heap *before* opening the socket\n\nBetween polls each plane dead-reckons forward from its last heading and speed, so\nmotion stays smooth at 30 fps. That's capped: a dropped poll or an outage can't\nfling a target off the edge.\n\nThere's a gzipped SPA baked into flash as well, served off the device itself:\nradar, flight list, stats and detail cards off `/api/flights`, with the browser\nenriching routes and photos from adsbdb and planespotters.",
+      "stats": {
+        "entries": 8,
+        "photos": 9,
+        "daysActive": 140,
+        "firstEntry": "2026-06-13",
+        "lastEntry": "2026-10-30"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/wired.jpg",
+          "caption": "Round GC9A01 on the bench"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/scope.jpg"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/housing.jpg"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/hero.jpg"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-hero.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-exploded.jpg",
+          "kind": "render",
+          "caption": "Body, faceplate, display clip, keyboard insert, 4 M3 self-tappers"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-section.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-button-recess.jpg",
+          "kind": "render",
+          "caption": "12.5 mm recess for the tactile switch, 0.8 mm floor"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-back.jpg",
+          "kind": "render"
+        }
+      ],
+      "lastEntry": "2026-10-30",
+      "entries": [
+        {
+          "date": "2026-10-30",
+          "title": "Case v2: 86 glued pieces down to 4 prints",
+          "tags": [
+            "enclosure",
+            "3d-printing"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/radar/media/case-v2-hero.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-exploded.jpg",
+              "kind": "render",
+              "caption": "Body, faceplate, display clip, keyboard insert, 4 M3 self-tappers"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-section.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-button-recess.jpg",
+              "kind": "render",
+              "caption": "12.5 mm recess for the tactile switch, 0.8 mm floor"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-back.jpg",
+              "kind": "render"
+            }
+          ],
+          "body": "A few of these are going out as Christmas presents, and the old case was the slow part. It was a kit of STEP parts that took a lot of assembly and a lot of superglue. The v2 redesign was modelled parametrically in SolidCraft.\n\n| | v1 | v2 |\n|---|---|---|\n| Printed pieces | 86 | 4 |\n| Glue joints | about 80 | 1 |\n| Assembly | 60–90 min | about 8 min |\n\n- **Body:** shell, deck, button recess and keyboard tray in one white print, about 50 g, so it prints with no purge waste.\n- **Faceplate:** printed face down on the AMS with a black bezel and grey ring and rivets. Two M3 screws from the back hold it.\n- **Keyboard insert:** 55 keys printed in place in four colours. It's the one glued part.\n- **Display clip:** a 1 g part that holds the round LCD in place of the old M2 screws and spacers.\n\nThe TTP223 touch pad is gone. It was finicky and gave no feedback, so range is now a 12 mm tactile switch that drops into a recess in the deck.\n\nThe first test print changed a few things. The board now mounts components-up, so its LED shows. The body grew 10 mm taller and 5 mm deeper, to 76 × 63 mm.\n\n> **Note:** module listings for the GC9A01 disagree on depth. Measure the glass-to-PCB stack before printing the clip."
+        },
+        {
+          "date": "2026-10-30",
+          "title": "Real maps, OTA updates and a range button",
+          "tags": [
+            "firmware",
+            "maps",
+            "ota"
+          ],
+          "media": [],
+          "body": "A gift sprint: the radar has to work for someone in another city who never touches a USB cable.\n\n- **Real map underlay:** the faint line map is replaced by a real basemap. The browser renders it from OpenFreeMap tiles for the device's location and uploads it to a flash partition. The device memory-maps it, so it costs no heap. It comes in Day and Dusk themes. A 12-minute soak on the polish build logged 228 polls, 0 fetch errors and a 44.6 KB worst-case free heap.\n- **OTA with rollback:** this S3 turned out to have 8 MB of flash, which leaves room for a second 3 MB app slot. Updates stream into the spare slot with no RAM buffer. A new image runs on probation and is kept after 30 s healthy on Wi-Fi. It rolls back if it never gets healthy in 5 minutes or crashes on boot. An interrupted upload, both rollback paths and map survival were all tested on the radar. A `v*` tag now builds the release files.\n- **Range button:** the TTP223 touch pad is replaced by a tactile switch on GPIO 6, read by an interrupt so fast presses step 1-for-1. A flapping line locks it out after more than 16 presses in 2 seconds.\n- **S3 only:** C3 support is removed. CI passes on main again for the first time since July, now that the airport-data drift check is a warning instead of a failure.\n\nA redesigned device web page is in review in its own PR."
+        },
+        {
+          "date": "2026-08-28",
+          "title": "Empty radar bug: de-chunk the ADS-B body",
+          "tags": [
+            "firmware",
+            "adsb",
+            "bugfix"
+          ],
+          "media": [],
+          "body": "The radar had started coming up empty. Grid, sweep, no planes. The fetch succeeded, the heap was fine, and nothing logged an error for a full day.\n\nThe endpoint sits behind Cloudflare and had started answering with `Transfer-Encoding: chunked`. `getStreamPtr()` hands back the raw socket and never de-chunks, so hex chunk-size lines were landing in the middle of the JSON. With a filter in place that parses as *Ok* against an empty document, so the fetch published zero aircraft, returned true, and never backed off.\n\n> **Trap:** a parser that succeeds on garbage is worse than one that crashes on it. The empty-`ac` case now logs instead of publishing silence.\n\nFixed with a small stream wrapper that de-chunks when `getSize()` reports -1 and passes identity bodies straight through, so the body still never gets held whole. `useHTTP10(true)` also kills chunking, but then the body is close-delimited and WiFiClientSecure truncates it, which trades a silent bug for a noisy one. Verified on the S3: ten clean fetches in a row, idle heap 105 KB, worst min-free 26 KB."
+        },
+        {
+          "date": "2026-08-06",
+          "title": "Map underlay + multi-leg routes",
+          "tags": [
+            "firmware",
+            "webapp",
+            "adsb"
+          ],
+          "media": [],
+          "body": "Both scopes got a faint map underlay: coast, lakes, rivers, roads, dim enough to place the traffic without competing with it. A regional crop of Natural Earth 1:10m bakes into flash at about 57 KB, projects once per range change into a fixed 14 KB screen-space cache, and draws under the sweep. No heap, so the TLS headroom is untouched. Now you can see a plane following a river valley.\n\nBuilding it turned up an old bug. The device projection was missing its `cos(lat)`, so everything was stretched about 26% east-west, and the device and the web app had been quietly disagreeing the whole time. Both read from one shared projection header now.\n\nRoutes learned to handle multi-leg trips too. Every stop renders, `JFK → RIC → SFO`, with the leg the aircraft is actually flying picked by smallest detour against its live position and brightened."
+        },
+        {
+          "date": "2026-07-19",
+          "title": "The web companion app — touch radar in the browser",
+          "tags": [
+            "firmware",
+            "webapp",
+            "heap",
+            "touch"
+          ],
+          "media": [],
+          "body": "The browser side got real. There's an interactive touch radar served straight off the device now, gzipped into flash, pulling traffic from `/api/flights` and letting the browser enrich each plane with route and photo data from adsbdb and planespotters. Per-device themes, and a header with live context so you know what you're looking at. The heap fix is the part that mattered: serving the SPA and running the live ADS-B poll were fighting over the same RAM.\n\nThen the TTP223 touch pad, which had started cycling range on its own at about two steps a second. A loose sensor makes the line oscillate, and every phantom step also wrote NVS and forced a refetch. Three defenses:\n\n1. A press only counts after the level holds for 40 ms. Real touches last 50 ms and up; noise edges don't.\n2. More than 6 taps in 8 seconds locks the input out until it's been quiet for 10. The BOOT button and the web UI stay live.\n3. Range persists to NVS once, 3 seconds after it stops changing."
+        },
+        {
+          "date": "2026-06-15",
+          "title": "Sweep goes under the grid",
+          "tags": [
+            "firmware",
+            "display"
+          ],
+          "media": [],
+          "body": "One line of layering, and it changed the whole look: the sweep renders beneath the grid now, not over it. The glow reads as light passing under the graticule, and the grid and plane markers stay crisp on top.\n\nDraw order is half the battle with these sprite composites."
+        },
+        {
+          "date": "2026-06-14",
+          "title": "Onboard RGB status light + a scanning overlay",
+          "tags": [
+            "firmware",
+            "ux"
+          ],
+          "media": [],
+          "body": "Put the C3's onboard RGB LED to work as a status light, and laid a scanning overlay over the scope so it reads like radar instead of a plot.\n\nDropped the 100 km range while I was there. The projection distortion gets silly at that zoom and I never once used it. The close ranges are the useful ones."
+        },
+        {
+          "date": "2026-06-13",
+          "title": "Forked a plane-radar project, then rebuilt it heap-first",
+          "tags": [
+            "firmware",
+            "adsb",
+            "display",
+            "heap"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/radar/media/wired.jpg",
+              "caption": "Round GC9A01 on the bench"
+            },
+            {
+              "src": "/buildlog/radar/media/scope.jpg"
+            },
+            {
+              "src": "/buildlog/radar/media/housing.jpg"
+            },
+            {
+              "src": "/buildlog/radar/media/hero.jpg"
+            }
+          ],
+          "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3 and then gutted most of it. The stock build locked up every so often: it fired a burst of ADS-B requests and buffered each whole response body. One request on a backoff, plus a stream parse with a field filter so the body is never held whole, and the lockups stopped.\n\nThe rest was one long session:\n\n- **Dual core:** the network fetch on its own task, so a poll never stalls a frame\n- **Interpolation:** targets dead-reckon between the 3-second polls instead of teleporting\n- **ESP32-S3 Super Mini:** a second target, for the better radio, with WiFi retry hardening\n- **Looks:** 16-bit colour at 80 MHz SPI, a sweep with a comet trail, 30 fps pacing\n\nBy the end it was a live scope sitting in the printed slatted cube: round LCD, green grid, real callsigns."
+        }
+      ]
+    },
+    {
       "slug": "vizmac",
       "title": "vizMac",
       "status": "active",
@@ -3301,150 +3516,6 @@
       ]
     },
     {
-      "slug": "radar",
-      "title": "ESP32 Plane Radar",
-      "status": "shipped",
-      "kind": "hardware",
-      "summary": "A desktop ADS-B aircraft scope on a round LCD.",
-      "stack": [
-        "ESP32-C3",
-        "LovyanGFX",
-        "ADS-B",
-        "PlatformIO"
-      ],
-      "tags": [
-        "display",
-        "adsb",
-        "firmware"
-      ],
-      "rung": "solder",
-      "facts": {
-        "aircraft": "64",
-        "screen": "1.28in round"
-      },
-      "repo": "kpow/ESP32-Plane-Radar",
-      "hero": "/buildlog/radar/media/hero.jpg",
-      "heroVideo": null,
-      "links": [
-        {
-          "label": "repo",
-          "url": "https://github.com/kpow/ESP32-Plane-Radar"
-        }
-      ],
-      "started": "2026-06-13",
-      "body": "A desktop ADS-B scope on a round LCD. It paints live traffic around my home onto\na green sonar grid: a rotating sweep with a comet trail, heading triangles with\nspeed vectors out front, callsign and type and altitude tags, and anything out of\nrange parked as a bearing dot on the rim. Data comes from the public adsb.fi\nopendata API over HTTPS, no local receiver, polled every 3 seconds for up to 64\naircraft.\n\nThe hardware is a GC9A01 1.28\" round LCD (240×240, LovyanGFX) on an ESP32-C3\nSuper Mini, in a printed slatted case with a BOOT button and an optional touch\npad for range. An ESP32-S3 target exists too, for the better radio.\n\n## How it's built\n\nTLS eats RAM, so the whole thing is written around the heap:\n\n- render into an 8-bit off-screen sprite, chosen specifically to survive the\n  pressure of a live HTTPS poll\n- stream-parse the JSON through a field filter, so the body is never held whole\n- check the heap *before* opening the socket\n\nBetween polls each plane dead-reckons forward from its last heading and speed, so\nmotion stays smooth at 30 fps. That's capped: a dropped poll or an outage can't\nfling a target off the edge.\n\nThere's a gzipped SPA baked into flash as well, served off the device itself:\nradar, flight list, stats and detail cards off `/api/flights`, with the browser\nenriching routes and photos from adsbdb and planespotters.",
-      "stats": {
-        "entries": 6,
-        "photos": 4,
-        "daysActive": 77,
-        "firstEntry": "2026-06-13",
-        "lastEntry": "2026-08-28"
-      },
-      "git": null,
-      "picturesOverTime": [
-        {
-          "date": "2026-06-13",
-          "src": "/buildlog/radar/media/wired.jpg",
-          "caption": "Round GC9A01 on the bench"
-        },
-        {
-          "date": "2026-06-13",
-          "src": "/buildlog/radar/media/scope.jpg"
-        },
-        {
-          "date": "2026-06-13",
-          "src": "/buildlog/radar/media/housing.jpg"
-        },
-        {
-          "date": "2026-06-13",
-          "src": "/buildlog/radar/media/hero.jpg"
-        }
-      ],
-      "lastEntry": "2026-08-28",
-      "entries": [
-        {
-          "date": "2026-08-28",
-          "title": "Empty radar bug: de-chunk the ADS-B body",
-          "tags": [
-            "firmware",
-            "adsb",
-            "bugfix"
-          ],
-          "media": [],
-          "body": "The radar had started coming up empty. Grid, sweep, no planes. The fetch succeeded, the heap was fine, and nothing logged an error for a full day.\n\nThe endpoint sits behind Cloudflare and had started answering with `Transfer-Encoding: chunked`. `getStreamPtr()` hands back the raw socket and never de-chunks, so hex chunk-size lines were landing in the middle of the JSON. With a filter in place that parses as *Ok* against an empty document, so the fetch published zero aircraft, returned true, and never backed off.\n\n> **Trap:** a parser that succeeds on garbage is worse than one that crashes on it. The empty-`ac` case now logs instead of publishing silence.\n\nFixed with a small stream wrapper that de-chunks when `getSize()` reports -1 and passes identity bodies straight through, so the body still never gets held whole. `useHTTP10(true)` also kills chunking, but then the body is close-delimited and WiFiClientSecure truncates it, which trades a silent bug for a noisy one. Verified on the S3: ten clean fetches in a row, idle heap 105 KB, worst min-free 26 KB."
-        },
-        {
-          "date": "2026-08-06",
-          "title": "Map underlay + multi-leg routes",
-          "tags": [
-            "firmware",
-            "webapp",
-            "adsb"
-          ],
-          "media": [],
-          "body": "Both scopes got a faint map underlay: coast, lakes, rivers, roads, dim enough to place the traffic without competing with it. A regional crop of Natural Earth 1:10m bakes into flash at about 57 KB, projects once per range change into a fixed 14 KB screen-space cache, and draws under the sweep. No heap, so the TLS headroom is untouched. Now you can see a plane following a river valley.\n\nBuilding it turned up an old bug. The device projection was missing its `cos(lat)`, so everything was stretched about 26% east-west, and the device and the web app had been quietly disagreeing the whole time. Both read from one shared projection header now.\n\nRoutes learned to handle multi-leg trips too. Every stop renders, `JFK → RIC → SFO`, with the leg the aircraft is actually flying picked by smallest detour against its live position and brightened."
-        },
-        {
-          "date": "2026-07-19",
-          "title": "The web companion app — touch radar in the browser",
-          "tags": [
-            "firmware",
-            "webapp",
-            "heap",
-            "touch"
-          ],
-          "media": [],
-          "body": "The browser side got real. There's an interactive touch radar served straight off the device now, gzipped into flash, pulling traffic from `/api/flights` and letting the browser enrich each plane with route and photo data from adsbdb and planespotters. Per-device themes, and a header with live context so you know what you're looking at. The heap fix is the part that mattered: serving the SPA and running the live ADS-B poll were fighting over the same RAM.\n\nThen the TTP223 touch pad, which had started cycling range on its own at about two steps a second. A loose sensor makes the line oscillate, and every phantom step also wrote NVS and forced a refetch. Three defenses:\n\n1. A press only counts after the level holds for 40 ms. Real touches last 50 ms and up; noise edges don't.\n2. More than 6 taps in 8 seconds locks the input out until it's been quiet for 10. The BOOT button and the web UI stay live.\n3. Range persists to NVS once, 3 seconds after it stops changing."
-        },
-        {
-          "date": "2026-06-15",
-          "title": "Sweep goes under the grid",
-          "tags": [
-            "firmware",
-            "display"
-          ],
-          "media": [],
-          "body": "One line of layering, and it changed the whole look: the sweep renders beneath the grid now, not over it. The glow reads as light passing under the graticule, and the grid and plane markers stay crisp on top.\n\nDraw order is half the battle with these sprite composites."
-        },
-        {
-          "date": "2026-06-14",
-          "title": "Onboard RGB status light + a scanning overlay",
-          "tags": [
-            "firmware",
-            "ux"
-          ],
-          "media": [],
-          "body": "Put the C3's onboard RGB LED to work as a status light, and laid a scanning overlay over the scope so it reads like radar instead of a plot.\n\nDropped the 100 km range while I was there. The projection distortion gets silly at that zoom and I never once used it. The close ranges are the useful ones."
-        },
-        {
-          "date": "2026-06-13",
-          "title": "Forked a plane-radar project, then rebuilt it heap-first",
-          "tags": [
-            "firmware",
-            "adsb",
-            "display",
-            "heap"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/radar/media/wired.jpg",
-              "caption": "Round GC9A01 on the bench"
-            },
-            {
-              "src": "/buildlog/radar/media/scope.jpg"
-            },
-            {
-              "src": "/buildlog/radar/media/housing.jpg"
-            },
-            {
-              "src": "/buildlog/radar/media/hero.jpg"
-            }
-          ],
-          "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3 and then gutted most of it. The stock build locked up every so often: it fired a burst of ADS-B requests and buffered each whole response body. One request on a backoff, plus a stream parse with a field filter so the body is never held whole, and the lockups stopped.\n\nThe rest was one long session:\n\n- **Dual core:** the network fetch on its own task, so a poll never stalls a frame\n- **Interpolation:** targets dead-reckon between the 3-second polls instead of teleporting\n- **ESP32-S3 Super Mini:** a second target, for the better radio, with WiFi retry hardening\n- **Looks:** 16-bit colour at 80 MHz SPI, a sweep with a comet trail, 30 fps pacing\n\nBy the end it was a live scope sitting in the printed slatted cube: round LCD, green grid, real callsigns."
-        }
-      ]
-    },
-    {
       "slug": "phantasyfish",
       "title": "PhantasyFish",
       "status": "live",
@@ -3846,6 +3917,54 @@
         }
       ],
       "body": "Built two more boards into trim cases and flashed both with the current firmware. Both boot to the new Slackey wordmark. A fresh board needs BOOT+RESET for its first USB flash. That first flash also lays down the two-slot partition table, so every update after the case closes can go over the air."
+    },
+    {
+      "build": "radar",
+      "buildTitle": "ESP32 Plane Radar",
+      "date": "2026-10-30",
+      "title": "Case v2: 86 glued pieces down to 4 prints",
+      "tags": [
+        "enclosure",
+        "3d-printing"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/radar/media/case-v2-hero.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/radar/media/case-v2-exploded.jpg",
+          "kind": "render",
+          "caption": "Body, faceplate, display clip, keyboard insert, 4 M3 self-tappers"
+        },
+        {
+          "src": "/buildlog/radar/media/case-v2-section.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/radar/media/case-v2-button-recess.jpg",
+          "kind": "render",
+          "caption": "12.5 mm recess for the tactile switch, 0.8 mm floor"
+        },
+        {
+          "src": "/buildlog/radar/media/case-v2-back.jpg",
+          "kind": "render"
+        }
+      ],
+      "body": "A few of these are going out as Christmas presents, and the old case was the slow part. It was a kit of STEP parts that took a lot of assembly and a lot of superglue. The v2 redesign was modelled parametrically in SolidCraft.\n\n| | v1 | v2 |\n|---|---|---|\n| Printed pieces | 86 | 4 |\n| Glue joints | about 80 | 1 |\n| Assembly | 60–90 min | about 8 min |\n\n- **Body:** shell, deck, button recess and keyboard tray in one white print, about 50 g, so it prints with no purge waste.\n- **Faceplate:** printed face down on the AMS with a black bezel and grey ring and rivets. Two M3 screws from the back hold it.\n- **Keyboard insert:** 55 keys printed in place in four colours. It's the one glued part.\n- **Display clip:** a 1 g part that holds the round LCD in place of the old M2 screws and spacers.\n\nThe TTP223 touch pad is gone. It was finicky and gave no feedback, so range is now a 12 mm tactile switch that drops into a recess in the deck.\n\nThe first test print changed a few things. The board now mounts components-up, so its LED shows. The body grew 10 mm taller and 5 mm deeper, to 76 × 63 mm.\n\n> **Note:** module listings for the GC9A01 disagree on depth. Measure the glass-to-PCB stack before printing the clip."
+    },
+    {
+      "build": "radar",
+      "buildTitle": "ESP32 Plane Radar",
+      "date": "2026-10-30",
+      "title": "Real maps, OTA updates and a range button",
+      "tags": [
+        "firmware",
+        "maps",
+        "ota"
+      ],
+      "media": [],
+      "body": "A gift sprint: the radar has to work for someone in another city who never touches a USB cable.\n\n- **Real map underlay:** the faint line map is replaced by a real basemap. The browser renders it from OpenFreeMap tiles for the device's location and uploads it to a flash partition. The device memory-maps it, so it costs no heap. It comes in Day and Dusk themes. A 12-minute soak on the polish build logged 228 polls, 0 fetch errors and a 44.6 KB worst-case free heap.\n- **OTA with rollback:** this S3 turned out to have 8 MB of flash, which leaves room for a second 3 MB app slot. Updates stream into the spare slot with no RAM buffer. A new image runs on probation and is kept after 30 s healthy on Wi-Fi. It rolls back if it never gets healthy in 5 minutes or crashes on boot. An interrupted upload, both rollback paths and map survival were all tested on the radar. A `v*` tag now builds the release files.\n- **Range button:** the TTP223 touch pad is replaced by a tactile switch on GPIO 6, read by an interrupt so fast presses step 1-for-1. A flapping line locks it out after more than 16 presses in 2 seconds.\n- **S3 only:** C3 support is removed. CI passes on main again for the first time since July, now that the airport-data drift check is a warning instead of a failure.\n\nA redesigned device web page is in review in its own PR."
     },
     {
       "build": "kfun",
@@ -5978,18 +6097,6 @@
       "body": "Put the C3's onboard RGB LED to work as a status light, and laid a scanning overlay over the scope so it reads like radar instead of a plot.\n\nDropped the 100 km range while I was there. The projection distortion gets silly at that zoom and I never once used it. The close ranges are the useful ones."
     },
     {
-      "build": "noodle",
-      "buildTitle": "Noodle 2K",
-      "date": "2026-06-13",
-      "title": "Portability pass + matrix sat moves to an S3",
-      "tags": [
-        "firmware",
-        "portability"
-      ],
-      "media": [],
-      "body": "Portability pass. Every board's `platformio.ini` now pins the pioarduino platform by URL, so a build on a new machine produces the same firmware as the old one instead of whatever the toolchain drifted to.\n\nThe 12×8 matrix satellite moved to a dual-core ESP32-S3 SuperMini for the better radio, and the 16×16 got a baked Pac-Chase animation as its own source."
-    },
-    {
       "build": "radar",
       "buildTitle": "ESP32 Plane Radar",
       "date": "2026-06-13",
@@ -6016,6 +6123,18 @@
         }
       ],
       "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3 and then gutted most of it. The stock build locked up every so often: it fired a burst of ADS-B requests and buffered each whole response body. One request on a backoff, plus a stream parse with a field filter so the body is never held whole, and the lockups stopped.\n\nThe rest was one long session:\n\n- **Dual core:** the network fetch on its own task, so a poll never stalls a frame\n- **Interpolation:** targets dead-reckon between the 3-second polls instead of teleporting\n- **ESP32-S3 Super Mini:** a second target, for the better radio, with WiFi retry hardening\n- **Looks:** 16-bit colour at 80 MHz SPI, a sweep with a comet trail, 30 fps pacing\n\nBy the end it was a live scope sitting in the printed slatted cube: round LCD, green grid, real callsigns."
+    },
+    {
+      "build": "noodle",
+      "buildTitle": "Noodle 2K",
+      "date": "2026-06-13",
+      "title": "Portability pass + matrix sat moves to an S3",
+      "tags": [
+        "firmware",
+        "portability"
+      ],
+      "media": [],
+      "body": "Portability pass. Every board's `platformio.ini` now pins the pioarduino platform by URL, so a build on a new machine produces the same firmware as the old one instead of whatever the toolchain drifted to.\n\nThe 12×8 matrix satellite moved to a dual-core ESP32-S3 SuperMini for the better radio, and the 16×16 got a baked Pac-Chase animation as its own source."
     },
     {
       "build": "vizbot",
@@ -6657,5 +6776,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-10-30T12:29:38.211Z"
+  "generatedAt": "2026-10-31T04:17:59.535Z"
 }
