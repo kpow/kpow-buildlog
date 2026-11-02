@@ -26,7 +26,7 @@ app, no cloud service, nothing left running on a computer.
 ## What it does
 
 - **Now Playing:** the cover at 64×64, crossfading on every track change
-- **Visualizer:** 22 effects out of the NoodleLab catalog, driven by a 512-point FFT of the board's own mics. 16 log-spaced bands, spectral-flux beat detection, 23 palettes, a new one on every effect change
+- **Visualizer:** 22 effects out of the NoodleLab catalog, driven by a 512-point FFT of the board's own mics. 16 log-spaced bands, spectral-flux beat detection, 23 palettes (the shared Noodle family set, including the morphing LIVE palette), a new one on every effect change
 - **Ambient:** slow patterns when nothing is playing, reacting to room audio so it still moves when the music is coming from somewhere else. A cover you played earlier fades in with how long ago it was
 - **Kaleidoscope:** mirror and rotational folds over any effect, with live blend, spin and slice
 - **Control page:** all of it from a phone on the same WiFi, plus Spotify search and transport. The browser talks to Spotify directly, so the board pays nothing for it

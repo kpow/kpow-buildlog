@@ -11,7 +11,8 @@ facts:
   effects: 25
   palettes: 23
   modes: 5
-hero: media/hero.jpg
+hero: media/key-switches-modes.jpg
+heroVideo: media/key-switches-modes.mp4
 links:
   - { label: repo, url: https://github.com/kpow/vizMac }
 started: 2026-09-24

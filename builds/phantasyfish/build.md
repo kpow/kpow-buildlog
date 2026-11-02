@@ -3,7 +3,7 @@ slug: phantasyfish
 title: PhantasyFish
 status: live
 kind: software
-summary: Fantasy sports for Phish setlists.
+summary: Fantasy sports for Phish setlists, with an MCP server so AI assistants can play it.
 stack: [React, TypeScript, Express, PostgreSQL, Drizzle, OpenAI, Resend, DigitalOcean]
 tags: [web, fullstack, phish]
 repo: kpow/phantasyphish
@@ -36,6 +36,8 @@ hands out bonuses for:
 **WookBot** is an OpenAI setlist generator built on historical play patterns.
 Around it sit leaderboards (global, tour, show), research tools, an admin
 console, and transactional email.
+
+Since October it also has an **MCP server** at `/mcp`. Claude and other AI assistants can connect with a personal API key (managed from the AI Assistant tab on the profile page), research shows, read leaderboards and player stats, and make predictions.
 
 ## Year one
 

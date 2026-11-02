@@ -12,7 +12,7 @@ facts:
   patterns: 16
   transitions: 9
   seedIcons: 30
-hero: media/hero.jpg
+hero: media/fleet-v6.jpg
 links:
   - { label: repo, url: https://github.com/kpow/8x8 }
 started: 2026-09-14
@@ -42,6 +42,8 @@ Sixty-four WS2812Bs at full white would pull about 3.8 A, so brightness starts a
 40/255 on a fresh board and FastLED is held to 450 mA. How the matrix sits in the case is a
 per-device setting rather than a constant — one lookup folds rotation, flips and
 serpentine wiring together.
+
+Firmware updates come over WiFi: the handheld serves its own upload page and advertises itself over mDNS. A user guide and hardware notes are written up for the handheld, and the setup portal has a way out of setup.
 
 ## The format
 

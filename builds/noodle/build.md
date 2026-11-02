@@ -12,7 +12,8 @@ facts:
   satellites: 6
   effects: 22
   palettes: 23
-hero: media/noodle-2k-lit.jpg
+hero: media/noodle-2k-hero.jpg
+heroVideo: media/noodle-2k-hero.mp4
 links:
   - { label: repo, url: https://github.com/kpow/noodlez-v2 }
 started: 2026-03-23
@@ -55,6 +56,8 @@ Over ESP-NOW:
   console's state
 - two **HUB75 panels** on MatrixPortal S3 boards, a 64×32 and a 128×64, fed the
   same packets side by side until one is retired
+
+**Palettes** are now one shared set for the whole Noodle family (vizSpot and vizMac use it too), with a lab editor. A LIVE slot generates palettes that morph in, carried over the wire as protocol v12.
 
 **22 effects**, including a trimmed port of WLED's 2D particle system and a
 16-band GEQ, all render through **23 palettes**. The hub75 panels also run the

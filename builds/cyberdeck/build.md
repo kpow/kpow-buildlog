@@ -10,7 +10,7 @@ rung: design
 repo: kpow/noodle-exp
 facts:
   modes: 11
-hero: media/hero.jpg
+hero: media/deck-and-bench.jpg
 links:
   - { label: repo, url: https://github.com/kpow/noodle-exp }
 started: 2026-06-28
@@ -38,6 +38,8 @@ framebuffer:
 | **Pattern** | Chladni, Kaleido |
 | **Light** | Filaments, LED Matrix, Color Pick |
 | **Sensor** | Room Radar, Presence Log |
+
+**Current state (Oct 2026):** the original ESP32 board was lost to a misseated power module, and a spare is now the main board with everything working on the bench. The 5V bus runs from a 3A supply. A pin map and bring-up notes live in the repo.
 
 No WiFi, no Bluetooth, no companion app. It is a genuinely standalone appliance,
 which is rarer than it should be.
