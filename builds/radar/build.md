@@ -1,19 +1,20 @@
 ---
 slug: radar
-title: ESP32 Plane Radar
+title: tinyradar
 status: shipped
 kind: hardware
 summary: A desktop ADS-B aircraft scope on a round LCD.
-stack: [ESP32-C3, LovyanGFX, ADS-B, PlatformIO]
+stack: [ESP32-S3, LovyanGFX, ADS-B, PlatformIO]
 tags: [display, adsb, firmware]
 rung: solder
 repo: kpow/ESP32-Plane-Radar
 facts:
   aircraft: 64
   screen: 1.28in round
-hero: media/hero.jpg
+hero: media/tinyradar-front.jpg
 links:
   - { label: repo, url: https://github.com/kpow/ESP32-Plane-Radar }
+  - { label: guide, url: https://kpow.xyz/tinyradar/guide }
 started: 2026-06-13
 ---
 A desktop ADS-B scope on a round LCD. It paints live traffic around my home onto
@@ -23,9 +24,9 @@ range parked as a bearing dot on the rim. Data comes from the public adsb.fi
 opendata API over HTTPS, no local receiver, polled every 3 seconds for up to 64
 aircraft.
 
-The hardware is a GC9A01 1.28" round LCD (240×240, LovyanGFX) on an ESP32-C3
-Super Mini, in a printed slatted case with a BOOT button and an optional touch
-pad for range. An ESP32-S3 target exists too, for the better radio.
+The hardware is a GC9A01 1.28" round LCD (240×240, LovyanGFX) on an ESP32-S3
+Super Mini (8 MB flash), in a four-print case with a tactile range button. It
+sets itself up from a phone and updates over Wi-Fi.
 
 ## How it's built
 
