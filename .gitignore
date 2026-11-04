@@ -4,3 +4,6 @@ node_modules/
 # photo inbox — raw phone photos carry GPS; only processed copies get committed
 inbox/*
 !inbox/README.md
+
+# Local dev-server config (machine paths); the buildlog skill in .claude/skills stays tracked
+.claude/launch.json
