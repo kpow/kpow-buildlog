@@ -38,7 +38,7 @@
       "started": "2026-11-12",
       "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.",
       "stats": {
-        "entries": 2,
+        "entries": 3,
         "photos": 12,
         "daysActive": 2,
         "firstEntry": "2026-11-12",
@@ -113,6 +113,16 @@
       ],
       "lastEntry": "2026-11-13",
       "entries": [
+        {
+          "date": "2026-11-13",
+          "title": "Kaleido: smooth edges at 33 fps, tuned looks that stick",
+          "tags": [
+            "kaleido",
+            "performance"
+          ],
+          "media": [],
+          "body": "A morning of polish on how Kaleido looks and moves.\n\n- **Smooth rendering:** the device sampled the 128 px source with nearest texels, so each one showed as a 4-15 px block with stair-stepped edges. It now samples bilinear, with the 240 px render split across both cores as Chladni does it: 33-34 fps, where bilinear on one core managed 27.\n- **Steady slow spins:** zoomed in, slow spins stalled and then jumped. Texture coordinates moved to full-width fixed point, which keeps about 20 bits at any zoom.\n- **Tuned looks are saved:** edits from Tune, the web sliders or a pinch stay with that look across restarts. The device and page mark it \"(edited)\", and the Studio page can reset it.\n- **Controls:** two fingers sliding up or down step Speed. The L+R chord window doubled to 300 ms. Tilt no longer spins the picture.\n- **LEDs:** the four top LEDs sampled the screen quadrants, which a kaleidoscope makes identical. They now sample spots from centre to edge, so the colours differ and flow with the picture.\n\nAll motion now runs at 75%: 1.0 felt too fast, 0.5 too slow.\n\n> **Dead end:** rendering at the full 480 px ran at 20 fps and looked no better than bilinear at 240."
+        },
         {
           "date": "2026-11-13",
           "title": "Chladni, and switching apps from My IDEAs",
@@ -4288,6 +4298,18 @@
       "build": "mosaico",
       "buildTitle": "ESP-Mosaico",
       "date": "2026-11-13",
+      "title": "Kaleido: smooth edges at 33 fps, tuned looks that stick",
+      "tags": [
+        "kaleido",
+        "performance"
+      ],
+      "media": [],
+      "body": "A morning of polish on how Kaleido looks and moves.\n\n- **Smooth rendering:** the device sampled the 128 px source with nearest texels, so each one showed as a 4-15 px block with stair-stepped edges. It now samples bilinear, with the 240 px render split across both cores as Chladni does it: 33-34 fps, where bilinear on one core managed 27.\n- **Steady slow spins:** zoomed in, slow spins stalled and then jumped. Texture coordinates moved to full-width fixed point, which keeps about 20 bits at any zoom.\n- **Tuned looks are saved:** edits from Tune, the web sliders or a pinch stay with that look across restarts. The device and page mark it \"(edited)\", and the Studio page can reset it.\n- **Controls:** two fingers sliding up or down step Speed. The L+R chord window doubled to 300 ms. Tilt no longer spins the picture.\n- **LEDs:** the four top LEDs sampled the screen quadrants, which a kaleidoscope makes identical. They now sample spots from centre to edge, so the colours differ and flow with the picture.\n\nAll motion now runs at 75%: 1.0 felt too fast, 0.5 too slow.\n\n> **Dead end:** rendering at the full 480 px ran at 20 fps and looked no better than bilinear at 240."
+    },
+    {
+      "build": "mosaico",
+      "buildTitle": "ESP-Mosaico",
+      "date": "2026-11-13",
       "title": "Chladni, and switching apps from My IDEAs",
       "tags": [
         "chladni",
@@ -7394,5 +7416,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-13T16:39:38.662Z"
+  "generatedAt": "2026-11-13T16:45:44.556Z"
 }
