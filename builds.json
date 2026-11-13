@@ -1,6 +1,89 @@
 {
   "builds": [
     {
+      "slug": "mosaico",
+      "title": "ESP-Mosaico",
+      "status": "active",
+      "kind": "hybrid",
+      "summary": "Apps for Espressif's modular ESP32-S31 kit: a square AMOLED with snap-on modules.",
+      "stack": [
+        "ESP32-S31",
+        "ESP-IDF",
+        "ESP-GSP",
+        "FreeRTOS"
+      ],
+      "tags": [
+        "display",
+        "firmware",
+        "esp-mosaico"
+      ],
+      "rung": null,
+      "facts": {
+        "screen": "2.16in 480x480",
+        "apps": "1"
+      },
+      "repo": null,
+      "hero": "/buildlog/mosaico/media/esp-mosaico.jpg",
+      "heroVideo": null,
+      "links": [
+        {
+          "label": "kit docs",
+          "url": "https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s31/esp-mosaico/user_guide.html"
+        },
+        {
+          "label": "workspace",
+          "url": "https://github.com/esp-mosaico/esp-mosaico-vibe"
+        }
+      ],
+      "started": "2026-11-12",
+      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.",
+      "stats": {
+        "entries": 1,
+        "photos": 2,
+        "daysActive": 1,
+        "firstEntry": "2026-11-12",
+        "lastEntry": "2026-11-12"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
+          "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
+          "kind": "render",
+          "caption": "Espressif's product render of the kit"
+        }
+      ],
+      "lastEntry": "2026-11-12",
+      "entries": [
+        {
+          "date": "2026-11-12",
+          "title": "Kaleido: a kaleidoscope app, simulator to device in a day",
+          "tags": [
+            "kaleido",
+            "display",
+            "camera"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
+              "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
+            },
+            {
+              "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
+              "kind": "render",
+              "caption": "Espressif's product render of the kit"
+            }
+          ],
+          "body": "First app on the Mosaico. Kaleido started as a spec and a clickable prototype, ran in the PC simulator next, and was on the device by evening.\n\n- **Frame pipeline:** a render task pinned to core 1 fills a pool of three PSRAM frame buffers. GSP sends them to the panel from core 0. That took it from about 13 to 21 fps.\n- **Sources:** three generative patterns (Lava Cells, Flora, Marbling), images added from a phone, and the camera module. The PPA crops each camera frame to the centre square and scales it to 128×128 in one pass.\n- **Looks:** eight presets, from Rose Window to Neon Lattice. L and R step through them, and holding a key changes the source.\n- **Phone page:** `kaleido.local` serves a 4.7 KB page for image links, uploads and snapshots. The Function button saves the frame as a 480×480 JPEG.\n\n> **Trap:** I rotated the picture in the GSP presenter and the touch separately, and taps never landed in the right place. The BSP rotates panel and touch together from one setting: 270 with the module at the bottom."
+        }
+      ]
+    },
+    {
       "slug": "radar",
       "title": "tinyradar",
       "status": "shipped",
@@ -4094,6 +4177,29 @@
   ],
   "recent": [
     {
+      "build": "mosaico",
+      "buildTitle": "ESP-Mosaico",
+      "date": "2026-11-12",
+      "title": "Kaleido: a kaleidoscope app, simulator to device in a day",
+      "tags": [
+        "kaleido",
+        "display",
+        "camera"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
+          "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
+        },
+        {
+          "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
+          "kind": "render",
+          "caption": "Espressif's product render of the kit"
+        }
+      ],
+      "body": "First app on the Mosaico. Kaleido started as a spec and a clickable prototype, ran in the PC simulator next, and was on the device by evening.\n\n- **Frame pipeline:** a render task pinned to core 1 fills a pool of three PSRAM frame buffers. GSP sends them to the panel from core 0. That took it from about 13 to 21 fps.\n- **Sources:** three generative patterns (Lava Cells, Flora, Marbling), images added from a phone, and the camera module. The PPA crops each camera frame to the centre square and scales it to 128×128 in one pass.\n- **Looks:** eight presets, from Rose Window to Neon Lattice. L and R step through them, and holding a key changes the source.\n- **Phone page:** `kaleido.local` serves a 4.7 KB page for image links, uploads and snapshots. The Function button saves the frame as a 480×480 JPEG.\n\n> **Trap:** I rotated the picture in the GSP presenter and the touch separately, and taps never landed in the right place. The BSP rotates panel and touch together from one setting: 270 with the module at the bottom."
+    },
+    {
       "build": "radar",
       "buildTitle": "tinyradar",
       "date": "2026-11-11",
@@ -7123,5 +7229,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-11T21:27:25.958Z"
+  "generatedAt": "2026-11-13T03:29:12.937Z"
 }
