@@ -20,7 +20,7 @@
       "rung": null,
       "facts": {
         "screen": "2.16in 480x480",
-        "apps": "1"
+        "apps": "2"
       },
       "repo": null,
       "hero": "/buildlog/mosaico/media/esp-mosaico.jpg",
@@ -36,13 +36,13 @@
         }
       ],
       "started": "2026-11-12",
-      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.",
+      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.",
       "stats": {
-        "entries": 1,
-        "photos": 2,
-        "daysActive": 1,
+        "entries": 2,
+        "photos": 12,
+        "daysActive": 2,
         "firstEntry": "2026-11-12",
-        "lastEntry": "2026-11-12"
+        "lastEntry": "2026-11-13"
       },
       "git": null,
       "picturesOverTime": [
@@ -53,13 +53,100 @@
         },
         {
           "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
+          "kind": "screenshot",
+          "caption": "The Studio page at kaleido.local"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-flower.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-lattice.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
           "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
           "kind": "render",
           "caption": "Espressif's product render of the kit"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/chladni-magenta.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/chladni-orange.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/chladni-tune-rail.jpg",
+          "kind": "screenshot",
+          "caption": "Tune rail: 13 settings, stepped with L and R"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/chladni-triad.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/my-ideas-grid.jpg",
+          "kind": "screenshot",
+          "caption": "Vibe Mode 0.3.0 with both apps saved"
         }
       ],
-      "lastEntry": "2026-11-12",
+      "lastEntry": "2026-11-13",
       "entries": [
+        {
+          "date": "2026-11-13",
+          "title": "Chladni, and switching apps from My IDEAs",
+          "tags": [
+            "chladni",
+            "vibe-mode",
+            "display"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/chladni-magenta.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/chladni-orange.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/chladni-tune-rail.jpg",
+              "kind": "screenshot",
+              "caption": "Tune rail: 13 settings, stepped with L and R"
+            },
+            {
+              "src": "/buildlog/mosaico/media/chladni-triad.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/my-ideas-grid.jpg",
+              "kind": "screenshot",
+              "caption": "Vibe Mode 0.3.0 with both apps saved"
+            }
+          ],
+          "body": "Second app on the Mosaico: Chladni, a port of megafun's ChladniModule. It draws\nresonant-plate standing waves. 42 (m,n) figures morph into each other while sand\ngathers on the nodal lines, in one of eight palettes.\n\n- **Controls:** a tap, the Function button or a shake strikes the plate. R and L step figures. Tilt or drag bends the resonance.\n- **Tune rail:** double-tap opens 13 settings, saved in NVS.\n- **LEDs:** the Interaction Module shows a turning slice of the plate at 50 Hz.\n- **Speed:** the first build was capped at 16-20 fps. Splitting the pixel loop across both cores took it to 38-44 frames a second, above the panel's ~33 fps ceiling.\n\nEach app is its own firmware. To switch, hold AI at power-on to reach Vibe Mode,\nopen My IDEAs and tap one. An app gets on that grid by installing it over USB,\nthen tapping Save Current Build.\n\n> **Trap:** On Vibe Mode 0.2.1, Save Current Build failed for every app with\n> ESP_ERR_INVALID_ARG (0x102). I guessed it was the 0.3 update, and it was:\n> updating Vibe Mode to 0.3.0 fixed it."
+        },
         {
           "date": "2026-11-12",
           "title": "Kaleido: a kaleidoscope app, simulator to device in a day",
@@ -72,6 +159,27 @@
             {
               "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
               "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
+              "kind": "screenshot",
+              "caption": "The Studio page at kaleido.local"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-flower.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-lattice.jpg",
+              "kind": "screenshot"
             },
             {
               "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
@@ -4179,6 +4287,42 @@
     {
       "build": "mosaico",
       "buildTitle": "ESP-Mosaico",
+      "date": "2026-11-13",
+      "title": "Chladni, and switching apps from My IDEAs",
+      "tags": [
+        "chladni",
+        "vibe-mode",
+        "display"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/mosaico/media/chladni-magenta.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/mosaico/media/chladni-orange.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/mosaico/media/chladni-tune-rail.jpg",
+          "kind": "screenshot",
+          "caption": "Tune rail: 13 settings, stepped with L and R"
+        },
+        {
+          "src": "/buildlog/mosaico/media/chladni-triad.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/mosaico/media/my-ideas-grid.jpg",
+          "kind": "screenshot",
+          "caption": "Vibe Mode 0.3.0 with both apps saved"
+        }
+      ],
+      "body": "Second app on the Mosaico: Chladni, a port of megafun's ChladniModule. It draws\nresonant-plate standing waves. 42 (m,n) figures morph into each other while sand\ngathers on the nodal lines, in one of eight palettes.\n\n- **Controls:** a tap, the Function button or a shake strikes the plate. R and L step figures. Tilt or drag bends the resonance.\n- **Tune rail:** double-tap opens 13 settings, saved in NVS.\n- **LEDs:** the Interaction Module shows a turning slice of the plate at 50 Hz.\n- **Speed:** the first build was capped at 16-20 fps. Splitting the pixel loop across both cores took it to 38-44 frames a second, above the panel's ~33 fps ceiling.\n\nEach app is its own firmware. To switch, hold AI at power-on to reach Vibe Mode,\nopen My IDEAs and tap one. An app gets on that grid by installing it over USB,\nthen tapping Save Current Build.\n\n> **Trap:** On Vibe Mode 0.2.1, Save Current Build failed for every app with\n> ESP_ERR_INVALID_ARG (0x102). I guessed it was the 0.3 update, and it was:\n> updating Vibe Mode to 0.3.0 fixed it."
+    },
+    {
+      "build": "mosaico",
+      "buildTitle": "ESP-Mosaico",
       "date": "2026-11-12",
       "title": "Kaleido: a kaleidoscope app, simulator to device in a day",
       "tags": [
@@ -4190,6 +4334,27 @@
         {
           "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
           "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
+        },
+        {
+          "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
+          "kind": "screenshot",
+          "caption": "The Studio page at kaleido.local"
+        },
+        {
+          "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/mosaico/media/kaleido-flower.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/mosaico/media/kaleido-lattice.jpg",
+          "kind": "screenshot"
         },
         {
           "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
@@ -7229,5 +7394,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-13T03:29:12.937Z"
+  "generatedAt": "2026-11-13T16:39:38.662Z"
 }

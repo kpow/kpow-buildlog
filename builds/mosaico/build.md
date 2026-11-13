@@ -8,7 +8,7 @@ stack: [ESP32-S31, ESP-IDF, ESP-GSP, FreeRTOS]
 tags: [display, firmware, esp-mosaico]
 facts:
   screen: 2.16in 480x480
-  apps: 1
+  apps: 2
 hero: media/esp-mosaico.jpg
 links:
   - { label: kit docs, url: https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s31/esp-mosaico/user_guide.html }
@@ -30,9 +30,12 @@ comes in only for what the simulator can't cover: frame rate, the camera, the
 motor, touch.
 
 The kit keeps a retained firmware called Vibe Mode. It installs apps over USB
-and is where an app exits back to.
+and is where an app exits back to. Its My IDEAs grid holds saved apps to switch
+between.
 
 ## Apps
 
 - **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images
   from a phone page at `kaleido.local`.
+- **Chladni:** resonant-plate standing waves, ported from megafun's
+  ChladniModule.
