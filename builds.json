@@ -38,7 +38,7 @@
       "started": "2026-11-12",
       "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.",
       "stats": {
-        "entries": 3,
+        "entries": 4,
         "photos": 12,
         "daysActive": 2,
         "firstEntry": "2026-11-12",
@@ -48,19 +48,18 @@
       "picturesOverTime": [
         {
           "date": "2026-11-12",
-          "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
-          "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
-        },
-        {
-          "date": "2026-11-12",
           "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
-          "kind": "screenshot",
-          "caption": "The Studio page at kaleido.local"
+          "kind": "screenshot"
         },
         {
           "date": "2026-11-12",
           "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
           "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
+          "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
         },
         {
           "date": "2026-11-12",
@@ -159,6 +158,26 @@
         },
         {
           "date": "2026-11-12",
+          "title": "Kaleido: Studio web page, two new symmetries, 33 fps",
+          "tags": [
+            "kaleido",
+            "web",
+            "performance"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
+              "kind": "screenshot"
+            }
+          ],
+          "body": "The evening after Kaleido first ran on the device.\n\n- **Studio page:** the phone-only page became a Studio with a desktop layout: Picture on the left and Pattern on the right, like the L and R keys. Phones get tabs and a remote within thumb reach. 18 KB gzipped.\n- **Live preview:** the page shows the screen at about 4 fps. Frames go through the S31's hardware JPEG encoder: 9 ms for a preview, 41 ms for a 480×480 snapshot.\n- **Two new symmetries:** Snowflake (30-60-90 triangle mirrors) replaced Quilt, and Tunnel (log-polar, flying into the tube) replaced Neon Lattice.\n- **Speed:** a new look setting from 0.1x to 3x. Each look got a hidden pace so 1x moves the same amount everywhere.\n- **19.5 to 33 fps:** rendering at 240×240 and upscaling 2x with the PPA cut the engine from 46 to about 14 ms. The frame task also stopped waiting for the 33 ms UI tick.\n\n> **Note:** TE sync came off the display. A full-frame transfer takes longer than a refresh, so TE only added waiting, and nothing tears."
+        },
+        {
+          "date": "2026-11-12",
           "title": "Kaleido: a kaleidoscope app, simulator to device in a day",
           "tags": [
             "kaleido",
@@ -169,15 +188,6 @@
             {
               "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
               "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
-            },
-            {
-              "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
-              "kind": "screenshot",
-              "caption": "The Studio page at kaleido.local"
-            },
-            {
-              "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
-              "kind": "screenshot"
             },
             {
               "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
@@ -4346,6 +4356,28 @@
       "build": "mosaico",
       "buildTitle": "ESP-Mosaico",
       "date": "2026-11-12",
+      "title": "Kaleido: Studio web page, two new symmetries, 33 fps",
+      "tags": [
+        "kaleido",
+        "web",
+        "performance"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
+          "kind": "screenshot"
+        }
+      ],
+      "body": "The evening after Kaleido first ran on the device.\n\n- **Studio page:** the phone-only page became a Studio with a desktop layout: Picture on the left and Pattern on the right, like the L and R keys. Phones get tabs and a remote within thumb reach. 18 KB gzipped.\n- **Live preview:** the page shows the screen at about 4 fps. Frames go through the S31's hardware JPEG encoder: 9 ms for a preview, 41 ms for a 480×480 snapshot.\n- **Two new symmetries:** Snowflake (30-60-90 triangle mirrors) replaced Quilt, and Tunnel (log-polar, flying into the tube) replaced Neon Lattice.\n- **Speed:** a new look setting from 0.1x to 3x. Each look got a hidden pace so 1x moves the same amount everywhere.\n- **19.5 to 33 fps:** rendering at 240×240 and upscaling 2x with the PPA cut the engine from 46 to about 14 ms. The frame task also stopped waiting for the 33 ms UI tick.\n\n> **Note:** TE sync came off the display. A full-frame transfer takes longer than a refresh, so TE only added waiting, and nothing tears."
+    },
+    {
+      "build": "mosaico",
+      "buildTitle": "ESP-Mosaico",
+      "date": "2026-11-12",
       "title": "Kaleido: a kaleidoscope app, simulator to device in a day",
       "tags": [
         "kaleido",
@@ -4356,15 +4388,6 @@
         {
           "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
           "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
-        },
-        {
-          "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
-          "kind": "screenshot",
-          "caption": "The Studio page at kaleido.local"
-        },
-        {
-          "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
-          "kind": "screenshot"
         },
         {
           "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
@@ -7416,5 +7439,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-13T16:45:44.556Z"
+  "generatedAt": "2026-11-13T17:31:50.743Z"
 }
