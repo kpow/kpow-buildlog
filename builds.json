@@ -37,7 +37,7 @@
       "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.",
       "stats": {
         "entries": 60,
-        "photos": 60,
+        "photos": 65,
         "daysActive": 295,
         "firstEntry": "2026-01-24",
         "lastEntry": "2026-11-14"
@@ -359,6 +359,33 @@
           "date": "2026-11-04",
           "src": "/buildlog/vizbot/media/vizzy-demo.mp4",
           "poster": "/buildlog/vizbot/media/vizzy-demo.jpg"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/vizbot/media/vizcloud-home.jpg",
+          "kind": "screenshot",
+          "caption": "A local copy with simulated bots"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/vizbot/media/vizcloud-sounds.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/vizbot/media/vizcloud-vizmini-bot.jpg",
+          "kind": "screenshot",
+          "caption": "A simulated vizMini: its OLED face and 12 LEDs"
+        },
+        {
+          "date": "2026-11-14",
+          "src": "/buildlog/vizbot/media/vizcloud-waiting.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-14",
+          "src": "/buildlog/vizbot/media/vizcloud-firmware.jpg",
+          "kind": "screenshot"
         }
       ],
       "lastEntry": "2026-11-14",
@@ -371,7 +398,16 @@
             "ota",
             "release"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/vizcloud-waiting.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/vizbot/media/vizcloud-firmware.jpg",
+              "kind": "screenshot"
+            }
+          ],
           "body": "Forget removes a bot and everything tied to it. The next time that bot syncs, the cloud answers approval \"unknown\". v2 firmware (vizBot 3.11.2, vizMini 0.8.1) then drops its id and token and registers as a new bot waiting for approval. That gives the old bots a clean start on the new server.\n\nThree real bots went through the whole loop: update, forget, re-register, approve, get content. They were skunky the StackChan, a 1.69 inch LCD bot and a vizMini. The 1.69 and the vizMini updated over cloud OTA.\n\nThe database migrations were rehearsed against the real production schema first and passed 11 of 11 checks. The first deploy rebuilt the old commit after a settings change and failed its health check without harm. The second shipped the merged code.\n\n> **Next:** forget all bots in production and re-approve the fleet as each one comes back."
         },
         {
@@ -392,7 +428,17 @@
             "vizcloud",
             "admin"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/vizcloud-home.jpg",
+              "kind": "screenshot",
+              "caption": "A local copy with simulated bots"
+            },
+            {
+              "src": "/buildlog/vizbot/media/vizcloud-sounds.jpg",
+              "kind": "screenshot"
+            }
+          ],
           "body": "VizCloud got rebuilt end to end. The fleet it runs is small: under 25 bots, gifts for close friends this Christmas. Recipients never log in, and a few friends edit content with full access.\n\n- **Look:** a new design called Toybox, in vizBot black and yellow with Slackey headings. Bots show their real faces, drawn by a TypeScript port of the face model generated from the firmware headers.\n- **Editors:** each has their own login, and every change lands in an activity log with who made it.\n- **Publishing:** edits save right away but reach bots only on Publish, which stores an immutable release. Rollback points back at an earlier one. Each kind of bot gets only the content it can use, trimmed to its size budget, so publish never refuses for size.\n- **Commands:** a persistent log, queued then delivered.\n- **Bots:** new bots wait for approval, and each one's name comes from the bot itself. Online history shows when each was awake.\n- **Firmware:** updates are uploaded and assigned to bots from the admin. vizMini is now a supported device.\n\nUnder it: one TypeScript Node service on Postgres, a React client, and a soak test of 50 simulated bots across all five hardware types on both protocols."
         },
         {
@@ -403,7 +449,13 @@
             "ota",
             "firmware"
           ],
-          "media": [],
+          "media": [
+            {
+              "src": "/buildlog/vizbot/media/vizcloud-vizmini-bot.jpg",
+              "kind": "screenshot",
+              "caption": "A simulated vizMini: its OLED face and 12 LEDs"
+            }
+          ],
           "body": "Both firmwares learned bot protocol v2 for the rebuilt VizCloud. It's additive, so a v2 bot still works against the old server.\n\n- **Identity:** each bot gets its own token on register and keeps it in NVS. A refused token used to stop cloud calls until a reboot. Now the bot backs off an hour, drops the token and registers again.\n- **Names:** the bot reports its own device name on every sync. A rename in the admin comes down as config and goes through the same path as the web panel.\n- **Settings:** brightness, personality and poll interval arrive the same way, with no reboot.\n- **Cloud OTA:** the image downloads to the inactive slot, and its size and SHA-256 are checked before switching. It's kept only after a successful sync, otherwise it rolls back. Never during a web upload or on a low battery, and at most hourly.\n\nvizMini 0.8.0.1 got its own small client with a 2 KB reply cap. Its cloud updates need 80 KB of free heap and get a 10 minute rollback window. Weather, cloud calls and web uploads now take turns, because the C3's heap can't hold two at once. Each unit also got its own device name, defaulting to vizMini plus four hex digits."
         },
         {
@@ -4367,7 +4419,16 @@
         "ota",
         "release"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/vizcloud-waiting.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "src": "/buildlog/vizbot/media/vizcloud-firmware.jpg",
+          "kind": "screenshot"
+        }
+      ],
       "body": "Forget removes a bot and everything tied to it. The next time that bot syncs, the cloud answers approval \"unknown\". v2 firmware (vizBot 3.11.2, vizMini 0.8.1) then drops its id and token and registers as a new bot waiting for approval. That gives the old bots a clean start on the new server.\n\nThree real bots went through the whole loop: update, forget, re-register, approve, get content. They were skunky the StackChan, a 1.69 inch LCD bot and a vizMini. The 1.69 and the vizMini updated over cloud OTA.\n\nThe database migrations were rehearsed against the real production schema first and passed 11 of 11 checks. The first deploy rebuilt the old commit after a settings change and failed its health check without harm. The second shipped the merged code.\n\n> **Next:** forget all bots in production and re-approve the fleet as each one comes back."
     },
     {
@@ -4392,7 +4453,17 @@
         "vizcloud",
         "admin"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/vizcloud-home.jpg",
+          "kind": "screenshot",
+          "caption": "A local copy with simulated bots"
+        },
+        {
+          "src": "/buildlog/vizbot/media/vizcloud-sounds.jpg",
+          "kind": "screenshot"
+        }
+      ],
       "body": "VizCloud got rebuilt end to end. The fleet it runs is small: under 25 bots, gifts for close friends this Christmas. Recipients never log in, and a few friends edit content with full access.\n\n- **Look:** a new design called Toybox, in vizBot black and yellow with Slackey headings. Bots show their real faces, drawn by a TypeScript port of the face model generated from the firmware headers.\n- **Editors:** each has their own login, and every change lands in an activity log with who made it.\n- **Publishing:** edits save right away but reach bots only on Publish, which stores an immutable release. Rollback points back at an earlier one. Each kind of bot gets only the content it can use, trimmed to its size budget, so publish never refuses for size.\n- **Commands:** a persistent log, queued then delivered.\n- **Bots:** new bots wait for approval, and each one's name comes from the bot itself. Online history shows when each was awake.\n- **Firmware:** updates are uploaded and assigned to bots from the admin. vizMini is now a supported device.\n\nUnder it: one TypeScript Node service on Postgres, a React client, and a soak test of 50 simulated bots across all five hardware types on both protocols."
     },
     {
@@ -4405,7 +4476,13 @@
         "ota",
         "firmware"
       ],
-      "media": [],
+      "media": [
+        {
+          "src": "/buildlog/vizbot/media/vizcloud-vizmini-bot.jpg",
+          "kind": "screenshot",
+          "caption": "A simulated vizMini: its OLED face and 12 LEDs"
+        }
+      ],
       "body": "Both firmwares learned bot protocol v2 for the rebuilt VizCloud. It's additive, so a v2 bot still works against the old server.\n\n- **Identity:** each bot gets its own token on register and keeps it in NVS. A refused token used to stop cloud calls until a reboot. Now the bot backs off an hour, drops the token and registers again.\n- **Names:** the bot reports its own device name on every sync. A rename in the admin comes down as config and goes through the same path as the web panel.\n- **Settings:** brightness, personality and poll interval arrive the same way, with no reboot.\n- **Cloud OTA:** the image downloads to the inactive slot, and its size and SHA-256 are checked before switching. It's kept only after a successful sync, otherwise it rolls back. Never during a web upload or on a low battery, and at most hourly.\n\nvizMini 0.8.0.1 got its own small client with a 2 KB reply cap. Its cloud updates need 80 KB of free heap and get a 10 minute rollback window. Weather, cloud calls and web uploads now take turns, because the C3's heap can't hold two at once. Each unit also got its own device name, defaulting to vizMini plus four hex digits."
     },
     {
@@ -7556,5 +7633,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-14T15:55:12.769Z"
+  "generatedAt": "2026-11-14T16:11:01.802Z"
 }
