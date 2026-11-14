@@ -1,525 +1,6 @@
 {
   "builds": [
     {
-      "slug": "mosaico",
-      "title": "ESP-Mosaico",
-      "status": "active",
-      "kind": "hybrid",
-      "summary": "Apps for Espressif's modular ESP32-S31 kit: a square AMOLED with snap-on modules.",
-      "stack": [
-        "ESP32-S31",
-        "ESP-IDF",
-        "ESP-GSP",
-        "FreeRTOS"
-      ],
-      "tags": [
-        "display",
-        "firmware",
-        "esp-mosaico"
-      ],
-      "rung": null,
-      "facts": {
-        "screen": "2.16in 480x480",
-        "apps": "2"
-      },
-      "repo": null,
-      "hero": "/buildlog/mosaico/media/esp-mosaico.jpg",
-      "heroVideo": null,
-      "links": [
-        {
-          "label": "kit docs",
-          "url": "https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s31/esp-mosaico/user_guide.html"
-        },
-        {
-          "label": "workspace",
-          "url": "https://github.com/esp-mosaico/esp-mosaico-vibe"
-        }
-      ],
-      "started": "2026-11-12",
-      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.",
-      "stats": {
-        "entries": 4,
-        "photos": 12,
-        "daysActive": 2,
-        "firstEntry": "2026-11-12",
-        "lastEntry": "2026-11-13"
-      },
-      "git": null,
-      "picturesOverTime": [
-        {
-          "date": "2026-11-12",
-          "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
-          "kind": "screenshot"
-        },
-        {
-          "date": "2026-11-12",
-          "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
-          "kind": "screenshot"
-        },
-        {
-          "date": "2026-11-12",
-          "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
-          "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
-        },
-        {
-          "date": "2026-11-12",
-          "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
-          "kind": "screenshot"
-        },
-        {
-          "date": "2026-11-12",
-          "src": "/buildlog/mosaico/media/kaleido-flower.jpg",
-          "kind": "screenshot"
-        },
-        {
-          "date": "2026-11-12",
-          "src": "/buildlog/mosaico/media/kaleido-lattice.jpg",
-          "kind": "screenshot"
-        },
-        {
-          "date": "2026-11-12",
-          "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
-          "kind": "render",
-          "caption": "Espressif's product render of the kit"
-        },
-        {
-          "date": "2026-11-13",
-          "src": "/buildlog/mosaico/media/chladni-magenta.jpg",
-          "kind": "screenshot"
-        },
-        {
-          "date": "2026-11-13",
-          "src": "/buildlog/mosaico/media/chladni-orange.jpg",
-          "kind": "screenshot"
-        },
-        {
-          "date": "2026-11-13",
-          "src": "/buildlog/mosaico/media/chladni-tune-rail.jpg",
-          "kind": "screenshot",
-          "caption": "Tune rail: 13 settings, stepped with L and R"
-        },
-        {
-          "date": "2026-11-13",
-          "src": "/buildlog/mosaico/media/chladni-triad.jpg",
-          "kind": "screenshot"
-        },
-        {
-          "date": "2026-11-13",
-          "src": "/buildlog/mosaico/media/my-ideas-grid.jpg",
-          "kind": "screenshot",
-          "caption": "Vibe Mode 0.3.0 with both apps saved"
-        }
-      ],
-      "lastEntry": "2026-11-13",
-      "entries": [
-        {
-          "date": "2026-11-13",
-          "title": "Kaleido: smooth edges at 33 fps, tuned looks that stick",
-          "tags": [
-            "kaleido",
-            "performance"
-          ],
-          "media": [],
-          "body": "A morning of polish on how Kaleido looks and moves.\n\n- **Smooth rendering:** the device sampled the 128 px source with nearest texels, so each one showed as a 4-15 px block with stair-stepped edges. It now samples bilinear, with the 240 px render split across both cores as Chladni does it: 33-34 fps, where bilinear on one core managed 27.\n- **Steady slow spins:** zoomed in, slow spins stalled and then jumped. Texture coordinates moved to full-width fixed point, which keeps about 20 bits at any zoom.\n- **Tuned looks are saved:** edits from Tune, the web sliders or a pinch stay with that look across restarts. The device and page mark it \"(edited)\", and the Studio page can reset it.\n- **Controls:** two fingers sliding up or down step Speed. The L+R chord window doubled to 300 ms. Tilt no longer spins the picture.\n- **LEDs:** the four top LEDs sampled the screen quadrants, which a kaleidoscope makes identical. They now sample spots from centre to edge, so the colours differ and flow with the picture.\n\nAll motion now runs at 75%: 1.0 felt too fast, 0.5 too slow.\n\n> **Dead end:** rendering at the full 480 px ran at 20 fps and looked no better than bilinear at 240."
-        },
-        {
-          "date": "2026-11-13",
-          "title": "Chladni, and switching apps from My IDEAs",
-          "tags": [
-            "chladni",
-            "vibe-mode",
-            "display"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/mosaico/media/chladni-magenta.jpg",
-              "kind": "screenshot"
-            },
-            {
-              "src": "/buildlog/mosaico/media/chladni-orange.jpg",
-              "kind": "screenshot"
-            },
-            {
-              "src": "/buildlog/mosaico/media/chladni-tune-rail.jpg",
-              "kind": "screenshot",
-              "caption": "Tune rail: 13 settings, stepped with L and R"
-            },
-            {
-              "src": "/buildlog/mosaico/media/chladni-triad.jpg",
-              "kind": "screenshot"
-            },
-            {
-              "src": "/buildlog/mosaico/media/my-ideas-grid.jpg",
-              "kind": "screenshot",
-              "caption": "Vibe Mode 0.3.0 with both apps saved"
-            }
-          ],
-          "body": "Second app on the Mosaico: Chladni, a port of megafun's ChladniModule. It draws\nresonant-plate standing waves. 42 (m,n) figures morph into each other while sand\ngathers on the nodal lines, in one of eight palettes.\n\n- **Controls:** a tap, the Function button or a shake strikes the plate. R and L step figures. Tilt or drag bends the resonance.\n- **Tune rail:** double-tap opens 13 settings, saved in NVS.\n- **LEDs:** the Interaction Module shows a turning slice of the plate at 50 Hz.\n- **Speed:** the first build was capped at 16-20 fps. Splitting the pixel loop across both cores took it to 38-44 frames a second, above the panel's ~33 fps ceiling.\n\nEach app is its own firmware. To switch, hold AI at power-on to reach Vibe Mode,\nopen My IDEAs and tap one. An app gets on that grid by installing it over USB,\nthen tapping Save Current Build.\n\n> **Trap:** On Vibe Mode 0.2.1, Save Current Build failed for every app with\n> ESP_ERR_INVALID_ARG (0x102). I guessed it was the 0.3 update, and it was:\n> updating Vibe Mode to 0.3.0 fixed it."
-        },
-        {
-          "date": "2026-11-12",
-          "title": "Kaleido: Studio web page, two new symmetries, 33 fps",
-          "tags": [
-            "kaleido",
-            "web",
-            "performance"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
-              "kind": "screenshot"
-            },
-            {
-              "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
-              "kind": "screenshot"
-            }
-          ],
-          "body": "The evening after Kaleido first ran on the device.\n\n- **Studio page:** the phone-only page became a Studio with a desktop layout: Picture on the left and Pattern on the right, like the L and R keys. Phones get tabs and a remote within thumb reach. 18 KB gzipped.\n- **Live preview:** the page shows the screen at about 4 fps. Frames go through the S31's hardware JPEG encoder: 9 ms for a preview, 41 ms for a 480×480 snapshot.\n- **Two new symmetries:** Snowflake (30-60-90 triangle mirrors) replaced Quilt, and Tunnel (log-polar, flying into the tube) replaced Neon Lattice.\n- **Speed:** a new look setting from 0.1x to 3x. Each look got a hidden pace so 1x moves the same amount everywhere.\n- **19.5 to 33 fps:** rendering at 240×240 and upscaling 2x with the PPA cut the engine from 46 to about 14 ms. The frame task also stopped waiting for the 33 ms UI tick.\n\n> **Note:** TE sync came off the display. A full-frame transfer takes longer than a refresh, so TE only added waiting, and nothing tears."
-        },
-        {
-          "date": "2026-11-12",
-          "title": "Kaleido: a kaleidoscope app, simulator to device in a day",
-          "tags": [
-            "kaleido",
-            "display",
-            "camera"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
-              "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
-            },
-            {
-              "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
-              "kind": "screenshot"
-            },
-            {
-              "src": "/buildlog/mosaico/media/kaleido-flower.jpg",
-              "kind": "screenshot"
-            },
-            {
-              "src": "/buildlog/mosaico/media/kaleido-lattice.jpg",
-              "kind": "screenshot"
-            },
-            {
-              "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
-              "kind": "render",
-              "caption": "Espressif's product render of the kit"
-            }
-          ],
-          "body": "First app on the Mosaico. Kaleido started as a spec and a clickable prototype, ran in the PC simulator next, and was on the device by evening.\n\n- **Frame pipeline:** a render task pinned to core 1 fills a pool of three PSRAM frame buffers. GSP sends them to the panel from core 0. That took it from about 13 to 21 fps.\n- **Sources:** three generative patterns (Lava Cells, Flora, Marbling), images added from a phone, and the camera module. The PPA crops each camera frame to the centre square and scales it to 128×128 in one pass.\n- **Looks:** eight presets, from Rose Window to Neon Lattice. L and R step through them, and holding a key changes the source.\n- **Phone page:** `kaleido.local` serves a 4.7 KB page for image links, uploads and snapshots. The Function button saves the frame as a 480×480 JPEG.\n\n> **Trap:** I rotated the picture in the GSP presenter and the touch separately, and taps never landed in the right place. The BSP rotates panel and touch together from one setting: 270 with the module at the bottom."
-        }
-      ]
-    },
-    {
-      "slug": "radar",
-      "title": "tinyradar",
-      "status": "shipped",
-      "kind": "hardware",
-      "summary": "A desktop ADS-B aircraft scope on a round LCD.",
-      "stack": [
-        "ESP32-S3",
-        "LovyanGFX",
-        "ADS-B",
-        "PlatformIO"
-      ],
-      "tags": [
-        "display",
-        "adsb",
-        "firmware"
-      ],
-      "rung": "solder",
-      "facts": {
-        "aircraft": "64",
-        "screen": "1.28in round"
-      },
-      "repo": "kpow/ESP32-Plane-Radar",
-      "hero": "/buildlog/radar/media/tinyradar-front.jpg",
-      "heroVideo": null,
-      "links": [
-        {
-          "label": "repo",
-          "url": "https://github.com/kpow/ESP32-Plane-Radar"
-        },
-        {
-          "label": "guide",
-          "url": "https://kpow.xyz/tinyradar/guide"
-        }
-      ],
-      "started": "2026-06-13",
-      "body": "A desktop ADS-B scope on a round LCD. It paints live traffic around my home onto\na green sonar grid: a rotating sweep with a comet trail, heading triangles with\nspeed vectors out front, callsign and type and altitude tags, and anything out of\nrange parked as a bearing dot on the rim. Data comes from the public adsb.fi\nopendata API over HTTPS, no local receiver, polled every 3 seconds for up to 64\naircraft.\n\nThe hardware is a GC9A01 1.28\" round LCD (240×240, LovyanGFX) on an ESP32-S3\nSuper Mini (8 MB flash), in a four-print case with a tactile range button. It\nsets itself up from a phone and updates over Wi-Fi.\n\n## How it's built\n\nTLS eats RAM, so the whole thing is written around the heap:\n\n- render into an 8-bit off-screen sprite, chosen specifically to survive the\n  pressure of a live HTTPS poll\n- stream-parse the JSON through a field filter, so the body is never held whole\n- check the heap *before* opening the socket\n\nBetween polls each plane dead-reckons forward from its last heading and speed, so\nmotion stays smooth at 30 fps. That's capped: a dropped poll or an outage can't\nfling a target off the edge.\n\nThere's a gzipped SPA baked into flash as well, served off the device itself:\nradar, flight list, stats and detail cards off `/api/flights`, with the browser\nenriching routes and photos from adsbdb and planespotters.",
-      "stats": {
-        "entries": 11,
-        "photos": 16,
-        "daysActive": 152,
-        "firstEntry": "2026-06-13",
-        "lastEntry": "2026-11-11"
-      },
-      "git": null,
-      "picturesOverTime": [
-        {
-          "date": "2026-06-13",
-          "src": "/buildlog/radar/media/wired.jpg",
-          "caption": "Round GC9A01 on the bench"
-        },
-        {
-          "date": "2026-06-13",
-          "src": "/buildlog/radar/media/scope.jpg"
-        },
-        {
-          "date": "2026-06-13",
-          "src": "/buildlog/radar/media/housing.jpg"
-        },
-        {
-          "date": "2026-06-13",
-          "src": "/buildlog/radar/media/hero.jpg"
-        },
-        {
-          "date": "2026-10-30",
-          "src": "/buildlog/radar/media/case-v2-hero.jpg",
-          "kind": "render"
-        },
-        {
-          "date": "2026-10-30",
-          "src": "/buildlog/radar/media/case-v2-exploded.jpg",
-          "kind": "render",
-          "caption": "Body, faceplate, display clip, keyboard insert, 4 M3 self-tappers"
-        },
-        {
-          "date": "2026-10-30",
-          "src": "/buildlog/radar/media/case-v2-section.jpg",
-          "kind": "render"
-        },
-        {
-          "date": "2026-10-30",
-          "src": "/buildlog/radar/media/case-v2-button-recess.jpg",
-          "kind": "render",
-          "caption": "12.5 mm recess for the tactile switch, 0.8 mm floor"
-        },
-        {
-          "date": "2026-10-30",
-          "src": "/buildlog/radar/media/case-v2-back.jpg",
-          "kind": "render"
-        },
-        {
-          "date": "2026-10-31",
-          "src": "/buildlog/radar/media/case-v2-test-bodies.jpg",
-          "caption": "The v1 case next to three v2 test bodies"
-        },
-        {
-          "date": "2026-11-01",
-          "src": "/buildlog/radar/media/tinyradar-front.jpg"
-        },
-        {
-          "date": "2026-11-01",
-          "src": "/buildlog/radar/media/tinyradar-walkaround.mp4",
-          "poster": "/buildlog/radar/media/tinyradar-walkaround.jpg"
-        },
-        {
-          "date": "2026-11-01",
-          "src": "/buildlog/radar/media/faceplate.jpg"
-        },
-        {
-          "date": "2026-11-01",
-          "src": "/buildlog/radar/media/case-v2-wiring.jpg"
-        },
-        {
-          "date": "2026-11-01",
-          "src": "/buildlog/radar/media/tinyradar-three-quarter.jpg"
-        },
-        {
-          "date": "2026-11-11",
-          "src": "/buildlog/radar/media/tinyradar-eyes.mp4",
-          "poster": "/buildlog/radar/media/tinyradar-eyes.jpg"
-        }
-      ],
-      "lastEntry": "2026-11-11",
-      "entries": [
-        {
-          "date": "2026-11-11",
-          "title": "tinyradar: six synced eyes on an M5StickC remote",
-          "tags": [
-            "experimental",
-            "esp-now",
-            "firmware"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/radar/media/tinyradar-eyes.mp4",
-              "poster": "/buildlog/radar/media/tinyradar-eyes.jpg"
-            }
-          ],
-          "body": "An experimental side branch: all six tinyradars turn into one set of eyes, steered by an M5StickC Plus with a Mini JoyC hat. It's a hidden mode in its own build. The gift firmware doesn't have it, and the radars go back to tracking planes when the eyes switch off.\n\n- **Rendering:** every pixel is drawn into the radar's strip buffer on both cores. Lookup tables and fast-math tricks took a frame from 142 ms to about 50.\n- **Radio:** ESP-NOW. With the eyes on, the radars drop WiFi and sit on one fixed channel with the remote. Before that, the eyes stalled whenever the remote settled on an overlapping channel.\n- **Styles:** living hazel, cartoon, flame iris, goat and LED matrix are in the video. Radar and camera-aperture eyes exist but were left out.\n\n> **Trap:** the Mini JoyC locks up, holding the I2C clock low, if you read it with a repeated start or ask for too many bytes. Write the register, send STOP, then read exactly two bytes."
-        },
-        {
-          "date": "2026-11-01",
-          "title": "tinyradar: first full build in the v2 case",
-          "tags": [
-            "enclosure",
-            "firmware"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/radar/media/tinyradar-front.jpg"
-            },
-            {
-              "src": "/buildlog/radar/media/tinyradar-walkaround.mp4",
-              "poster": "/buildlog/radar/media/tinyradar-walkaround.jpg"
-            },
-            {
-              "src": "/buildlog/radar/media/faceplate.jpg"
-            },
-            {
-              "src": "/buildlog/radar/media/case-v2-wiring.jpg"
-            },
-            {
-              "src": "/buildlog/radar/media/tinyradar-three-quarter.jpg"
-            }
-          ],
-          "body": "The first one fully assembled in the v2 case, and a name for the gift box: tinyradar.\n\n- **Rename:** the hotspot is TinyRadar-Setup and the page is tinyradar.local. Saved settings survive the rename.\n- **Boot:** with a location saved it goes straight to the radar. Hold the range button for a second to see the web address.\n- **No location yet:** the radar still comes up, rings and sweep with no planes, plus a small \"Set your location\" card.\n- **Range button:** a press on GPIO 6 or 7 counts, so either wiring works."
-        },
-        {
-          "date": "2026-10-31",
-          "title": "Gift-ready setup + a new device page",
-          "tags": [
-            "firmware",
-            "web-ui"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/radar/media/case-v2-test-bodies.jpg",
-              "caption": "The v1 case next to three v2 test bodies"
-            }
-          ],
-          "body": "These go to houses I'll never see, so first boot changed the most.\n\n- **No baked-in Wi-Fi:** gift builds boot to a setup hotspot. Credentials live only in a gitignored dev file.\n- **No baked-in location:** nothing is fetched until a location is saved from the web page.\n- **Power cuts:** if the saved network won't connect, the hotspot times out after 3 minutes and the radar goes back to retrying it.\n- **Device page:** redesigned from scratch. Radar, flight strips, plane details with routes and photos, a first-run \"Where is your radar?\" step, and settings for looks, range, units, updates, Wi-Fi and factory reset.\n\nA second S3 Super Mini boot-looped on its first flash. Its GD flash returned garbage on quad reads under the default QIO bootloader. Builds now use DIO.\n\n> **Trap:** OTA never rewrites the bootloader, so the flash mode has to be right on the first USB flash."
-        },
-        {
-          "date": "2026-10-30",
-          "title": "Case v2: 86 glued pieces down to 4 prints",
-          "tags": [
-            "enclosure",
-            "3d-printing"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/radar/media/case-v2-hero.jpg",
-              "kind": "render"
-            },
-            {
-              "src": "/buildlog/radar/media/case-v2-exploded.jpg",
-              "kind": "render",
-              "caption": "Body, faceplate, display clip, keyboard insert, 4 M3 self-tappers"
-            },
-            {
-              "src": "/buildlog/radar/media/case-v2-section.jpg",
-              "kind": "render"
-            },
-            {
-              "src": "/buildlog/radar/media/case-v2-button-recess.jpg",
-              "kind": "render",
-              "caption": "12.5 mm recess for the tactile switch, 0.8 mm floor"
-            },
-            {
-              "src": "/buildlog/radar/media/case-v2-back.jpg",
-              "kind": "render"
-            }
-          ],
-          "body": "A few of these are going out as Christmas presents, and the old case was the slow part. It was a kit of STEP parts that took a lot of assembly and a lot of superglue. The v2 redesign was modelled parametrically in SolidCraft.\n\n| | v1 | v2 |\n|---|---|---|\n| Printed pieces | 86 | 4 |\n| Glue joints | about 80 | 1 |\n| Assembly | 60–90 min | about 8 min |\n\n- **Body:** shell, deck, button recess and keyboard tray in one white print, about 50 g, so it prints with no purge waste.\n- **Faceplate:** printed face down on the AMS with a black bezel and grey ring and rivets. Two M3 screws from the back hold it.\n- **Keyboard insert:** 55 keys printed in place in four colours. It's the one glued part.\n- **Display clip:** a 1 g part that holds the round LCD in place of the old M2 screws and spacers.\n\nThe TTP223 touch pad is gone. It was finicky and gave no feedback, so range is now a 12 mm tactile switch that drops into a recess in the deck.\n\nThe first test print changed a few things. The board now mounts components-up, so its LED shows. The body grew 10 mm taller and 5 mm deeper, to 76 × 63 mm.\n\n> **Note:** module listings for the GC9A01 disagree on depth. Measure the glass-to-PCB stack before printing the clip."
-        },
-        {
-          "date": "2026-10-30",
-          "title": "Real maps, OTA updates and a range button",
-          "tags": [
-            "firmware",
-            "maps",
-            "ota"
-          ],
-          "media": [],
-          "body": "A gift sprint: the radar has to work for someone in another city who never touches a USB cable.\n\n- **Real map underlay:** the faint line map is replaced by a real basemap. The browser renders it from OpenFreeMap tiles for the device's location and uploads it to a flash partition. The device memory-maps it, so it costs no heap. It comes in Day and Dusk themes. A 12-minute soak on the polish build logged 228 polls, 0 fetch errors and a 44.6 KB worst-case free heap.\n- **OTA with rollback:** this S3 turned out to have 8 MB of flash, which leaves room for a second 3 MB app slot. Updates stream into the spare slot with no RAM buffer. A new image runs on probation and is kept after 30 s healthy on Wi-Fi. It rolls back if it never gets healthy in 5 minutes or crashes on boot. An interrupted upload, both rollback paths and map survival were all tested on the radar. A `v*` tag now builds the release files.\n- **Range button:** the TTP223 touch pad is replaced by a tactile switch on GPIO 6, read by an interrupt so fast presses step 1-for-1. A flapping line locks it out after more than 16 presses in 2 seconds.\n- **S3 only:** C3 support is removed. CI passes on main again for the first time since July, now that the airport-data drift check is a warning instead of a failure.\n\nA redesigned device web page is in review in its own PR."
-        },
-        {
-          "date": "2026-08-28",
-          "title": "Empty radar bug: de-chunk the ADS-B body",
-          "tags": [
-            "firmware",
-            "adsb",
-            "bugfix"
-          ],
-          "media": [],
-          "body": "The radar had started coming up empty. Grid, sweep, no planes. The fetch succeeded, the heap was fine, and nothing logged an error for a full day.\n\nThe endpoint sits behind Cloudflare and had started answering with `Transfer-Encoding: chunked`. `getStreamPtr()` hands back the raw socket and never de-chunks, so hex chunk-size lines were landing in the middle of the JSON. With a filter in place that parses as *Ok* against an empty document, so the fetch published zero aircraft, returned true, and never backed off.\n\n> **Trap:** a parser that succeeds on garbage is worse than one that crashes on it. The empty-`ac` case now logs instead of publishing silence.\n\nFixed with a small stream wrapper that de-chunks when `getSize()` reports -1 and passes identity bodies straight through, so the body still never gets held whole. `useHTTP10(true)` also kills chunking, but then the body is close-delimited and WiFiClientSecure truncates it, which trades a silent bug for a noisy one. Verified on the S3: ten clean fetches in a row, idle heap 105 KB, worst min-free 26 KB."
-        },
-        {
-          "date": "2026-08-06",
-          "title": "Map underlay + multi-leg routes",
-          "tags": [
-            "firmware",
-            "webapp",
-            "adsb"
-          ],
-          "media": [],
-          "body": "Both scopes got a faint map underlay: coast, lakes, rivers, roads, dim enough to place the traffic without competing with it. A regional crop of Natural Earth 1:10m bakes into flash at about 57 KB, projects once per range change into a fixed 14 KB screen-space cache, and draws under the sweep. No heap, so the TLS headroom is untouched. Now you can see a plane following a river valley.\n\nBuilding it turned up an old bug. The device projection was missing its `cos(lat)`, so everything was stretched about 26% east-west, and the device and the web app had been quietly disagreeing the whole time. Both read from one shared projection header now.\n\nRoutes learned to handle multi-leg trips too. Every stop renders, `JFK → RIC → SFO`, with the leg the aircraft is actually flying picked by smallest detour against its live position and brightened."
-        },
-        {
-          "date": "2026-07-19",
-          "title": "The web companion app — touch radar in the browser",
-          "tags": [
-            "firmware",
-            "webapp",
-            "heap",
-            "touch"
-          ],
-          "media": [],
-          "body": "The browser side got real. There's an interactive touch radar served straight off the device now, gzipped into flash, pulling traffic from `/api/flights` and letting the browser enrich each plane with route and photo data from adsbdb and planespotters. Per-device themes, and a header with live context so you know what you're looking at. The heap fix is the part that mattered: serving the SPA and running the live ADS-B poll were fighting over the same RAM.\n\nThen the TTP223 touch pad, which had started cycling range on its own at about two steps a second. A loose sensor makes the line oscillate, and every phantom step also wrote NVS and forced a refetch. Three defenses:\n\n1. A press only counts after the level holds for 40 ms. Real touches last 50 ms and up; noise edges don't.\n2. More than 6 taps in 8 seconds locks the input out until it's been quiet for 10. The BOOT button and the web UI stay live.\n3. Range persists to NVS once, 3 seconds after it stops changing."
-        },
-        {
-          "date": "2026-06-15",
-          "title": "Sweep goes under the grid",
-          "tags": [
-            "firmware",
-            "display"
-          ],
-          "media": [],
-          "body": "One line of layering, and it changed the whole look: the sweep renders beneath the grid now, not over it. The glow reads as light passing under the graticule, and the grid and plane markers stay crisp on top.\n\nDraw order is half the battle with these sprite composites."
-        },
-        {
-          "date": "2026-06-14",
-          "title": "Onboard RGB status light + a scanning overlay",
-          "tags": [
-            "firmware",
-            "ux"
-          ],
-          "media": [],
-          "body": "Put the C3's onboard RGB LED to work as a status light, and laid a scanning overlay over the scope so it reads like radar instead of a plot.\n\nDropped the 100 km range while I was there. The projection distortion gets silly at that zoom and I never once used it. The close ranges are the useful ones."
-        },
-        {
-          "date": "2026-06-13",
-          "title": "Forked a plane-radar project, then rebuilt it heap-first",
-          "tags": [
-            "firmware",
-            "adsb",
-            "display",
-            "heap"
-          ],
-          "media": [
-            {
-              "src": "/buildlog/radar/media/wired.jpg",
-              "caption": "Round GC9A01 on the bench"
-            },
-            {
-              "src": "/buildlog/radar/media/scope.jpg"
-            },
-            {
-              "src": "/buildlog/radar/media/housing.jpg"
-            },
-            {
-              "src": "/buildlog/radar/media/hero.jpg"
-            }
-          ],
-          "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3 and then gutted most of it. The stock build locked up every so often: it fired a burst of ADS-B requests and buffered each whole response body. One request on a backoff, plus a stream parse with a field filter so the body is never held whole, and the lockups stopped.\n\nThe rest was one long session:\n\n- **Dual core:** the network fetch on its own task, so a poll never stalls a frame\n- **Interpolation:** targets dead-reckon between the 3-second polls instead of teleporting\n- **ESP32-S3 Super Mini:** a second target, for the better radio, with WiFi retry hardening\n- **Looks:** 16-bit colour at 80 MHz SPI, a sweep with a comet trail, 30 fps pacing\n\nBy the end it was a live scope sitting in the printed slatted cube: round LCD, green grid, real callsigns."
-        }
-      ]
-    },
-    {
       "slug": "vizbot",
       "title": "vizBot",
       "status": "shipped",
@@ -541,8 +22,7 @@
       ],
       "rung": "solder → design",
       "facts": {
-        "expressions": "25",
-        "deployed": "4"
+        "expressions": "25"
       },
       "repo": "kpow/vizpow",
       "hero": "/buildlog/vizbot/media/bots-matrix-hero.jpg",
@@ -554,13 +34,13 @@
         }
       ],
       "started": "2026-01-24",
-      "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.\n\nFour of them are living in other places now, which makes it a real fleet in the\nwild rather than a demo with plans.",
+      "body": "vizBot is a little companion robot with a face. 25 procedurally-drawn\nexpressions and a handful of personalities that decide how it reacts to the\nroom. It started as an LED matrix controller and grew a face, then a voice, then\nopinions.\n\nEverything on screen is drawn from primitives, eyes and mouths and tweened\ntransitions, so the same face engine renders on a Waveshare LCD, an M5 Core S3\nand a 1-bit 128×64 OLED without a per-device redraw. It listens on a 512-point\nFFT of the Core S3 mic, drives a StackChan servo base for head movement, and\npushes its speech to a WLED matrix over DDP, drawing the pixels itself rather\nthan fighting WLED's scroll effects for them.\n\n## The fleet part\n\nDual-core FreeRTOS underneath: rendering on one core, WiFi and HTTP and mesh and\nan isolated cloud task on the other. Two networks, doing different jobs:\n\n- **vizCloud**, a Node.js backend I run on DigitalOcean, handles registration,\n  telemetry, fleet groups and server-queued commands, including NTP-scheduled\n  ones so a room of bots can move together.\n- **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast\n  packet mean two bots won't drive the same WLED matrix, and one will defer its\n  speech bubble until a peer releases the display.",
       "stats": {
-        "entries": 55,
+        "entries": 60,
         "photos": 60,
-        "daysActive": 285,
+        "daysActive": 295,
         "firstEntry": "2026-01-24",
-        "lastEntry": "2026-11-04"
+        "lastEntry": "2026-11-14"
       },
       "git": null,
       "picturesOverTime": [
@@ -881,8 +361,62 @@
           "poster": "/buildlog/vizbot/media/vizzy-demo.jpg"
         }
       ],
-      "lastEntry": "2026-11-04",
+      "lastEntry": "2026-11-14",
       "entries": [
+        {
+          "date": "2026-11-14",
+          "title": "Forget bots, three real bots through the loop, and VizCloud v2 in production",
+          "tags": [
+            "vizcloud",
+            "ota",
+            "release"
+          ],
+          "media": [],
+          "body": "Forget removes a bot and everything tied to it. The next time that bot syncs, the cloud answers approval \"unknown\". v2 firmware (vizBot 3.11.2, vizMini 0.8.1) then drops its id and token and registers as a new bot waiting for approval. That gives the old bots a clean start on the new server.\n\nThree real bots went through the whole loop: update, forget, re-register, approve, get content. They were skunky the StackChan, a 1.69 inch LCD bot and a vizMini. The 1.69 and the vizMini updated over cloud OTA.\n\nThe database migrations were rehearsed against the real production schema first and passed 11 of 11 checks. The first deploy rebuilt the old commit after a settings change and failed its health check without harm. The second shipped the merged code.\n\n> **Next:** forget all bots in production and re-approve the fleet as each one comes back."
+        },
+        {
+          "date": "2026-11-13",
+          "title": "StackChan boot loop: the wake mic ran WiFi out of buffers, 3.11.1",
+          "tags": [
+            "stackchan",
+            "cloud",
+            "bugfix"
+          ],
+          "media": [],
+          "body": "On protocol v2 the StackChan fell into a boot loop. Every boot downloaded the same 43 KB of cloud content and crashed again.\n\nThe cause was the voice wake stream: 1 KB of mic audio over UDP every 32 ms, plus a 32-chunk pre-roll sent back to back. It filled the WiFi TX buffers, so the TLS download and the next connects failed with ENOMEM.\n\n- **Network hold:** the wake stream and WLED fade frames pause for each cloud request and while the answer is applied.\n- **Back-off:** after 3 failed wake sends in a row it pauses 1 to 8 s instead of retrying every chunk. The pre-roll is paced.\n- **PSRAM:** ArduinoJson had put every cloud document and all cached content in internal RAM. It now uses a PSRAM allocator.\n- **Crash guard:** a boot after a panic or watchdog reset skips the content version it crashed on for an hour and reports it, and VizCloud flags it on the bot's page.\n\n> **Trap:** the WiFi stack has only 8 static TX buffers. A steady UDP stream can hold all of them, and a TLS download started alongside it fails with ENOMEM."
+        },
+        {
+          "date": "2026-11-13",
+          "title": "VizCloud rebuilt: Toybox admin, editor logins and immutable releases",
+          "tags": [
+            "vizcloud",
+            "admin"
+          ],
+          "media": [],
+          "body": "VizCloud got rebuilt end to end. The fleet it runs is small: under 25 bots, gifts for close friends this Christmas. Recipients never log in, and a few friends edit content with full access.\n\n- **Look:** a new design called Toybox, in vizBot black and yellow with Slackey headings. Bots show their real faces, drawn by a TypeScript port of the face model generated from the firmware headers.\n- **Editors:** each has their own login, and every change lands in an activity log with who made it.\n- **Publishing:** edits save right away but reach bots only on Publish, which stores an immutable release. Rollback points back at an earlier one. Each kind of bot gets only the content it can use, trimmed to its size budget, so publish never refuses for size.\n- **Commands:** a persistent log, queued then delivered.\n- **Bots:** new bots wait for approval, and each one's name comes from the bot itself. Online history shows when each was awake.\n- **Firmware:** updates are uploaded and assigned to bots from the admin. vizMini is now a supported device.\n\nUnder it: one TypeScript Node service on Postgres, a React client, and a soak test of 50 simulated bots across all five hardware types on both protocols."
+        },
+        {
+          "date": "2026-11-13",
+          "title": "Bot protocol v2 + cloud firmware updates: vizBot 3.11.0 and vizMini 0.8",
+          "tags": [
+            "cloud",
+            "ota",
+            "firmware"
+          ],
+          "media": [],
+          "body": "Both firmwares learned bot protocol v2 for the rebuilt VizCloud. It's additive, so a v2 bot still works against the old server.\n\n- **Identity:** each bot gets its own token on register and keeps it in NVS. A refused token used to stop cloud calls until a reboot. Now the bot backs off an hour, drops the token and registers again.\n- **Names:** the bot reports its own device name on every sync. A rename in the admin comes down as config and goes through the same path as the web panel.\n- **Settings:** brightness, personality and poll interval arrive the same way, with no reboot.\n- **Cloud OTA:** the image downloads to the inactive slot, and its size and SHA-256 are checked before switching. It's kept only after a successful sync, otherwise it rolls back. Never during a web upload or on a low battery, and at most hourly.\n\nvizMini 0.8.0.1 got its own small client with a 2 KB reply cap. Its cloud updates need 80 KB of free heap and get a 10 minute rollback window. Weather, cloud calls and web uploads now take turns, because the C3's heap can't hold two at once. Each unit also got its own device name, defaulting to vizMini plus four hex digits."
+        },
+        {
+          "date": "2026-11-06",
+          "title": "StackChan power and servo fixes: a battery that charges and a head that recovers",
+          "tags": [
+            "stackchan",
+            "power",
+            "firmware"
+          ],
+          "media": [],
+          "body": "The StackChan's battery never charged. M5.begin's default turns on the CoreS3's 5V output and its boost, and on the StackChan base that keeps USB from reaching the AXP2101. The battery drained at about 0.5 A until the bot crash-looped. The base doesn't use that 5V, so it stays off now.\n\n- **Head freezes:** bench tests showed the stalls are hardware on this unit. Both servos stop answering at once, and only while their motors are driven. A watchdog now pings both every second and cycles the servo rail after 3 missed checks, backing off up to 5 minutes when a recovery doesn't help.\n- **Pitch floor:** raised from 25° to 40°. The old floor sat about 4° above the mechanical end stop.\n- **Silent hangs:** a wedged web server task left WiFi up and the bot dead, with no coredump. wifi_srv and loop now check in on every pass, and a timer aborts with a coredump if either goes 30 s without one.\n- **Internal RAM:** TLS buffers and the 20 KB cloud MIDI table moved to PSRAM. Each TLS handshake had been taking about 30 KB of internal RAM, enough to stop every cloud sync and to leave no room for a photo.\n\n> **Trap:** a WiFi firmware update tripped the task watchdog. The coredump showed the 2 MB image being hashed on core 0 while a cloud TLS handshake ran its ECDSA verify on the same core at the same priority. Cloud syncs now wait out an upload."
+        },
         {
           "date": "2026-11-04",
           "title": "Vizzy, nearly final: a printed body, 12 lights and a bordered clock",
@@ -1750,6 +1284,525 @@
           ],
           "media": [],
           "body": "Day one. An ESP32-S3, an LED matrix, and a controller that renders effects onto it. Build config sorted, folders laid out, pixels moving.\n\nNo face, no cloud, no gestures. It was a matrix controller and nothing else, which is worth remembering given where it ended up."
+        }
+      ]
+    },
+    {
+      "slug": "mosaico",
+      "title": "ESP-Mosaico",
+      "status": "active",
+      "kind": "hybrid",
+      "summary": "Apps for Espressif's modular ESP32-S31 kit: a square AMOLED with snap-on modules.",
+      "stack": [
+        "ESP32-S31",
+        "ESP-IDF",
+        "ESP-GSP",
+        "FreeRTOS"
+      ],
+      "tags": [
+        "display",
+        "firmware",
+        "esp-mosaico"
+      ],
+      "rung": null,
+      "facts": {
+        "screen": "2.16in 480x480",
+        "apps": "2"
+      },
+      "repo": null,
+      "hero": "/buildlog/mosaico/media/esp-mosaico.jpg",
+      "heroVideo": null,
+      "links": [
+        {
+          "label": "kit docs",
+          "url": "https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s31/esp-mosaico/user_guide.html"
+        },
+        {
+          "label": "workspace",
+          "url": "https://github.com/esp-mosaico/esp-mosaico-vibe"
+        }
+      ],
+      "started": "2026-11-12",
+      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.",
+      "stats": {
+        "entries": 4,
+        "photos": 12,
+        "daysActive": 2,
+        "firstEntry": "2026-11-12",
+        "lastEntry": "2026-11-13"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
+          "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-flower.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/kaleido-lattice.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-12",
+          "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
+          "kind": "render",
+          "caption": "Espressif's product render of the kit"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/chladni-magenta.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/chladni-orange.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/chladni-tune-rail.jpg",
+          "kind": "screenshot",
+          "caption": "Tune rail: 13 settings, stepped with L and R"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/chladni-triad.jpg",
+          "kind": "screenshot"
+        },
+        {
+          "date": "2026-11-13",
+          "src": "/buildlog/mosaico/media/my-ideas-grid.jpg",
+          "kind": "screenshot",
+          "caption": "Vibe Mode 0.3.0 with both apps saved"
+        }
+      ],
+      "lastEntry": "2026-11-13",
+      "entries": [
+        {
+          "date": "2026-11-13",
+          "title": "Kaleido: smooth edges at 33 fps, tuned looks that stick",
+          "tags": [
+            "kaleido",
+            "performance"
+          ],
+          "media": [],
+          "body": "A morning of polish on how Kaleido looks and moves.\n\n- **Smooth rendering:** the device sampled the 128 px source with nearest texels, so each one showed as a 4-15 px block with stair-stepped edges. It now samples bilinear, with the 240 px render split across both cores as Chladni does it: 33-34 fps, where bilinear on one core managed 27.\n- **Steady slow spins:** zoomed in, slow spins stalled and then jumped. Texture coordinates moved to full-width fixed point, which keeps about 20 bits at any zoom.\n- **Tuned looks are saved:** edits from Tune, the web sliders or a pinch stay with that look across restarts. The device and page mark it \"(edited)\", and the Studio page can reset it.\n- **Controls:** two fingers sliding up or down step Speed. The L+R chord window doubled to 300 ms. Tilt no longer spins the picture.\n- **LEDs:** the four top LEDs sampled the screen quadrants, which a kaleidoscope makes identical. They now sample spots from centre to edge, so the colours differ and flow with the picture.\n\nAll motion now runs at 75%: 1.0 felt too fast, 0.5 too slow.\n\n> **Dead end:** rendering at the full 480 px ran at 20 fps and looked no better than bilinear at 240."
+        },
+        {
+          "date": "2026-11-13",
+          "title": "Chladni, and switching apps from My IDEAs",
+          "tags": [
+            "chladni",
+            "vibe-mode",
+            "display"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/chladni-magenta.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/chladni-orange.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/chladni-tune-rail.jpg",
+              "kind": "screenshot",
+              "caption": "Tune rail: 13 settings, stepped with L and R"
+            },
+            {
+              "src": "/buildlog/mosaico/media/chladni-triad.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/my-ideas-grid.jpg",
+              "kind": "screenshot",
+              "caption": "Vibe Mode 0.3.0 with both apps saved"
+            }
+          ],
+          "body": "Second app on the Mosaico: Chladni, a port of megafun's ChladniModule. It draws\nresonant-plate standing waves. 42 (m,n) figures morph into each other while sand\ngathers on the nodal lines, in one of eight palettes.\n\n- **Controls:** a tap, the Function button or a shake strikes the plate. R and L step figures. Tilt or drag bends the resonance.\n- **Tune rail:** double-tap opens 13 settings, saved in NVS.\n- **LEDs:** the Interaction Module shows a turning slice of the plate at 50 Hz.\n- **Speed:** the first build was capped at 16-20 fps. Splitting the pixel loop across both cores took it to 38-44 frames a second, above the panel's ~33 fps ceiling.\n\nEach app is its own firmware. To switch, hold AI at power-on to reach Vibe Mode,\nopen My IDEAs and tap one. An app gets on that grid by installing it over USB,\nthen tapping Save Current Build.\n\n> **Trap:** On Vibe Mode 0.2.1, Save Current Build failed for every app with\n> ESP_ERR_INVALID_ARG (0x102). I guessed it was the 0.3 update, and it was:\n> updating Vibe Mode to 0.3.0 fixed it."
+        },
+        {
+          "date": "2026-11-12",
+          "title": "Kaleido: Studio web page, two new symmetries, 33 fps",
+          "tags": [
+            "kaleido",
+            "web",
+            "performance"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/kaleido-studio-desktop.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-studio-phone.jpg",
+              "kind": "screenshot"
+            }
+          ],
+          "body": "The evening after Kaleido first ran on the device.\n\n- **Studio page:** the phone-only page became a Studio with a desktop layout: Picture on the left and Pattern on the right, like the L and R keys. Phones get tabs and a remote within thumb reach. 18 KB gzipped.\n- **Live preview:** the page shows the screen at about 4 fps. Frames go through the S31's hardware JPEG encoder: 9 ms for a preview, 41 ms for a 480×480 snapshot.\n- **Two new symmetries:** Snowflake (30-60-90 triangle mirrors) replaced Quilt, and Tunnel (log-polar, flying into the tube) replaced Neon Lattice.\n- **Speed:** a new look setting from 0.1x to 3x. Each look got a hidden pace so 1x moves the same amount everywhere.\n- **19.5 to 33 fps:** rendering at 240×240 and upscaling 2x with the PPA cut the engine from 46 to about 14 ms. The frame task also stopped waiting for the 33 ms UI tick.\n\n> **Note:** TE sync came off the display. A full-frame transfer takes longer than a refresh, so TE only added waiting, and nothing tears."
+        },
+        {
+          "date": "2026-11-12",
+          "title": "Kaleido: a kaleidoscope app, simulator to device in a day",
+          "tags": [
+            "kaleido",
+            "display",
+            "camera"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/kaleido-demo.mp4",
+              "poster": "/buildlog/mosaico/media/kaleido-demo.jpg"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-prism.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-flower.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-lattice.jpg",
+              "kind": "screenshot"
+            },
+            {
+              "src": "/buildlog/mosaico/media/esp-mosaico.jpg",
+              "kind": "render",
+              "caption": "Espressif's product render of the kit"
+            }
+          ],
+          "body": "First app on the Mosaico. Kaleido started as a spec and a clickable prototype, ran in the PC simulator next, and was on the device by evening.\n\n- **Frame pipeline:** a render task pinned to core 1 fills a pool of three PSRAM frame buffers. GSP sends them to the panel from core 0. That took it from about 13 to 21 fps.\n- **Sources:** three generative patterns (Lava Cells, Flora, Marbling), images added from a phone, and the camera module. The PPA crops each camera frame to the centre square and scales it to 128×128 in one pass.\n- **Looks:** eight presets, from Rose Window to Neon Lattice. L and R step through them, and holding a key changes the source.\n- **Phone page:** `kaleido.local` serves a 4.7 KB page for image links, uploads and snapshots. The Function button saves the frame as a 480×480 JPEG.\n\n> **Trap:** I rotated the picture in the GSP presenter and the touch separately, and taps never landed in the right place. The BSP rotates panel and touch together from one setting: 270 with the module at the bottom."
+        }
+      ]
+    },
+    {
+      "slug": "radar",
+      "title": "tinyradar",
+      "status": "shipped",
+      "kind": "hardware",
+      "summary": "A desktop ADS-B aircraft scope on a round LCD.",
+      "stack": [
+        "ESP32-S3",
+        "LovyanGFX",
+        "ADS-B",
+        "PlatformIO"
+      ],
+      "tags": [
+        "display",
+        "adsb",
+        "firmware"
+      ],
+      "rung": "solder",
+      "facts": {
+        "aircraft": "64",
+        "screen": "1.28in round"
+      },
+      "repo": "kpow/ESP32-Plane-Radar",
+      "hero": "/buildlog/radar/media/tinyradar-front.jpg",
+      "heroVideo": null,
+      "links": [
+        {
+          "label": "repo",
+          "url": "https://github.com/kpow/ESP32-Plane-Radar"
+        },
+        {
+          "label": "guide",
+          "url": "https://kpow.xyz/tinyradar/guide"
+        }
+      ],
+      "started": "2026-06-13",
+      "body": "A desktop ADS-B scope on a round LCD. It paints live traffic around my home onto\na green sonar grid: a rotating sweep with a comet trail, heading triangles with\nspeed vectors out front, callsign and type and altitude tags, and anything out of\nrange parked as a bearing dot on the rim. Data comes from the public adsb.fi\nopendata API over HTTPS, no local receiver, polled every 3 seconds for up to 64\naircraft.\n\nThe hardware is a GC9A01 1.28\" round LCD (240×240, LovyanGFX) on an ESP32-S3\nSuper Mini (8 MB flash), in a four-print case with a tactile range button. It\nsets itself up from a phone and updates over Wi-Fi.\n\n## How it's built\n\nTLS eats RAM, so the whole thing is written around the heap:\n\n- render into an 8-bit off-screen sprite, chosen specifically to survive the\n  pressure of a live HTTPS poll\n- stream-parse the JSON through a field filter, so the body is never held whole\n- check the heap *before* opening the socket\n\nBetween polls each plane dead-reckons forward from its last heading and speed, so\nmotion stays smooth at 30 fps. That's capped: a dropped poll or an outage can't\nfling a target off the edge.\n\nThere's a gzipped SPA baked into flash as well, served off the device itself:\nradar, flight list, stats and detail cards off `/api/flights`, with the browser\nenriching routes and photos from adsbdb and planespotters.",
+      "stats": {
+        "entries": 11,
+        "photos": 16,
+        "daysActive": 152,
+        "firstEntry": "2026-06-13",
+        "lastEntry": "2026-11-11"
+      },
+      "git": null,
+      "picturesOverTime": [
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/wired.jpg",
+          "caption": "Round GC9A01 on the bench"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/scope.jpg"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/housing.jpg"
+        },
+        {
+          "date": "2026-06-13",
+          "src": "/buildlog/radar/media/hero.jpg"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-hero.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-exploded.jpg",
+          "kind": "render",
+          "caption": "Body, faceplate, display clip, keyboard insert, 4 M3 self-tappers"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-section.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-button-recess.jpg",
+          "kind": "render",
+          "caption": "12.5 mm recess for the tactile switch, 0.8 mm floor"
+        },
+        {
+          "date": "2026-10-30",
+          "src": "/buildlog/radar/media/case-v2-back.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-10-31",
+          "src": "/buildlog/radar/media/case-v2-test-bodies.jpg",
+          "caption": "The v1 case next to three v2 test bodies"
+        },
+        {
+          "date": "2026-11-01",
+          "src": "/buildlog/radar/media/tinyradar-front.jpg"
+        },
+        {
+          "date": "2026-11-01",
+          "src": "/buildlog/radar/media/tinyradar-walkaround.mp4",
+          "poster": "/buildlog/radar/media/tinyradar-walkaround.jpg"
+        },
+        {
+          "date": "2026-11-01",
+          "src": "/buildlog/radar/media/faceplate.jpg"
+        },
+        {
+          "date": "2026-11-01",
+          "src": "/buildlog/radar/media/case-v2-wiring.jpg"
+        },
+        {
+          "date": "2026-11-01",
+          "src": "/buildlog/radar/media/tinyradar-three-quarter.jpg"
+        },
+        {
+          "date": "2026-11-11",
+          "src": "/buildlog/radar/media/tinyradar-eyes.mp4",
+          "poster": "/buildlog/radar/media/tinyradar-eyes.jpg"
+        }
+      ],
+      "lastEntry": "2026-11-11",
+      "entries": [
+        {
+          "date": "2026-11-11",
+          "title": "tinyradar: six synced eyes on an M5StickC remote",
+          "tags": [
+            "experimental",
+            "esp-now",
+            "firmware"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/radar/media/tinyradar-eyes.mp4",
+              "poster": "/buildlog/radar/media/tinyradar-eyes.jpg"
+            }
+          ],
+          "body": "An experimental side branch: all six tinyradars turn into one set of eyes, steered by an M5StickC Plus with a Mini JoyC hat. It's a hidden mode in its own build. The gift firmware doesn't have it, and the radars go back to tracking planes when the eyes switch off.\n\n- **Rendering:** every pixel is drawn into the radar's strip buffer on both cores. Lookup tables and fast-math tricks took a frame from 142 ms to about 50.\n- **Radio:** ESP-NOW. With the eyes on, the radars drop WiFi and sit on one fixed channel with the remote. Before that, the eyes stalled whenever the remote settled on an overlapping channel.\n- **Styles:** living hazel, cartoon, flame iris, goat and LED matrix are in the video. Radar and camera-aperture eyes exist but were left out.\n\n> **Trap:** the Mini JoyC locks up, holding the I2C clock low, if you read it with a repeated start or ask for too many bytes. Write the register, send STOP, then read exactly two bytes."
+        },
+        {
+          "date": "2026-11-01",
+          "title": "tinyradar: first full build in the v2 case",
+          "tags": [
+            "enclosure",
+            "firmware"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/radar/media/tinyradar-front.jpg"
+            },
+            {
+              "src": "/buildlog/radar/media/tinyradar-walkaround.mp4",
+              "poster": "/buildlog/radar/media/tinyradar-walkaround.jpg"
+            },
+            {
+              "src": "/buildlog/radar/media/faceplate.jpg"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-wiring.jpg"
+            },
+            {
+              "src": "/buildlog/radar/media/tinyradar-three-quarter.jpg"
+            }
+          ],
+          "body": "The first one fully assembled in the v2 case, and a name for the gift box: tinyradar.\n\n- **Rename:** the hotspot is TinyRadar-Setup and the page is tinyradar.local. Saved settings survive the rename.\n- **Boot:** with a location saved it goes straight to the radar. Hold the range button for a second to see the web address.\n- **No location yet:** the radar still comes up, rings and sweep with no planes, plus a small \"Set your location\" card.\n- **Range button:** a press on GPIO 6 or 7 counts, so either wiring works."
+        },
+        {
+          "date": "2026-10-31",
+          "title": "Gift-ready setup + a new device page",
+          "tags": [
+            "firmware",
+            "web-ui"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/radar/media/case-v2-test-bodies.jpg",
+              "caption": "The v1 case next to three v2 test bodies"
+            }
+          ],
+          "body": "These go to houses I'll never see, so first boot changed the most.\n\n- **No baked-in Wi-Fi:** gift builds boot to a setup hotspot. Credentials live only in a gitignored dev file.\n- **No baked-in location:** nothing is fetched until a location is saved from the web page.\n- **Power cuts:** if the saved network won't connect, the hotspot times out after 3 minutes and the radar goes back to retrying it.\n- **Device page:** redesigned from scratch. Radar, flight strips, plane details with routes and photos, a first-run \"Where is your radar?\" step, and settings for looks, range, units, updates, Wi-Fi and factory reset.\n\nA second S3 Super Mini boot-looped on its first flash. Its GD flash returned garbage on quad reads under the default QIO bootloader. Builds now use DIO.\n\n> **Trap:** OTA never rewrites the bootloader, so the flash mode has to be right on the first USB flash."
+        },
+        {
+          "date": "2026-10-30",
+          "title": "Case v2: 86 glued pieces down to 4 prints",
+          "tags": [
+            "enclosure",
+            "3d-printing"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/radar/media/case-v2-hero.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-exploded.jpg",
+              "kind": "render",
+              "caption": "Body, faceplate, display clip, keyboard insert, 4 M3 self-tappers"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-section.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-button-recess.jpg",
+              "kind": "render",
+              "caption": "12.5 mm recess for the tactile switch, 0.8 mm floor"
+            },
+            {
+              "src": "/buildlog/radar/media/case-v2-back.jpg",
+              "kind": "render"
+            }
+          ],
+          "body": "A few of these are going out as Christmas presents, and the old case was the slow part. It was a kit of STEP parts that took a lot of assembly and a lot of superglue. The v2 redesign was modelled parametrically in SolidCraft.\n\n| | v1 | v2 |\n|---|---|---|\n| Printed pieces | 86 | 4 |\n| Glue joints | about 80 | 1 |\n| Assembly | 60–90 min | about 8 min |\n\n- **Body:** shell, deck, button recess and keyboard tray in one white print, about 50 g, so it prints with no purge waste.\n- **Faceplate:** printed face down on the AMS with a black bezel and grey ring and rivets. Two M3 screws from the back hold it.\n- **Keyboard insert:** 55 keys printed in place in four colours. It's the one glued part.\n- **Display clip:** a 1 g part that holds the round LCD in place of the old M2 screws and spacers.\n\nThe TTP223 touch pad is gone. It was finicky and gave no feedback, so range is now a 12 mm tactile switch that drops into a recess in the deck.\n\nThe first test print changed a few things. The board now mounts components-up, so its LED shows. The body grew 10 mm taller and 5 mm deeper, to 76 × 63 mm.\n\n> **Note:** module listings for the GC9A01 disagree on depth. Measure the glass-to-PCB stack before printing the clip."
+        },
+        {
+          "date": "2026-10-30",
+          "title": "Real maps, OTA updates and a range button",
+          "tags": [
+            "firmware",
+            "maps",
+            "ota"
+          ],
+          "media": [],
+          "body": "A gift sprint: the radar has to work for someone in another city who never touches a USB cable.\n\n- **Real map underlay:** the faint line map is replaced by a real basemap. The browser renders it from OpenFreeMap tiles for the device's location and uploads it to a flash partition. The device memory-maps it, so it costs no heap. It comes in Day and Dusk themes. A 12-minute soak on the polish build logged 228 polls, 0 fetch errors and a 44.6 KB worst-case free heap.\n- **OTA with rollback:** this S3 turned out to have 8 MB of flash, which leaves room for a second 3 MB app slot. Updates stream into the spare slot with no RAM buffer. A new image runs on probation and is kept after 30 s healthy on Wi-Fi. It rolls back if it never gets healthy in 5 minutes or crashes on boot. An interrupted upload, both rollback paths and map survival were all tested on the radar. A `v*` tag now builds the release files.\n- **Range button:** the TTP223 touch pad is replaced by a tactile switch on GPIO 6, read by an interrupt so fast presses step 1-for-1. A flapping line locks it out after more than 16 presses in 2 seconds.\n- **S3 only:** C3 support is removed. CI passes on main again for the first time since July, now that the airport-data drift check is a warning instead of a failure.\n\nA redesigned device web page is in review in its own PR."
+        },
+        {
+          "date": "2026-08-28",
+          "title": "Empty radar bug: de-chunk the ADS-B body",
+          "tags": [
+            "firmware",
+            "adsb",
+            "bugfix"
+          ],
+          "media": [],
+          "body": "The radar had started coming up empty. Grid, sweep, no planes. The fetch succeeded, the heap was fine, and nothing logged an error for a full day.\n\nThe endpoint sits behind Cloudflare and had started answering with `Transfer-Encoding: chunked`. `getStreamPtr()` hands back the raw socket and never de-chunks, so hex chunk-size lines were landing in the middle of the JSON. With a filter in place that parses as *Ok* against an empty document, so the fetch published zero aircraft, returned true, and never backed off.\n\n> **Trap:** a parser that succeeds on garbage is worse than one that crashes on it. The empty-`ac` case now logs instead of publishing silence.\n\nFixed with a small stream wrapper that de-chunks when `getSize()` reports -1 and passes identity bodies straight through, so the body still never gets held whole. `useHTTP10(true)` also kills chunking, but then the body is close-delimited and WiFiClientSecure truncates it, which trades a silent bug for a noisy one. Verified on the S3: ten clean fetches in a row, idle heap 105 KB, worst min-free 26 KB."
+        },
+        {
+          "date": "2026-08-06",
+          "title": "Map underlay + multi-leg routes",
+          "tags": [
+            "firmware",
+            "webapp",
+            "adsb"
+          ],
+          "media": [],
+          "body": "Both scopes got a faint map underlay: coast, lakes, rivers, roads, dim enough to place the traffic without competing with it. A regional crop of Natural Earth 1:10m bakes into flash at about 57 KB, projects once per range change into a fixed 14 KB screen-space cache, and draws under the sweep. No heap, so the TLS headroom is untouched. Now you can see a plane following a river valley.\n\nBuilding it turned up an old bug. The device projection was missing its `cos(lat)`, so everything was stretched about 26% east-west, and the device and the web app had been quietly disagreeing the whole time. Both read from one shared projection header now.\n\nRoutes learned to handle multi-leg trips too. Every stop renders, `JFK → RIC → SFO`, with the leg the aircraft is actually flying picked by smallest detour against its live position and brightened."
+        },
+        {
+          "date": "2026-07-19",
+          "title": "The web companion app — touch radar in the browser",
+          "tags": [
+            "firmware",
+            "webapp",
+            "heap",
+            "touch"
+          ],
+          "media": [],
+          "body": "The browser side got real. There's an interactive touch radar served straight off the device now, gzipped into flash, pulling traffic from `/api/flights` and letting the browser enrich each plane with route and photo data from adsbdb and planespotters. Per-device themes, and a header with live context so you know what you're looking at. The heap fix is the part that mattered: serving the SPA and running the live ADS-B poll were fighting over the same RAM.\n\nThen the TTP223 touch pad, which had started cycling range on its own at about two steps a second. A loose sensor makes the line oscillate, and every phantom step also wrote NVS and forced a refetch. Three defenses:\n\n1. A press only counts after the level holds for 40 ms. Real touches last 50 ms and up; noise edges don't.\n2. More than 6 taps in 8 seconds locks the input out until it's been quiet for 10. The BOOT button and the web UI stay live.\n3. Range persists to NVS once, 3 seconds after it stops changing."
+        },
+        {
+          "date": "2026-06-15",
+          "title": "Sweep goes under the grid",
+          "tags": [
+            "firmware",
+            "display"
+          ],
+          "media": [],
+          "body": "One line of layering, and it changed the whole look: the sweep renders beneath the grid now, not over it. The glow reads as light passing under the graticule, and the grid and plane markers stay crisp on top.\n\nDraw order is half the battle with these sprite composites."
+        },
+        {
+          "date": "2026-06-14",
+          "title": "Onboard RGB status light + a scanning overlay",
+          "tags": [
+            "firmware",
+            "ux"
+          ],
+          "media": [],
+          "body": "Put the C3's onboard RGB LED to work as a status light, and laid a scanning overlay over the scope so it reads like radar instead of a plot.\n\nDropped the 100 km range while I was there. The projection distortion gets silly at that zoom and I never once used it. The close ranges are the useful ones."
+        },
+        {
+          "date": "2026-06-13",
+          "title": "Forked a plane-radar project, then rebuilt it heap-first",
+          "tags": [
+            "firmware",
+            "adsb",
+            "display",
+            "heap"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/radar/media/wired.jpg",
+              "caption": "Round GC9A01 on the bench"
+            },
+            {
+              "src": "/buildlog/radar/media/scope.jpg"
+            },
+            {
+              "src": "/buildlog/radar/media/housing.jpg"
+            },
+            {
+              "src": "/buildlog/radar/media/hero.jpg"
+            }
+          ],
+          "body": "Started from a modern-SDK fork of a plane-radar project on the ESP32-C3 and then gutted most of it. The stock build locked up every so often: it fired a burst of ADS-B requests and buffered each whole response body. One request on a backoff, plus a stream parse with a field filter so the body is never held whole, and the lockups stopped.\n\nThe rest was one long session:\n\n- **Dual core:** the network fetch on its own task, so a poll never stalls a frame\n- **Interpolation:** targets dead-reckon between the 3-second polls instead of teleporting\n- **ESP32-S3 Super Mini:** a second target, for the better radio, with WiFi retry hardening\n- **Looks:** 16-bit colour at 80 MHz SPI, a sweep with a comet trail, 30 fps pacing\n\nBy the end it was a live scope sitting in the printed slatted cube: round LCD, green grid, real callsigns."
         }
       ]
     },
@@ -4305,6 +4358,57 @@
   ],
   "recent": [
     {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-11-14",
+      "title": "Forget bots, three real bots through the loop, and VizCloud v2 in production",
+      "tags": [
+        "vizcloud",
+        "ota",
+        "release"
+      ],
+      "media": [],
+      "body": "Forget removes a bot and everything tied to it. The next time that bot syncs, the cloud answers approval \"unknown\". v2 firmware (vizBot 3.11.2, vizMini 0.8.1) then drops its id and token and registers as a new bot waiting for approval. That gives the old bots a clean start on the new server.\n\nThree real bots went through the whole loop: update, forget, re-register, approve, get content. They were skunky the StackChan, a 1.69 inch LCD bot and a vizMini. The 1.69 and the vizMini updated over cloud OTA.\n\nThe database migrations were rehearsed against the real production schema first and passed 11 of 11 checks. The first deploy rebuilt the old commit after a settings change and failed its health check without harm. The second shipped the merged code.\n\n> **Next:** forget all bots in production and re-approve the fleet as each one comes back."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-11-13",
+      "title": "StackChan boot loop: the wake mic ran WiFi out of buffers, 3.11.1",
+      "tags": [
+        "stackchan",
+        "cloud",
+        "bugfix"
+      ],
+      "media": [],
+      "body": "On protocol v2 the StackChan fell into a boot loop. Every boot downloaded the same 43 KB of cloud content and crashed again.\n\nThe cause was the voice wake stream: 1 KB of mic audio over UDP every 32 ms, plus a 32-chunk pre-roll sent back to back. It filled the WiFi TX buffers, so the TLS download and the next connects failed with ENOMEM.\n\n- **Network hold:** the wake stream and WLED fade frames pause for each cloud request and while the answer is applied.\n- **Back-off:** after 3 failed wake sends in a row it pauses 1 to 8 s instead of retrying every chunk. The pre-roll is paced.\n- **PSRAM:** ArduinoJson had put every cloud document and all cached content in internal RAM. It now uses a PSRAM allocator.\n- **Crash guard:** a boot after a panic or watchdog reset skips the content version it crashed on for an hour and reports it, and VizCloud flags it on the bot's page.\n\n> **Trap:** the WiFi stack has only 8 static TX buffers. A steady UDP stream can hold all of them, and a TLS download started alongside it fails with ENOMEM."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-11-13",
+      "title": "VizCloud rebuilt: Toybox admin, editor logins and immutable releases",
+      "tags": [
+        "vizcloud",
+        "admin"
+      ],
+      "media": [],
+      "body": "VizCloud got rebuilt end to end. The fleet it runs is small: under 25 bots, gifts for close friends this Christmas. Recipients never log in, and a few friends edit content with full access.\n\n- **Look:** a new design called Toybox, in vizBot black and yellow with Slackey headings. Bots show their real faces, drawn by a TypeScript port of the face model generated from the firmware headers.\n- **Editors:** each has their own login, and every change lands in an activity log with who made it.\n- **Publishing:** edits save right away but reach bots only on Publish, which stores an immutable release. Rollback points back at an earlier one. Each kind of bot gets only the content it can use, trimmed to its size budget, so publish never refuses for size.\n- **Commands:** a persistent log, queued then delivered.\n- **Bots:** new bots wait for approval, and each one's name comes from the bot itself. Online history shows when each was awake.\n- **Firmware:** updates are uploaded and assigned to bots from the admin. vizMini is now a supported device.\n\nUnder it: one TypeScript Node service on Postgres, a React client, and a soak test of 50 simulated bots across all five hardware types on both protocols."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-11-13",
+      "title": "Bot protocol v2 + cloud firmware updates: vizBot 3.11.0 and vizMini 0.8",
+      "tags": [
+        "cloud",
+        "ota",
+        "firmware"
+      ],
+      "media": [],
+      "body": "Both firmwares learned bot protocol v2 for the rebuilt VizCloud. It's additive, so a v2 bot still works against the old server.\n\n- **Identity:** each bot gets its own token on register and keeps it in NVS. A refused token used to stop cloud calls until a reboot. Now the bot backs off an hour, drops the token and registers again.\n- **Names:** the bot reports its own device name on every sync. A rename in the admin comes down as config and goes through the same path as the web panel.\n- **Settings:** brightness, personality and poll interval arrive the same way, with no reboot.\n- **Cloud OTA:** the image downloads to the inactive slot, and its size and SHA-256 are checked before switching. It's kept only after a successful sync, otherwise it rolls back. Never during a web upload or on a low battery, and at most hourly.\n\nvizMini 0.8.0.1 got its own small client with a 2 KB reply cap. Its cloud updates need 80 KB of free heap and get a 10 minute rollback window. Weather, cloud calls and web uploads now take turns, because the C3's heap can't hold two at once. Each unit also got its own device name, defaulting to vizMini plus four hex digits."
+    },
+    {
       "build": "mosaico",
       "buildTitle": "ESP-Mosaico",
       "date": "2026-11-13",
@@ -4426,6 +4530,19 @@
         }
       ],
       "body": "An experimental side branch: all six tinyradars turn into one set of eyes, steered by an M5StickC Plus with a Mini JoyC hat. It's a hidden mode in its own build. The gift firmware doesn't have it, and the radars go back to tracking planes when the eyes switch off.\n\n- **Rendering:** every pixel is drawn into the radar's strip buffer on both cores. Lookup tables and fast-math tricks took a frame from 142 ms to about 50.\n- **Radio:** ESP-NOW. With the eyes on, the radars drop WiFi and sit on one fixed channel with the remote. Before that, the eyes stalled whenever the remote settled on an overlapping channel.\n- **Styles:** living hazel, cartoon, flame iris, goat and LED matrix are in the video. Radar and camera-aperture eyes exist but were left out.\n\n> **Trap:** the Mini JoyC locks up, holding the I2C clock low, if you read it with a repeated start or ask for too many bytes. Write the register, send STOP, then read exactly two bytes."
+    },
+    {
+      "build": "vizbot",
+      "buildTitle": "vizBot",
+      "date": "2026-11-06",
+      "title": "StackChan power and servo fixes: a battery that charges and a head that recovers",
+      "tags": [
+        "stackchan",
+        "power",
+        "firmware"
+      ],
+      "media": [],
+      "body": "The StackChan's battery never charged. M5.begin's default turns on the CoreS3's 5V output and its boost, and on the StackChan base that keeps USB from reaching the AXP2101. The battery drained at about 0.5 A until the bot crash-looped. The base doesn't use that 5V, so it stays off now.\n\n- **Head freezes:** bench tests showed the stalls are hardware on this unit. Both servos stop answering at once, and only while their motors are driven. A watchdog now pings both every second and cycles the servo rail after 3 missed checks, backing off up to 5 minutes when a recovery doesn't help.\n- **Pitch floor:** raised from 25° to 40°. The old floor sat about 4° above the mechanical end stop.\n- **Silent hangs:** a wedged web server task left WiFi up and the bot dead, with no coredump. wifi_srv and loop now check in on every pass, and a timer aborts with a coredump if either goes 30 s without one.\n- **Internal RAM:** TLS buffers and the 20 KB cloud MIDI table moved to PSRAM. Each TLS handshake had been taking about 30 KB of internal RAM, enough to stop every cloud sync and to leave no room for a photo.\n\n> **Trap:** a WiFi firmware update tripped the task watchdog. The coredump showed the 2 MB image being hashed on core 0 while a cloud TLS handshake ran its ECDSA verify on the same core at the same priority. Cloud syncs now wait out an upload."
     },
     {
       "build": "vizbot",
@@ -7439,5 +7556,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-13T17:31:50.743Z"
+  "generatedAt": "2026-11-14T15:55:12.769Z"
 }

@@ -10,7 +10,6 @@ rung: solder → design
 repo: kpow/vizpow
 facts:
   expressions: 25
-  deployed: 4
 hero: media/bots-matrix-hero.jpg
 heroVideo: media/bots-matrix-hero.mp4
 links:
@@ -40,6 +39,3 @@ an isolated cloud task on the other. Two networks, doing different jobs:
 - **An ESP-NOW mesh** handles the local etiquette. Flag bits in a broadcast
   packet mean two bots won't drive the same WLED matrix, and one will defer its
   speech bubble until a peer releases the display.
-
-Four of them are living in other places now, which makes it a real fleet in the
-wild rather than a demo with plans.
