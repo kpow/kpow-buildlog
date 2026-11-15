@@ -8,7 +8,7 @@ stack: [ESP32-S31, ESP-IDF, ESP-GSP, FreeRTOS]
 tags: [display, firmware, esp-mosaico]
 facts:
   screen: 2.16in 480x480
-  apps: 2
+  apps: 3
 hero: media/esp-mosaico.jpg
 links:
   - { label: kit docs, url: https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s31/esp-mosaico/user_guide.html }
@@ -39,3 +39,4 @@ between.
   from a phone page at `kaleido.local`.
 - **Chladni:** resonant-plate standing waves, ported from megafun's
   ChladniModule.
+- **Cymatics:** a water dish driven by a tone, from the speaker or the mic.

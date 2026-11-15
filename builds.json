@@ -20,7 +20,7 @@
       "rung": null,
       "facts": {
         "screen": "2.16in 480x480",
-        "apps": "2"
+        "apps": "3"
       },
       "repo": null,
       "hero": "/buildlog/mosaico/media/esp-mosaico.jpg",
@@ -36,13 +36,13 @@
         }
       ],
       "started": "2026-11-12",
-      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.",
+      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.\n- **Cymatics:** a water dish driven by a tone, from the speaker or the mic.",
       "stats": {
-        "entries": 5,
-        "photos": 13,
-        "daysActive": 3,
+        "entries": 8,
+        "photos": 25,
+        "daysActive": 4,
         "firstEntry": "2026-11-12",
-        "lastEntry": "2026-11-14"
+        "lastEntry": "2026-11-15"
       },
       "git": null,
       "picturesOverTime": [
@@ -111,12 +111,162 @@
         },
         {
           "date": "2026-11-14",
+          "src": "/buildlog/mosaico/media/cymatics-sweep-lock.mp4",
+          "poster": "/buildlog/mosaico/media/cymatics-sweep-lock.jpg"
+        },
+        {
+          "date": "2026-11-14",
+          "src": "/buildlog/mosaico/media/cymatics-spectrum.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-14",
+          "src": "/buildlog/mosaico/media/cymatics-rain-pond.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-14",
+          "src": "/buildlog/mosaico/media/cymatics-faraday.jpg",
+          "kind": "render",
+          "caption": "Faraday scene at 702 Hz"
+        },
+        {
+          "date": "2026-11-14",
+          "src": "/buildlog/mosaico/media/cymatics-pluck.mp4",
+          "poster": "/buildlog/mosaico/media/cymatics-pluck.jpg",
+          "caption": "Two taps pluck a locked pattern"
+        },
+        {
+          "date": "2026-11-14",
           "src": "/buildlog/mosaico/media/battery-case.mp4",
           "poster": "/buildlog/mosaico/media/battery-case.jpg"
+        },
+        {
+          "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/kaleido-cathedral.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/kaleido-acid-bloom.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/cymatics-cmy-344hz.jpg",
+          "kind": "render",
+          "caption": "CMY Triad, locked at 344 Hz"
+        },
+        {
+          "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/cymatics-light-schemes.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/cymatics-pink-cyan.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/cymatics-zoom.jpg",
+          "kind": "render",
+          "caption": "Whole dish, default, 3×, 6×"
+        },
+        {
+          "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/cymatics-spectrum-6x.jpg",
+          "kind": "render"
         }
       ],
-      "lastEntry": "2026-11-14",
+      "lastEntry": "2026-11-15",
       "entries": [
+        {
+          "date": "2026-11-15",
+          "title": "Kaleido: Cathedral and Acid Bloom at 33 fps",
+          "tags": [
+            "kaleido",
+            "performance"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/kaleido-cathedral.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/mosaico/media/kaleido-acid-bloom.jpg",
+              "kind": "render"
+            }
+          ],
+          "body": "Cathedral and Acid Bloom came over from Cymatics as Kaleido's looks 9 and 10.\nOn the device they ran at 13 to 17 fps. Their per-pixel tables, about 27 KB,\nneed fast internal RAM. Kaleido runs Wi-Fi and the camera and had about 22 KB\nto spare, so the tables sat in PSRAM: 35 to 60 ms per half frame instead of 7.\n\n| Tried | Result |\n| --- | --- |\n| Close the camera | It never reopened. Reverted |\n| Interleave the tables | No faster from PSRAM |\n| Borrow the mirror's texture | 33 fps, Wi-Fi fine |\n\nThe mirror looks keep a 64 KB texture in internal RAM that sits idle during\nthese two looks. They now borrow it and hand it back when a mirror look returns.\nBooting straight into one of them used to stop Wi-Fi from starting. Their small\nbuffers now go to PSRAM explicitly.\n\n> **Dead end:** Closing the camera to free RAM left it timing out on every frame\n> after it reopened, until a cold power cycle."
+        },
+        {
+          "date": "2026-11-15",
+          "title": "Cymatics: duo and triad colour schemes, 6× zoom",
+          "tags": [
+            "cymatics",
+            "display"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/cymatics-cmy-344hz.jpg",
+              "kind": "render",
+              "caption": "CMY Triad, locked at 344 Hz"
+            },
+            {
+              "src": "/buildlog/mosaico/media/cymatics-light-schemes.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/mosaico/media/cymatics-pink-cyan.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/mosaico/media/cymatics-zoom.jpg",
+              "kind": "render",
+              "caption": "Whole dish, default, 3×, 6×"
+            },
+            {
+              "src": "/buildlog/mosaico/media/cymatics-spectrum-6x.jpg",
+              "kind": "render"
+            }
+          ],
+          "body": "Eight colour schemes joined White, Warm, Cyan, Magenta and Spectrum under Light.\n\n- **Duos:** Teal+Orange, Blue+Gold, Pink+Cyan, Violet+Lime.\n- **Triads:** RGB, CMY, Secondaries, Sunset.\n\nRing Light blends a scheme around each ring by slope direction. Ink & Light\ngives each colour its own light, two opposite or three at 120°. The rim and the\nmodule LEDs share the colours out.\n\nPinch now goes to 6×, up from 3×. The per-pixel cost doesn't depend on zoom, so\nit stays at 33 fps.\n\nGlass Dish and Still Water are gone. The settings store moved to version 5, and\na saved scene that pointed at one of them opens Tone Sweep."
+        },
+        {
+          "date": "2026-11-14",
+          "title": "Cymatics: a water dish driven by a tone",
+          "tags": [
+            "cymatics",
+            "audio",
+            "display"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/cymatics-sweep-lock.mp4",
+              "poster": "/buildlog/mosaico/media/cymatics-sweep-lock.jpg"
+            },
+            {
+              "src": "/buildlog/mosaico/media/cymatics-spectrum.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/mosaico/media/cymatics-rain-pond.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/mosaico/media/cymatics-faraday.jpg",
+              "kind": "render",
+              "caption": "Faraday scene at 702 Hz"
+            },
+            {
+              "src": "/buildlog/mosaico/media/cymatics-pluck.mp4",
+              "poster": "/buildlog/mosaico/media/cymatics-pluck.jpg",
+              "caption": "Two taps pluck a locked pattern"
+            }
+          ],
+          "body": "Third app on the Mosaico. The first version was a vibrating drum with a sand\nmode, palettes and kaleidoscope folds at 31.8 fps. After trying it I called it\nnot very cymatics: a lot of Chladni and kaleidoscope. Sand went. Its two most\npsychedelic looks, Cathedral and Acid Bloom, moved to Kaleido.\n\nThe rewrite treats every pixel as water driven by a tone. The dish's own modes\nare Bessel functions with a Neumann wall, and a tone excites the modes whose\nresonance (f = 36·k Hz) it sits close to.\n\n- **Looks:** Ring Light, Clear Dish, Sunlit Pool, Mercury, Ink & Light.\n- **Scenes:** sweeps slow down and hold on each pattern, then rush through the empty gaps.\n- **Tone ruler:** the right edge marks every resonance. Release near a tick and the tone snaps on.\n- **Sound:** the ES8311 speaker plays the tone, or the mic listens and a voice drives the water.\n\nAfter the first hands-on session:\n\n- **Louder:** the tone levels went up to −12 / −6 / −1 dBFS.\n- **Taps pluck:** a tap rings the modes that fit the spot instead of dropping a ripple.\n- **Pinch zoom:** the default fills the screen, so the dish rim sits off the edge.\n\nIt renders 240 px on both cores, doubled to 480, at about 33 fps, the panel's ceiling.\n\n> **Trap:** The Interaction Module's LEDs stayed dark. A health line showed every\n> LED write succeeding, then the LEDs died in Kaleido and the stock firmware too.\n> A small IC on the module had two legs knocked off. A resolder brought them back."
+        },
         {
           "date": "2026-11-14",
           "title": "Battery case: 2000 mAh into the USB-C port",
@@ -4433,6 +4583,98 @@
     {
       "build": "mosaico",
       "buildTitle": "ESP-Mosaico",
+      "date": "2026-11-15",
+      "title": "Kaleido: Cathedral and Acid Bloom at 33 fps",
+      "tags": [
+        "kaleido",
+        "performance"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/mosaico/media/kaleido-cathedral.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/mosaico/media/kaleido-acid-bloom.jpg",
+          "kind": "render"
+        }
+      ],
+      "body": "Cathedral and Acid Bloom came over from Cymatics as Kaleido's looks 9 and 10.\nOn the device they ran at 13 to 17 fps. Their per-pixel tables, about 27 KB,\nneed fast internal RAM. Kaleido runs Wi-Fi and the camera and had about 22 KB\nto spare, so the tables sat in PSRAM: 35 to 60 ms per half frame instead of 7.\n\n| Tried | Result |\n| --- | --- |\n| Close the camera | It never reopened. Reverted |\n| Interleave the tables | No faster from PSRAM |\n| Borrow the mirror's texture | 33 fps, Wi-Fi fine |\n\nThe mirror looks keep a 64 KB texture in internal RAM that sits idle during\nthese two looks. They now borrow it and hand it back when a mirror look returns.\nBooting straight into one of them used to stop Wi-Fi from starting. Their small\nbuffers now go to PSRAM explicitly.\n\n> **Dead end:** Closing the camera to free RAM left it timing out on every frame\n> after it reopened, until a cold power cycle."
+    },
+    {
+      "build": "mosaico",
+      "buildTitle": "ESP-Mosaico",
+      "date": "2026-11-15",
+      "title": "Cymatics: duo and triad colour schemes, 6× zoom",
+      "tags": [
+        "cymatics",
+        "display"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/mosaico/media/cymatics-cmy-344hz.jpg",
+          "kind": "render",
+          "caption": "CMY Triad, locked at 344 Hz"
+        },
+        {
+          "src": "/buildlog/mosaico/media/cymatics-light-schemes.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/mosaico/media/cymatics-pink-cyan.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/mosaico/media/cymatics-zoom.jpg",
+          "kind": "render",
+          "caption": "Whole dish, default, 3×, 6×"
+        },
+        {
+          "src": "/buildlog/mosaico/media/cymatics-spectrum-6x.jpg",
+          "kind": "render"
+        }
+      ],
+      "body": "Eight colour schemes joined White, Warm, Cyan, Magenta and Spectrum under Light.\n\n- **Duos:** Teal+Orange, Blue+Gold, Pink+Cyan, Violet+Lime.\n- **Triads:** RGB, CMY, Secondaries, Sunset.\n\nRing Light blends a scheme around each ring by slope direction. Ink & Light\ngives each colour its own light, two opposite or three at 120°. The rim and the\nmodule LEDs share the colours out.\n\nPinch now goes to 6×, up from 3×. The per-pixel cost doesn't depend on zoom, so\nit stays at 33 fps.\n\nGlass Dish and Still Water are gone. The settings store moved to version 5, and\na saved scene that pointed at one of them opens Tone Sweep."
+    },
+    {
+      "build": "mosaico",
+      "buildTitle": "ESP-Mosaico",
+      "date": "2026-11-14",
+      "title": "Cymatics: a water dish driven by a tone",
+      "tags": [
+        "cymatics",
+        "audio",
+        "display"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/mosaico/media/cymatics-sweep-lock.mp4",
+          "poster": "/buildlog/mosaico/media/cymatics-sweep-lock.jpg"
+        },
+        {
+          "src": "/buildlog/mosaico/media/cymatics-spectrum.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/mosaico/media/cymatics-rain-pond.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/mosaico/media/cymatics-faraday.jpg",
+          "kind": "render",
+          "caption": "Faraday scene at 702 Hz"
+        },
+        {
+          "src": "/buildlog/mosaico/media/cymatics-pluck.mp4",
+          "poster": "/buildlog/mosaico/media/cymatics-pluck.jpg",
+          "caption": "Two taps pluck a locked pattern"
+        }
+      ],
+      "body": "Third app on the Mosaico. The first version was a vibrating drum with a sand\nmode, palettes and kaleidoscope folds at 31.8 fps. After trying it I called it\nnot very cymatics: a lot of Chladni and kaleidoscope. Sand went. Its two most\npsychedelic looks, Cathedral and Acid Bloom, moved to Kaleido.\n\nThe rewrite treats every pixel as water driven by a tone. The dish's own modes\nare Bessel functions with a Neumann wall, and a tone excites the modes whose\nresonance (f = 36·k Hz) it sits close to.\n\n- **Looks:** Ring Light, Clear Dish, Sunlit Pool, Mercury, Ink & Light.\n- **Scenes:** sweeps slow down and hold on each pattern, then rush through the empty gaps.\n- **Tone ruler:** the right edge marks every resonance. Release near a tick and the tone snaps on.\n- **Sound:** the ES8311 speaker plays the tone, or the mic listens and a voice drives the water.\n\nAfter the first hands-on session:\n\n- **Louder:** the tone levels went up to −12 / −6 / −1 dBFS.\n- **Taps pluck:** a tap rings the modes that fit the spot instead of dropping a ripple.\n- **Pinch zoom:** the default fills the screen, so the dish rim sits off the edge.\n\nIt renders 240 px on both cores, doubled to 480, at about 33 fps, the panel's ceiling.\n\n> **Trap:** The Interaction Module's LEDs stayed dark. A health line showed every\n> LED write succeeding, then the LEDs died in Kaleido and the stock firmware too.\n> A small IC on the module had two legs knocked off. A resolder brought them back."
+    },
+    {
+      "build": "mosaico",
+      "buildTitle": "ESP-Mosaico",
       "date": "2026-11-14",
       "title": "Battery case: 2000 mAh into the USB-C port",
       "tags": [
@@ -7672,5 +7914,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-14T22:31:55.028Z"
+  "generatedAt": "2026-11-15T13:51:27.009Z"
 }
