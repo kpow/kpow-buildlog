@@ -8,7 +8,7 @@ stack: [ESP32-S31, ESP-IDF, ESP-GSP, FreeRTOS]
 tags: [display, firmware, esp-mosaico]
 facts:
   screen: 2.16in 480x480
-  apps: 3
+  apps: 4
 hero: media/esp-mosaico.jpg
 links:
   - { label: kit docs, url: https://docs.espressif.com/projects/esp-dev-kits/en/latest/esp32s31/esp-mosaico/user_guide.html }
@@ -40,3 +40,5 @@ between.
 - **Chladni:** resonant-plate standing waves, ported from megafun's
   ChladniModule.
 - **Cymatics:** a water dish driven by a tone, from the speaker or the mic.
+- **Escape Velocity:** space pinball in mission-control phosphor. Three rooms
+  stacked into one tall table, with a camera that scrolls between them.

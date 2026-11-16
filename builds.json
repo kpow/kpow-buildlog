@@ -20,7 +20,7 @@
       "rung": null,
       "facts": {
         "screen": "2.16in 480x480",
-        "apps": "3"
+        "apps": "4"
       },
       "repo": null,
       "hero": "/buildlog/mosaico/media/esp-mosaico.jpg",
@@ -36,7 +36,7 @@
         }
       ],
       "started": "2026-11-12",
-      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.\n- **Cymatics:** a water dish driven by a tone, from the speaker or the mic.",
+      "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.\n- **Cymatics:** a water dish driven by a tone, from the speaker or the mic.\n- **Escape Velocity:** space pinball in mission-control phosphor. Three rooms\n  stacked into one tall table, with a camera that scrolls between them.",
       "stats": {
         "entries": 9,
         "photos": 27,
@@ -7966,5 +7966,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-16T03:22:01.041Z"
+  "generatedAt": "2026-11-16T11:08:07.565Z"
 }
