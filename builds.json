@@ -38,8 +38,8 @@
       "started": "2026-11-12",
       "body": "Everything I build for Espressif's ESP-Mosaico lives here. It's a small dev kit\naround the ESP32-S31: a dual-core RISC-V chip at up to 320 MHz with 16 MB of\nPSRAM, behind a 2.16\" 480×480 square AMOLED touchscreen. It also carries an IMU,\na vibration motor and a battery. Modules snap onto its left and right sides: a\ncamera, and an Interaction Module with two keys and a Function button.\n\n## How apps get made\n\nEvery app starts in the esp-mosaico-vibe workspace with `mosaico.py project init`.\nThe UI is an ESP-GSP scene, and the same scene and C code run in a PC simulator\nand on the device. So most of the work happens in the simulator, and hardware\ncomes in only for what the simulator can't cover: frame rate, the camera, the\nmotor, touch.\n\nThe kit keeps a retained firmware called Vibe Mode. It installs apps over USB\nand is where an app exits back to. Its My IDEAs grid holds saved apps to switch\nbetween.\n\n## Apps\n\n- **Kaleido:** a live kaleidoscope. Generative sources, the camera, or images\n  from a phone page at `kaleido.local`.\n- **Chladni:** resonant-plate standing waves, ported from megafun's\n  ChladniModule.\n- **Cymatics:** a water dish driven by a tone, from the speaker or the mic.",
       "stats": {
-        "entries": 8,
-        "photos": 25,
+        "entries": 9,
+        "photos": 27,
         "daysActive": 4,
         "firstEntry": "2026-11-12",
         "lastEntry": "2026-11-15"
@@ -143,6 +143,16 @@
         },
         {
           "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/ev-title.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-15",
+          "src": "/buildlog/mosaico/media/ev-multiball.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-15",
           "src": "/buildlog/mosaico/media/kaleido-cathedral.jpg",
           "kind": "render"
         },
@@ -181,6 +191,26 @@
       ],
       "lastEntry": "2026-11-15",
       "entries": [
+        {
+          "date": "2026-11-15",
+          "title": "Escape Velocity: space pinball in three rooms",
+          "tags": [
+            "escape-velocity",
+            "game",
+            "pinball"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/mosaico/media/ev-title.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/mosaico/media/ev-multiball.jpg",
+              "kind": "render"
+            }
+          ],
+          "body": "Escape Velocity is a space pinball table in the Telemetry style: mission-control\nphosphor on true black. The table is three rooms stacked into one 480 x 1440\nworld: the Launch Pad, the Orbit and the Moon. A camera scrolls between them as\nthe ball goes up the ramps and comes back down the wires.\n\nThe first build had the Pad and the Orbit. On the device it ran at a median 31.9\nfps while scrolling, and the camera brought the flippers on screen 1.2 s before\nthe ball came back. Scrolling was easy to follow.\n\nWeek 3 added the Moon: the TLI ramp up from the Orbit, a far-side loop over the\ntop, and a crater to land the ball in. My first play left me underwhelmed. It\nneeded more colour, more pinball action, fly-overs, targets to build toward\nmultiball, and a bigger score. So three juice passes followed:\n\n| Pass | Added |\n| --- | --- |\n| 1 | Rolling score with pop-ups, colour by room, L-E-M targets, QUAKE bumper, spinner, fly-overs, the LISSA start screen |\n| 2 | Raised ramps with shadows, the GANTRY left ramp, SPACE JUNK, a livelier ring |\n| 3 | Hit sparks, screen shake, callouts that punch in, a parallax starfield, lit-shot arrows |\n\nAfter the third pass it played much better.\n\nWeek 4 took two notes from play. The low-gravity Moon was too easy, so every room\nnow runs at 1 g. And there was no way to lose the ball upstairs, so a black hole\nnow sits between each pair of mini flippers. On top of that:\n\n- **Real locks and multiball:** two balls locked in the crater, then three balls\n  in play.\n- **Four missions:** each lights a lamp on the HUD.\n- **ESCAPE:** a 30-second wizard mode behind the hatch.\n\n> **Dead end:** At 0.16 g the Moon's flippers launched the ball at 1,300 to\n> 1,700 px/s, so gravity barely mattered. Softer flippers made feathering a real\n> skill, but the floaty ball still made the room too easy. In the end the low\n> gravity went entirely."
+        },
         {
           "date": "2026-11-15",
           "title": "Kaleido: Cathedral and Acid Bloom at 33 fps",
@@ -4584,6 +4614,28 @@
       "build": "mosaico",
       "buildTitle": "ESP-Mosaico",
       "date": "2026-11-15",
+      "title": "Escape Velocity: space pinball in three rooms",
+      "tags": [
+        "escape-velocity",
+        "game",
+        "pinball"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/mosaico/media/ev-title.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/mosaico/media/ev-multiball.jpg",
+          "kind": "render"
+        }
+      ],
+      "body": "Escape Velocity is a space pinball table in the Telemetry style: mission-control\nphosphor on true black. The table is three rooms stacked into one 480 x 1440\nworld: the Launch Pad, the Orbit and the Moon. A camera scrolls between them as\nthe ball goes up the ramps and comes back down the wires.\n\nThe first build had the Pad and the Orbit. On the device it ran at a median 31.9\nfps while scrolling, and the camera brought the flippers on screen 1.2 s before\nthe ball came back. Scrolling was easy to follow.\n\nWeek 3 added the Moon: the TLI ramp up from the Orbit, a far-side loop over the\ntop, and a crater to land the ball in. My first play left me underwhelmed. It\nneeded more colour, more pinball action, fly-overs, targets to build toward\nmultiball, and a bigger score. So three juice passes followed:\n\n| Pass | Added |\n| --- | --- |\n| 1 | Rolling score with pop-ups, colour by room, L-E-M targets, QUAKE bumper, spinner, fly-overs, the LISSA start screen |\n| 2 | Raised ramps with shadows, the GANTRY left ramp, SPACE JUNK, a livelier ring |\n| 3 | Hit sparks, screen shake, callouts that punch in, a parallax starfield, lit-shot arrows |\n\nAfter the third pass it played much better.\n\nWeek 4 took two notes from play. The low-gravity Moon was too easy, so every room\nnow runs at 1 g. And there was no way to lose the ball upstairs, so a black hole\nnow sits between each pair of mini flippers. On top of that:\n\n- **Real locks and multiball:** two balls locked in the crater, then three balls\n  in play.\n- **Four missions:** each lights a lamp on the HUD.\n- **ESCAPE:** a 30-second wizard mode behind the hatch.\n\n> **Dead end:** At 0.16 g the Moon's flippers launched the ball at 1,300 to\n> 1,700 px/s, so gravity barely mattered. Softer flippers made feathering a real\n> skill, but the floaty ball still made the room too easy. In the end the low\n> gravity went entirely."
+    },
+    {
+      "build": "mosaico",
+      "buildTitle": "ESP-Mosaico",
+      "date": "2026-11-15",
       "title": "Kaleido: Cathedral and Acid Bloom at 33 fps",
       "tags": [
         "kaleido",
@@ -7914,5 +7966,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-15T13:51:27.009Z"
+  "generatedAt": "2026-11-16T03:22:01.041Z"
 }
