@@ -34,11 +34,11 @@
       "started": "2026-05-28",
       "body": "A family of handheld consoles built from one monorepo.\n\n| Spec | tinyfun | bigfun | megafun |\n|---|---|---|---|\n| Board | LOLIN S3 Mini Pro | ESP32-S3 SuperMini | ESP32-S3 SuperMini |\n| Screen | 128×128 GC9107 | 2.0\" 320×240 ST7789 | 2.0\" 320×240 ST7789 |\n| Input | 3 buttons | d-pad + two triggers | XY joystick + click |\n| Layout | portrait | landscape | landscape |\n\ntinyfun and bigfun run the same six slots, each game adapting to the hardware it\nlands on: lean and legible on three buttons, grown into sprites and particle\njuice on six. Sometimes the slot holds a different game entirely. Invaders\nbecomes Galaga on the wide board, Breakout becomes Arkanoid.\n\nTetris · Breakout · Snake · Invaders/Galaga · SkyGrid · Backgammon\n\nmegafun runs its own set on a joystick-native framework, and shares exactly the\npiece that has to stay in lockstep: the backgammon rules engine and the ESP-NOW\nlink, so all three can play each other.\n\n## How it holds together\n\n`common/` never names a GPIO or a screen size. Pins live only in each board's\n`Config.h`, and shared code branches on two capability flags those boards\ndeclare, `KF_LANDSCAPE` and `KF_DPAD`. megafun is the reason there are two: it's\nlandscape but joystick, which one flag couldn't express. Adding a board means\ndeclaring its capabilities, not adding a device identity.\n\nThe engine is a non-blocking contract (`init` / `update(dt)` / `render`) at a\nfixed 60 Hz, with every game placement-new'd into a single 12 KB arena that fails\nto compile if it won't fit. Two rules earned the hard way: the framebuffer is\npinned to SRAM because PSRAM faults on per-pixel writes, and the quit chord is\nun-swallowable, so a misbehaving game can never trap you inside it.\n\nFavourites among the six: **SkyGrid**, an original software 3D renderer with no\nz-buffer that pushes 128 triangles at 60 fps, and **Backgammon**, fully\nrules-checked and unit-tested, playing 2-ply expectimax on bigfun with a doubling\ncube, Crawford rule and NVS match save.",
       "stats": {
-        "entries": 20,
-        "photos": 24,
-        "daysActive": 174,
+        "entries": 21,
+        "photos": 26,
+        "daysActive": 175,
         "firstEntry": "2026-05-28",
-        "lastEntry": "2026-11-17"
+        "lastEntry": "2026-11-18"
       },
       "git": null,
       "picturesOverTime": [
@@ -156,10 +156,42 @@
           "src": "/buildlog/kfun/media/tinyfun-carrier-case.jpg",
           "kind": "render",
           "caption": "Facet case for Rev A"
+        },
+        {
+          "date": "2026-11-18",
+          "src": "/buildlog/kfun/media/tinyfun-m1-3d.jpg",
+          "kind": "render"
+        },
+        {
+          "date": "2026-11-18",
+          "src": "/buildlog/kfun/media/tinyfun-m1-3d-exploded.jpg",
+          "kind": "render",
+          "caption": "Back side exploded: SuperMini, MAX98357A, 1609 speaker, switch, 500 mAh cell"
         }
       ],
-      "lastEntry": "2026-11-17",
+      "lastEntry": "2026-11-18",
       "entries": [
+        {
+          "date": "2026-11-18",
+          "title": "M1 ordered: 20 boards from JLC",
+          "tags": [
+            "pcb",
+            "tinyfun",
+            "jlc"
+          ],
+          "media": [
+            {
+              "src": "/buildlog/kfun/media/tinyfun-m1-3d.jpg",
+              "kind": "render"
+            },
+            {
+              "src": "/buildlog/kfun/media/tinyfun-m1-3d-exploded.jpg",
+              "kind": "render",
+              "caption": "Back side exploded: SuperMini, MAX98357A, 1609 speaker, switch, 500 mAh cell"
+            }
+          ],
+          "body": "Ordered 20 module carriers from JLC. Their economic assembly fits the 12 small parts: five buttons, six 1206 passives and the B5819W Schottky. I solder the modules myself, all from AliExpress. About $250 for 20 tinyFuns.\n\nBefore paying I had an agent review the order files. It caught three things:\n\n- **Solder paste:** the gerber zip had no paste layer, so there was nothing to cut a stencil from.\n- **Placement origin:** the placement file and the gerbers used different origins.\n- **Amp SD pad:** it sat under the TP4056's USB shell. It's now a no-connect, and the amp board's own pull-up keeps it in mono.\n\nThe backlight also moved off 3V3. Left on, it would drain the 500 mAh cell in about a day. It now runs from GPIO8, so firmware can turn it off.\n\nOnly 9 \"big chip\" MAX98357A boards were left, so the rest are the small-chip version. The speaker is a 1609: 16 × 9 mm, 8 Ω.\n\nThere's an interactive 3D model to spin, explode and take apart: https://claude.ai/artifact/9BWsBeEC5Wvyg9NPRtfGS8\n\n> **Next:** a protoboard tinyFun on the M1 pin map, to start porting games before the boards arrive."
+        },
         {
           "date": "2026-11-17",
           "title": "First PCBs: two tinyFun carrier boards",
@@ -4678,6 +4710,29 @@
     {
       "build": "kfun",
       "buildTitle": "kFun",
+      "date": "2026-11-18",
+      "title": "M1 ordered: 20 boards from JLC",
+      "tags": [
+        "pcb",
+        "tinyfun",
+        "jlc"
+      ],
+      "media": [
+        {
+          "src": "/buildlog/kfun/media/tinyfun-m1-3d.jpg",
+          "kind": "render"
+        },
+        {
+          "src": "/buildlog/kfun/media/tinyfun-m1-3d-exploded.jpg",
+          "kind": "render",
+          "caption": "Back side exploded: SuperMini, MAX98357A, 1609 speaker, switch, 500 mAh cell"
+        }
+      ],
+      "body": "Ordered 20 module carriers from JLC. Their economic assembly fits the 12 small parts: five buttons, six 1206 passives and the B5819W Schottky. I solder the modules myself, all from AliExpress. About $250 for 20 tinyFuns.\n\nBefore paying I had an agent review the order files. It caught three things:\n\n- **Solder paste:** the gerber zip had no paste layer, so there was nothing to cut a stencil from.\n- **Placement origin:** the placement file and the gerbers used different origins.\n- **Amp SD pad:** it sat under the TP4056's USB shell. It's now a no-connect, and the amp board's own pull-up keeps it in mono.\n\nThe backlight also moved off 3V3. Left on, it would drain the 500 mAh cell in about a day. It now runs from GPIO8, so firmware can turn it off.\n\nOnly 9 \"big chip\" MAX98357A boards were left, so the rest are the small-chip version. The speaker is a 1609: 16 × 9 mm, 8 Ω.\n\nThere's an interactive 3D model to spin, explode and take apart: https://claude.ai/artifact/9BWsBeEC5Wvyg9NPRtfGS8\n\n> **Next:** a protoboard tinyFun on the M1 pin map, to start porting games before the boards arrive."
+    },
+    {
+      "build": "kfun",
+      "buildTitle": "kFun",
       "date": "2026-11-17",
       "title": "First PCBs: two tinyFun carrier boards",
       "tags": [
@@ -8069,5 +8124,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-17T12:40:55.317Z"
+  "generatedAt": "2026-11-18T16:52:15.754Z"
 }
