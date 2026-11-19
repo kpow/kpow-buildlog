@@ -27,6 +27,14 @@
       "heroVideo": null,
       "links": [
         {
+          "label": "tinyfun guide",
+          "url": "https://kpow.xyz/tinyfun"
+        },
+        {
+          "label": "tinyfun updates",
+          "url": "https://kpow.xyz/tinyfun/update"
+        },
+        {
           "label": "repo",
           "url": "https://github.com/kpow/kfun"
         }
@@ -8124,5 +8132,5 @@
       "body": "First commit, and the core loop worked the same day: build a setlist, save it as a prediction.\n\nThe build-a-setlist UI went up first. Drop songs into slots, reorder them, add sets as you go. Then the song database, seeded out of several phish.net endpoints and cached to a local JSON file so the game isn't hammering their API on every page load."
     }
   ],
-  "generatedAt": "2026-11-18T17:09:31.445Z"
+  "generatedAt": "2026-11-19T14:52:27.728Z"
 }

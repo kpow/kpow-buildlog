@@ -13,6 +13,8 @@ facts:
   games: 6
 hero: media/megafun-hero.jpg
 links:
+  - { label: tinyfun guide, url: https://kpow.xyz/tinyfun }
+  - { label: tinyfun updates, url: https://kpow.xyz/tinyfun/update }
   - { label: repo, url: https://github.com/kpow/kfun }
 started: 2026-05-28
 ---
